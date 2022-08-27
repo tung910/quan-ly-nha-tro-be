@@ -1,14 +1,25 @@
-/* eslint-disable no-undef */
-import express from 'express';
-import morgan from 'morgan';
-import dotenv from 'dotenv';
-dotenv.config();
+require('module-alias/register');
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+const { initEnvironment, initConnectDB } = require('~/environments/init');
+const routes = require('~/routes');
+const logger = require('./helpers/logger');
 
 const app = express();
-app.use(morgan('tiny'));
+initEnvironment();
+initConnectDB();
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('tiny'));
+}
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ limit: '50mb' }));
+app.use(express.json({ limit: '50mb' }));
 
-app.get('/', (req, res) => {
-    res.json('HELLO');
-});
+routes(app);
+
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log('server is listening port: ', PORT));
+app.listen(PORT, () =>
+    logger.info('Server is listening port: http://localhost:' + PORT)
+);

@@ -2,19 +2,22 @@
 module.exports = {
     env: {
         browser: true,
-        es2021: true,
+        es6: true,
+        node: true,
+        amd: true,
     },
-    extends: 'eslint:recommended',
+    extends: ['eslint:recommended', 'unused-imports'],
     overrides: [],
     parserOptions: {
-        ecmaVersion: 'latest',
+        ecmaVersion: '9',
         sourceType: 'module',
     },
     rules: {
+        'no-empty': ['error', { allowEmptyCatch: true }],
         indent: ['error', 4],
-        'linebreak-style': ['error', 'windows'],
+        'linebreak-style': ['windows'],
         quotes: ['error', 'single'],
-        semi: ['error', 'always'],
+        semi: ['warn', 'always'],
         'semi-spacing': [
             'error',
             {
@@ -25,4 +28,10 @@ module.exports = {
         eqeqeq: ['error', 'smart'],
         curly: 'off',
     },
+    globals: {
+        $: true,
+        require: true,
+        process: true,
+    },
+    root: true,
 };
