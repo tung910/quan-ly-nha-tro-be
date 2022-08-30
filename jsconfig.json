@@ -2,7 +2,6 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
-            "~/environments/*": ["./environments/*"],
             "~/routes/*": ["./src/routes/*"],
             "~/models/*": ["./src/models/*"],
             "~/controllers/*": ["./src/controllers/*"],
