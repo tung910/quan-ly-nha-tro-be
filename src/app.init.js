@@ -8,7 +8,10 @@ const initEnvironment = () => {
 
 const initConnectDB = async () => {
     try {
-        await mongoose.connect(process.env.DB_URL);
+        await mongoose.connect(process.env.DB_URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
         logger.info('Connected to db successfully');
     } catch (error) {
         logger.error(new Error(error));
