@@ -19,7 +19,7 @@ const Customer = new mongoose.Schema(
             require: true,
         },
         motelRoomId: {
-            type: ObjectId,
+            type: mongoose.ObjectId,
             ref:"MotelRoom"
         },
     },
