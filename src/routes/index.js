@@ -1,8 +1,7 @@
-// const motelRouter = require('./motel.route')
-function routes(app) {
-    app.use('/api', (req, res) => {
-        res.json('HELLO');
-    });
+const motelRoomRoute = require('./motel-room.route');
 
+function routes(app) {
+    app.use('/api/motel-room', motelRoomRoute);
 }
+
 module.exports = routes;

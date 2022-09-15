@@ -1,8 +1,8 @@
 require('module-alias/register');
 const express = require('express');
-const morgan = require('morgan');
 const cors = require('cors');
-const { initEnvironment, initConnectDB } = require('~/environments/init');
+
+const { initEnvironment, initConnectDB } = require('./app.init');
 const routes = require('~/routes');
 const logger = require('./helpers/logger');
 
@@ -10,6 +10,7 @@ const app = express();
 initEnvironment();
 initConnectDB();
 if (process.env.NODE_ENV === 'development') {
+    const morgan = require('morgan');
     app.use(morgan('tiny'));
 }
 app.use(cors());
