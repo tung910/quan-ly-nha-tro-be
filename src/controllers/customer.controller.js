@@ -7,4 +7,8 @@ module.exports = {
         const customer = await CustomerModel.find({});
         return AppResponse.success(req, res)(customer);
     }),
+    addCustomer: asyncUtil(async (req, res) => {
+        const customer = await CustomerModel(req.bode).save();
+        return AppResponse.success(req, res)(customer);
+    }),
 };
