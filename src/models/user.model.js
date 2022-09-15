@@ -14,26 +14,35 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    addresss: {
+        type: String,
+        required: true,
+    },
+    phoneNnumber: {
+        type: String,
+        required: true
     }
+
 }, { timestamps: true });
 
 userSchema.methods = {
-    authenticate(password){
+    authenticate(password) {
         return this.password == this.encryPassword(password);
     },
-    encryPassword(password){
-        if(!password) return;
+    encryPassword(password) {
+        if (!password) return;
         try {
-            return createHmac('sha256','datn_tw13').update(password).digest('hex');
+            return createHmac('sha256', 'datn_tw13').update(password).digest('hex');
         } catch (error) {
             console.log(error);
         }
     }
 }
 
-userSchema.pre('save',function(next){
+userSchema.pre('save', function (next) {
     this.password = this.encryPassword(this.password);
     next();
 })
 
-export default mongoose.model('User',userSchema);
+export default mongoose.model('User', userSchema);
