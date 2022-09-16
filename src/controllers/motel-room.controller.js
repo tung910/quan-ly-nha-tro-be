@@ -7,4 +7,9 @@ module.exports = {
         const motelRoom = await MotelRoomModel.find({});
         return AppResponse.success(req, res)(motelRoom);
     }),
+    createMotelRoom: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+        const motelRoom = await MotelRoomModel.create(data);
+        return AppResponse.success(req, res)(motelRoom);
+    }),
 };
