@@ -4,8 +4,12 @@ const AppResponse = require('~/helpers/response');
 
 module.exports = {
     getAllCustomer: asyncUtil(async (req, res) => {
-        const customer = await CustomerModel.find({});
-        return AppResponse.success(req, res)(customer);
+        try {
+            const customer = await CustomerModel.find({});
+            return AppResponse.success(req, res)(customer);
+        } catch (error) {
+            return AppResponse.fail(req,res)(error)
+        }
     }),
     addCustomer: asyncUtil(async (req, res) => {
         const customer = await CustomerModel(req.body).save();
@@ -20,7 +24,7 @@ module.exports = {
             ).exec();
             return AppResponse.success(req, res)(customer);
         } catch (error) {
-            return AppResponse.fail(req,res)(error)
+            return AppResponse.fail(req, res)(error);
         }
     }),
     deleteCustomer: asyncUtil(async (req, res) => {
@@ -30,7 +34,7 @@ module.exports = {
             }).exec();
             return AppResponse.success(req, res)(customer);
         } catch (error) {
-            return AppResponse.fail(req, res)({message:"Not Found"});
+            return AppResponse.fail(req, res)({ message: 'Not Found' });
         }
     }),
 };
