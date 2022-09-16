@@ -8,7 +8,7 @@ module.exports = {
             const customer = await CustomerModel.find({});
             return AppResponse.success(req, res)(customer);
         } catch (error) {
-            return AppResponse.fail(req,res)(error)
+            return AppResponse.fail(req, res)(error);
         }
     }),
     addCustomer: asyncUtil(async (req, res) => {
@@ -34,6 +34,16 @@ module.exports = {
     deleteCustomer: asyncUtil(async (req, res) => {
         try {
             const customer = await CustomerModel.findOneAndDelete({
+                _id: req.params.id,
+            }).exec();
+            return AppResponse.success(req, res)(customer);
+        } catch (error) {
+            return AppResponse.fail(req, res)({ message: 'Not Found' });
+        }
+    }),
+    detailCustomer: asyncUtil(async (req, res) => {
+        try {
+            const customer = await CustomerModel.findOne({
                 _id: req.params.id,
             }).exec();
             return AppResponse.success(req, res)(customer);
