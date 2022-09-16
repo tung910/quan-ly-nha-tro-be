@@ -7,7 +7,7 @@ const MotelRoomSchema = new mongoose.Schema(
             require: true,
             minLength: 5,
         },
-        maximum_number_of_people: {
+        maximumNumberOfPeople: {
             type: Number,
             default: 1,
         },
@@ -25,7 +25,7 @@ const MotelRoomSchema = new mongoose.Schema(
             type: Number,
             require: true,
         },
-        unit_price: {
+        unitPrice: {
             type: Number,
             require: true,
         },
