@@ -12,8 +12,12 @@ module.exports = {
         }
     }),
     addCustomer: asyncUtil(async (req, res) => {
-        const customer = await CustomerModel(req.body).save();
-        return AppResponse.success(req, res)(customer);
+        try {
+            const customer = await CustomerModel(req.body).save();
+            return AppResponse.success(req, res)(customer);
+        } catch (error) {
+            return AppResponse.fail(req, res)(error);
+        }
     }),
     editCustomer: asyncUtil(async (req, res) => {
         try {
