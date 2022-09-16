@@ -1,7 +1,7 @@
-import mongoose, { Schema } from "mongoose";
-import createHmac from 'crypto';
+const mongoose = require('mongoose');
+const createHmac = require('crypto');
 
-const userSchema = new Schema({
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -9,7 +9,7 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        required: true
+        unique: true
     },
     password: {
         type: String,
@@ -19,14 +19,14 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    phoneNnumber: {
+    phoneNumber: {
         type: String,
         required: true
     }
 
 }, { timestamps: true });
 
-userSchema.methods = {
+UserSchema.methods = {
     authenticate(password) {
         return this.password == this.encryPassword(password);
     },
@@ -40,9 +40,10 @@ userSchema.methods = {
     }
 }
 
-userSchema.pre('save', function (next) {
+UserSchema.pre('save', function (next) {
     this.password = this.encryPassword(this.password);
     next();
 })
 
-export default mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', UserSchema);
+

@@ -1,22 +1,34 @@
-import userModel from "~/models/user.model"
+const UserModel = require("~/models/user.model");
+const asyncUtil = require('~/helpers/asyncUtil');
+const AppResponse = require('~/helpers/response');
 
-export const userById = async (req, res, next, id) => {
-    try {
-        const user = await userModel.findById(id).exec();
+
+module.exports = {
+    signin: asyncUtil(async (req, res) => {
+        const { email, password } = req.body;
+        const user = await (await UserModel.findOne({ email })).save();
         if (!user) {
-            return res.status(400).json({
-                message: 'không tìm thấy user!'
-            })
+            return AppResponse.fail(res, req);
         }
-        req.profile = user;
-        req.profile.password = undefined;
-        req.profile.salt = undefined;
+        if (!user.authenticate(password)) {
+            return AppResponse.fail(res, req);
+        }
+        const token = jwt.sign({ _id: user._id }, "datn_tw13", { expiresIn: 60 * 60 });
+        return AppResponse.success(token, user)
+    }),
 
-        next();
-
-    } catch (error) {
-        req.status(400).json({
-            message: error
-        })
-    }
+    signup: asyncUtil(asyncUtil(async (req, res) => {
+        const { email, name, password } = req.body;
+        try {
+            const existUser = await UserModel.findOne({ email }).exec();
+            if (existUser) {
+                return AppResponse.fail(req, res);
+            }
+            const user = await UserModel({ email, name, password }).save();
+            return AppResponse.success(req, res)(user);
+        } catch (error) {
+            return AppResponse.fail(req, res);
+        }
+    }))
 }
+

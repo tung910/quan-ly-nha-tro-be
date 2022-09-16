@@ -3,7 +3,7 @@ const userRouter = require('./user.router');
 
 function routes(app) {
     app.use('/api/motel-room', motelRoomRoute);
-    app.use('/api/users', userRouter)
+    app.use('/api', userRouter)
 }
 
 module.exports = routes;
