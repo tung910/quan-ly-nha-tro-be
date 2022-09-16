@@ -7,14 +7,11 @@ const MotelRoomSchema = new mongoose.Schema(
             require: true,
             minLength: 5,
         },
-        img: {
-            type: String,
-        },
         maximum_number_of_people: {
             type: Number,
             default: 1,
         },
-        albums: {
+        images: {
             type: Array,
         },
         description: {
@@ -35,9 +32,13 @@ const MotelRoomSchema = new mongoose.Schema(
         lease: {
             type: Array,
         },
-        motel_id: {
+        motelId: {
             type: mongoose.ObjectId,
             ref: 'Motel',
+        },
+        roomStatus: {
+            type: Number,
+            default: 0,
         },
     },
     { collection: 'MotelRoom', timestamps: true }
