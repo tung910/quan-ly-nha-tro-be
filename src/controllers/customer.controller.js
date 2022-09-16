@@ -4,12 +4,8 @@ const AppResponse = require('~/helpers/response');
 
 module.exports = {
     getAllCustomer: asyncUtil(async (req, res) => {
-        try {
-            const customer = await CustomerModel.find({});
-            return AppResponse.success(req, res)(customer);
-        } catch (error) {
-            return AppResponse.fail(req, res)(error);
-        }
+        const customer = await CustomerModel.find({});
+        return AppResponse.success(req, res)(customer);
     }),
     addCustomer: asyncUtil(async (req, res) => {
         const customer = await CustomerModel(req.body).save();
