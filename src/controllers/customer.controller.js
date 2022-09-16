@@ -20,14 +20,10 @@ module.exports = {
         return AppResponse.success(req, res)(customer);
     }),
     deleteCustomer: asyncUtil(async (req, res) => {
-        try {
-            const customer = await CustomerModel.findOneAndDelete({
-                _id: req.params.id,
-            }).exec();
-            return AppResponse.success(req, res)(customer);
-        } catch (error) {
-            return AppResponse.fail(req, res)({ message: 'Not Found' });
-        }
+        const customer = await CustomerModel.findOneAndDelete({
+            _id: req.params.id,
+        }).exec();
+        return AppResponse.success(req, res)(customer);
     }),
     detailCustomer: asyncUtil(async (req, res) => {
         const customer = await CustomerModel.findOne({
