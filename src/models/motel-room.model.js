@@ -32,11 +32,11 @@ const MotelRoomSchema = new mongoose.Schema(
         lease: {
             type: Array,
         },
-        motel_id: {
+        motelId: {
             type: mongoose.ObjectId,
             ref: 'Motel',
         },
-        room_status: {
+        roomStatus: {
             type: Number,
             default: 0,
         },
