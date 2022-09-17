@@ -1,59 +1,41 @@
-import motel from "../models/motel.model";
-import Motel from "../models/motel.model";
 
-export const create = async (req, res) => {
-    try {
-        const motel = await new Motel(req.body).save();
-        res.json(motel)
-    } catch (error) {
-        res.status(400).json({
-            error: "Khong them duoc nha tro"
-        })
-    }
-}
+const MotelModel = require('~/models/motel.model')
+const asyncUtil = require('~/helpers/asyncUtil')
+const AppResponse = require('~/helpers/response')
 
-export const list = async (req, res) => {
-    try {
-        const motel = await Motel.find({}).exec();
-        res.json(motel)
-    } catch (error) {
-        res.status(400).json({
-            error: "Khong co nha tro"
-        })
-    }
-}
+module.exports ={
+    getAllMotel: asyncUtil(async (req, res) =>{
+        const motel = await MotelModel.find({});
+        return AppResponse.success(req, res)(motel);
+    }),
+    createMotel: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+        const motel = await MotelModel.create(data);
+        return AppResponse.success(req, res)(motel);
+    }),
+    editMotel: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+        const motel = await MotelModel.findOneAndUpdate(
+            {
+                _id: req.params.id,
+            },
+            data,
+            { new: true }
+        ).exec();
+        return AppResponse.success(req, res)(motel);
+    }),
+    deleteMotel: asyncUtil(async (req, res) => {
+        const motel = await MotelModel.findOneAndDelete({
+            _id: req.params.id,
+        }).exec();
+        return AppResponse.success(req, res)(motel);
+    }),
+    detailMotel: asyncUtil(async (req, res) => {
+        const motel = await MotelModel.findOne({
+            _id: req.params.id,
+        }).exec();
+        return AppResponse.success(req, res)(motel);
+    }),
+};
 
-export const get = async (req, res) => {
-    try {
-        const model = await Motel.findOne({_id: req.params.id}).exec();
-        res.json(motel)
-    } catch (error) {
-        res.status(400).json({
-            error: "Khong co thong tin nha tro"
-        })
-    }
-}
 
-export const remove = async (req, res) => {
-    try {
-        const model = await Motel.findByIdAndRemove({_id: req.params.id}).exec();
-        res.json(model)
-    } catch (error) {
-        res.status(400).json({
-            error: "Khong xoa duoc nha tro"
-        })
-    }
-}
-
-export const update = async (req, res) => {
-    const condition = { id: req.params.id }
-    const update = req.body
-    try {
-        const model = await Motel.findOneAndUpdate(condition, update).exec();
-        res.json(model)
-    } catch (error) {
-        res.status(400).json({
-            error: "Khong sua duoc nha tro"
-        })
-    }
-}

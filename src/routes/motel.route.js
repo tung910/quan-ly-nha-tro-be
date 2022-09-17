@@ -1,19 +1,14 @@
 
 
-import { Router } from "express";
-import { create, get, list, remove, update } from "../controllers/motel.controller";
+const express = require('express');
+const router = express.Router();
 
-const router = Router();
+const motelController = require('~/controllers/motel.controller');
 
-router.get("/motels", list);
+router.get('/list', motelController.getAllMotel);
+router.post('/create', motelController.createMotel);
+router.put('/edit/:id', motelController.editMotel);
+router.delete('/:id', motelController.deleteMotel);
+router.get('/:id', motelController.detailMotel);
 
-router.post("/motel",create);
-
-router.get("/motels/:id", get);
-
-router.delete("/motel/:id", remove);
-
-router.put("/motel/:id", update);
-
-
-export default router;
+module.exports = router;

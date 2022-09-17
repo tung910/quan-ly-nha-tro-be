@@ -1,5 +1,5 @@
-import mongoose, { Schema } from "mongoose";
-const Motel = new Schema({
+const mongoose = require('mongoose');
+const MotelSchema = new mongoose.Schema({
     name: {
         type: String,
         minlength: 5,
@@ -19,4 +19,4 @@ const Motel = new Schema({
     
 }, { timestamps : true})
 
-export default mongoose.model("Motel", Motel);
+module.exports = mongoose.model('Motel', MotelSchema);
