@@ -1,5 +1,6 @@
 
 const MotelModel = require('~/models/motel.model')
+const MotelRoomModel = require('~/models/motel-room.model')
 const asyncUtil = require('~/helpers/asyncUtil')
 const AppResponse = require('~/helpers/response')
 
@@ -34,6 +35,10 @@ module.exports ={
         const motel = await MotelModel.findOne({
             _id: req.params.id,
         }).exec();
+        const Motelroom = await MotelRoomModel.find({motel}).exec()
+        res.json({
+            motel, Motelroom
+        })
         return AppResponse.success(req, res)(motel);
     }),
 };
