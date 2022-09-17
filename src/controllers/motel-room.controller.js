@@ -23,4 +23,10 @@ module.exports = {
         ).exec();
         return AppResponse.success(req, res)(motelRoom);
     }),
+    removeMotelRoom: asyncUtil(async (req, res) => {
+        const motelRoom = await MotelRoomModel.findByIdAndDelete({
+            _id: req.params.id,
+        }).exec();
+        return AppResponse.success(req, res)(motelRoom);
+    }),
 };
