@@ -10,8 +10,7 @@ module.exports ={
         return AppResponse.success(req, res)(motel);
     }),
     createMotel: asyncUtil(async (req, res) => {
-        const { data } = req.body;
-        const motel = await MotelModel.create(data);
+        const motel = await MotelModel(req.body).save();
         return AppResponse.success(req, res)(motel);
     }),
     editMotel: asyncUtil(async (req, res) => {
