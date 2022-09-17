@@ -2,12 +2,17 @@ const mongoose = require('mongoose');
 
 const MotelRoomSchema = new mongoose.Schema(
     {
-        name: {
+        roomName: {
             type: String,
             require: true,
-            minLength: 5,
+            minLength: 3,
         },
-        maximumNumberOfPeople: {
+        customerName: {
+            type: String,
+            require: true,
+            minLength: 3,
+        },
+        maxPerson: {
             type: Number,
             default: 1,
         },
@@ -32,13 +37,21 @@ const MotelRoomSchema = new mongoose.Schema(
         lease: {
             type: Array,
         },
-        motelId: {
+        motelID: {
             type: mongoose.ObjectId,
             ref: 'Motel',
         },
-        roomStatus: {
-            type: Number,
-            default: 0,
+        isDebit: {
+            type: Boolean,
+            default: false,
+        },
+        isRent: {
+            type: Boolean,
+            default: false,
+        },
+        customerID: {
+            type: mongoose.ObjectId,
+            ref: 'Customer',
         },
     },
     { collection: 'MotelRoom', timestamps: true }
