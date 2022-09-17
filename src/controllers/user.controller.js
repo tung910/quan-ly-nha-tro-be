@@ -4,7 +4,7 @@ const AppResponse = require('~/helpers/response');
 
 module.exports = {
     getAllUsers: asyncUtil(async (req, res) => {
-        const users = await UserModel.findAll();
-        return AppResponse.success(req,res)(users);
+        const users = await UserModel.find({});
+        return AppResponse.success(req, res)(users);
     }),
 };
