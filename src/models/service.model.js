@@ -1,0 +1,21 @@
+const mongoose = require('mongoose');
+
+const ServiceSchema = new mongoose.Schema(
+    {
+        isActive: {
+            type: Boolean,
+            default: true,
+        },
+        serviceName: {
+            type: String,
+            require: true,
+        },
+        unitPrice: {
+            type: Number,
+            require: true,
+        },
+    },
+    { collection: 'Service', timestamps: true }
+);
+
+module.exports = mongoose.model('Service', ServiceSchema);
