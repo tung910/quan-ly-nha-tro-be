@@ -1,4 +1,5 @@
 const motelRoomRoute = require('./motel-room.route');
+const motelRoute = require('./motel.route');
 const userRouter = require('./user.router');
 const customerRoute = require('./customer.route');
 const serviceRoute = require('./service.route');
