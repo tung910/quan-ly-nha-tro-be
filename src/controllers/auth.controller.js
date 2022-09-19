@@ -1,5 +1,6 @@
 const UserModel = require("~/models/user.model");
 const asyncUtil = require('~/helpers/asyncUtil');
+const jwt = require('jsonwebtoken');
 const AppResponse = require('~/helpers/response');
 
 
@@ -14,21 +15,18 @@ module.exports = {
             return AppResponse.fail(res, req);
         }
         const token = jwt.sign({ _id: user._id }, "datn_tw13", { expiresIn: 60 * 60 });
-        return AppResponse.success(req,res)(token, user)
+        return AppResponse.success(req, res)(token, user)
+        
     }),
 
-    signup: asyncUtil(asyncUtil(async (req, res) => {
+    signup: asyncUtil(async (req, res) => {
         const { email, name, password } = req.body;
-        try {
-            const existUser = await UserModel.findOne({ email }).exec();
-            if (existUser) {
-                return AppResponse.fail(req, res);
-            }
-            const user = await CustomerModel(req.body).save();
-            return AppResponse.success(req, res)(user);
-        } catch (error) {
+        const existUser = await UserModel.findOne({ email }).exec();
+        if (existUser) {
             return AppResponse.fail(req, res);
         }
-    }))
+        const user = await UserModel(req.body).save();
+        return AppResponse.success(req, res)(user);
+    })
 }
 
