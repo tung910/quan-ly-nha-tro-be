@@ -9,13 +9,18 @@ const MotelSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    img: {
-       type: String,
-       required: true
+    province: {
+        type: String,
+        required:true
     },
-    desc: {
-        type: String
+    district: {
+        type: String,
+        required: true
     },
+    commune:{
+        type: String,
+        required:true
+    }
     
 }, { timestamps : true})
 
