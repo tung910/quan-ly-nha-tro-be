@@ -20,24 +20,22 @@ const RoomRentalDetail = new mongoose.Schema({
         require: true
     },
     rentalStartDate: {
-        type: Date,
-        require: true
+        type: String,
     },
     deposit: { //tiền cọc
         type: Number,
-        require: true
     },
     payType: {
         type: String
     },
     member: {
-        type: [{}]
+        type: []
     },
     service: {
         type: []
     },
     duration: { // thời hạn
-        type: Date,
+        type: String,
     }
 }, { timestamps: true })
 
