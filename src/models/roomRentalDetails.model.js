@@ -6,18 +6,36 @@ const RoomRentalDetail = new mongoose.Schema({
         require: true,
         minlength: 5
     },
-    motelID: {
+    motelRoomID: {
         type: mongoose.ObjectId,
-        ref: 'Motel',
+        ref: 'MotelRoom',
     },
     userID: {
         type: mongoose.ObjectId,
         ref: 'User',
     },
+    ccnd: {
+        type: String,
+        require: true
+    },
     address: {
         type: String,
         require: true
     },
+    dateRange: { // ngày cấp
+        type: String,
+        require: true
+    },
+    issuedBy: { // Nơi cấp
+        type: String,
+    },
+    gender: {
+        type: Number,
+    },
+    birthPlace: { //nơi sinh
+        type: String
+    }
+    ,
     phoneNumber: {
         type: String,
         require: true
@@ -28,17 +46,28 @@ const RoomRentalDetail = new mongoose.Schema({
     deposit: { //tiền cọc
         type: Number,
     },
+    licensePlates: {
+        type: String,
+    },
     payType: {
         type: String
     },
+    payEachTime: { // số lần thanh toán
+        type: String,
+    },
     member: {
-        type: []
+        type: Array
     },
     service: {
-        type: []
+        type: Array
     },
-    duration: { // thời hạn
-        type: String,
+    priceRoom: {
+        type: Number,
+        require: true
+    },
+    startDay: {
+        type: Date,
+        require: true
     }
 }, { timestamps: true })
 

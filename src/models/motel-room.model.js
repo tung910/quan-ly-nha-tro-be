@@ -41,11 +41,11 @@ const MotelRoomSchema = new mongoose.Schema(
             type: mongoose.ObjectId,
             ref: 'Motel',
         },
-        isDebit: {
+        isDebit: { // tien nợ
             type: Boolean,
             default: false,
         },
-        isRent: {
+        isRent: { // tiền cọc
             type: Boolean,
             default: false,
         },
