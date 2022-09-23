@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
 
-
 const RoomRentalDetail = new mongoose.Schema({
     customerName: {
         type: String,
         require: true,
         minlength: 5
     },
-    idMotel: {
-        type: Number,
-        require: true
+    motelID: {
+        type: mongoose.ObjectId,
+        ref: 'Motel',
+    },
+    userID: {
+        type: mongoose.ObjectId,
+        ref: 'User',
     },
     address: {
         type: String,
