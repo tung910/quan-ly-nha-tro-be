@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const PowerSchema = new mongoose.Schema(
+const DataPowerSchema = new mongoose.Schema(
     {
         newValue: {
             type: Number,
@@ -34,7 +34,7 @@ const PowerSchema = new mongoose.Schema(
             ref: 'Motel',
         },
     },
-    { collection: 'Power', timestamps: true }
+    { collection: 'DataPower', timestamps: true }
 );
 
-module.exports = mongoose.model('Power', PowerSchema);
+module.exports = mongoose.model('DataPower', DataPowerSchema);
