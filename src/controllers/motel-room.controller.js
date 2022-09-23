@@ -35,4 +35,8 @@ module.exports = {
         }).exec();
         return AppResponse.success(req, res)(motelRoom);
     }),
+    getMotelRoom: asyncUtil(async (req, res) => {
+        const motelRoom = await MotelRoomModel.findById({ _id: req.params.id });
+        return AppResponse.success(req, res)(motelRoom);
+    }),
 };
