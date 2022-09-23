@@ -20,9 +20,9 @@ const Customer = new mongoose.Schema(
         },
         motelRoomId: {
             type: mongoose.ObjectId,
-            ref:"MotelRoom"
+            ref: 'MotelRoom',
         },
     },
-    {collection:"Customer", timestamps: true }
+    { collection: 'Customer', timestamps: true }
 );
-module.exports =   mongoose.model('Customer', Customer);
+module.exports = mongoose.model('Customer', Customer);

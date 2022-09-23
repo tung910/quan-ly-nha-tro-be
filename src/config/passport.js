@@ -9,9 +9,9 @@ passport.use(
             if (err) return done(err);
             if (!user) return done(null, false);
             user.comparePassword(passport, done);
-        })
+        });
     })
-)
+);
 
 const cookiesExtractor = (req) => {
     let token = null;
@@ -19,19 +19,22 @@ const cookiesExtractor = (req) => {
         token = req.cookies['access_token'];
     }
     return token;
-}
+};
 
 passport.use(
-    new JwtStratery({
-        jwtFromRequest: cookiesExtractor,
-        secretOrKey: "Van Vuong"
-    }, (payload, done) => {
-        UserModel.findById({ _id: payload.sub }, (err, user) => {
-            if(err)return done(err,false);
-            if(user) return done(null,user);
-            else{
-                return done(null,false)
-            }
-        })
-    })
-)
+    new JwtStratery(
+        {
+            jwtFromRequest: cookiesExtractor,
+            secretOrKey: 'Van Vuong',
+        },
+        (payload, done) => {
+            UserModel.findById({ _id: payload.sub }, (err, user) => {
+                if (err) return done(err, false);
+                if (user) return done(null, user);
+                else {
+                    return done(null, false);
+                }
+            });
+        }
+    )
+);

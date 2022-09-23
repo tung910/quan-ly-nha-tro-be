@@ -1,10 +1,9 @@
+const MotelModel = require('~/models/motel.model');
+const asyncUtil = require('~/helpers/asyncUtil');
+const AppResponse = require('~/helpers/response');
 
-const MotelModel = require('~/models/motel.model')
-const asyncUtil = require('~/helpers/asyncUtil')
-const AppResponse = require('~/helpers/response')
-
-module.exports ={
-    getAllMotel: asyncUtil(async (req, res) =>{
+module.exports = {
+    getAllMotel: asyncUtil(async (req, res) => {
         const motel = await MotelModel.find({});
         return AppResponse.success(req, res)(motel);
     }),
@@ -36,5 +35,3 @@ module.exports ={
         return AppResponse.success(req, res)(motel);
     }),
 };
-
-

@@ -8,7 +8,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start:dev": "nodemon --inspect src/app.js",
         "start": "node src/app.js",
-        "beautiful": "lint-staged"
+        "beautiful": "lint-staged",
+        "format": "prettier --single-quote --trailing-comma es5 --tab-width 4 --write ."
     },
     "husky": {
         "hooks": {
@@ -16,7 +17,7 @@
         }
     },
     "lint-staged": {
-        "src/**/*.{js,json}": "prettier --single-quote --trailing-comma all --tab-width 4 --write"
+        "src/**/*.{js,json}": "prettier --single-quote --trailing-comma all --tab-width 4 --write ."
     },
     "keywords": [],
     "author": "",
