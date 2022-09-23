@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const createHmac = require('crypto');
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcrypt')
+
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -34,25 +35,23 @@ const UserSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-
 UserSchema.pre('save', function (next) {
-    this.salt = uuidv4();
-    this.password = this.encryptPassword(this.password);
-    next();
-});
+    if (!this.isModified("password")) return next();
+    bcrypt.hash(this.password, 10, (err, passwordHash) => {
+        if (err) return next();
+        this.password = passwordHash;
+        next();
+    })
+})
 
-UserSchema.methods = {
-    authenticate(password) {
-        return this.password === this.encryptPassword(password);
-    },
-    encryptPassword(password) {
-        if (!password) return;
-        try {
-            return createHmac('sha256', this.salt).update(password).digest('hex');
-        } catch (error) {
-            console.log(error);
+UserSchema.method.comparePassword = function (password, cb) {
+    bcrypt.compare(password, this.password, (err, isMatch) => {
+        if (err) return cb(err);
+        else{
+            if(!isMatch) return cb(null,isMatch);
+            return cb(null,this)
         }
-    }
+    })
 }
 
 module.exports = mongoose.model('User', UserSchema);
