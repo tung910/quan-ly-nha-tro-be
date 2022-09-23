@@ -4,6 +4,7 @@ const userRouter = require('./user.router');
 const customerRoute = require('./customer.route');
 const serviceRoute = require('./service.route');
 const roomRentalDetailRouter = require('./roomRentalDetail.router');
+const powerRoute = require('./data-power.route');
 
 function routes(app) {
     app.use('/api', userRouter);
@@ -12,6 +13,7 @@ function routes(app) {
     app.use('/api/customer', customerRoute);
     app.use('/api/service', serviceRoute);
     app.use('/api/roomRentalDetail', roomRentalDetailRouter);
+    app.use('/api/data-power',powerRoute)
 }
 
 module.exports = routes;
