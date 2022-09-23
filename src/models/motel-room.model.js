@@ -9,8 +9,7 @@ const MotelRoomSchema = new mongoose.Schema(
         },
         customerName: {
             type: String,
-            require: true,
-            minLength: 3,
+            default: '',
         },
         maxPerson: {
             type: Number,
@@ -41,11 +40,13 @@ const MotelRoomSchema = new mongoose.Schema(
             type: mongoose.ObjectId,
             ref: 'Motel',
         },
-        isDebit: { // tien nợ
+        isDebit: {
+            // tien nợ
             type: Boolean,
             default: false,
         },
-        isRent: { // tiền cọc
+        isRent: {
+            // tiền cọc
             type: Boolean,
             default: false,
         },

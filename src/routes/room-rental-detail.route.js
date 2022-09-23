@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const roomRentalDetailController = require('~/controllers/roomRentalDetail.controller');
+const roomRentalDetailController = require('~/controllers/room-rental-detail.controller');
 
 router.get('/list', roomRentalDetailController.getAllRoomRentalDetail);
 router.get('/:id', roomRentalDetailController.getRoomRentalDetail);
