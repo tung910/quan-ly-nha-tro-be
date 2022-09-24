@@ -5,12 +5,17 @@ const AppResponse = require('~/helpers/response');
 module.exports = {
     createWater: asyncUtil(async (req, res) => {
         const { data } = req.body;
-        const water = await WaterModel.create(data);
+        const water = await WaterModel(data).save();
         return AppResponse.success(req, res)(water);
     }),
+    
     updateWater: asyncUtil(async (req, res) => {
         const { data } = req.body;
-        const water = await WaterModel.create(data);
+        const water = await WaterModel.findOneAndUpdate(
+            { _id: req.params.id },
+            data,
+            { new: true }
+        );
         return AppResponse.success(req, res)(water);
     }),
     listWater: asyncUtil(async (req, res) => {
