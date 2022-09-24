@@ -22,6 +22,10 @@ const ServiceSchema = new mongoose.Schema(
             type: String,
             require: true,
         },
+        note: {
+            type: String,
+            default: '',
+        },
     },
     { collection: 'Service', timestamps: true }
 );
