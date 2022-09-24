@@ -23,10 +23,20 @@ module.exports = {
         ).exec();
         return AppResponse.success(req, res)(service);
     }),
-    removeService: asyncUtil(async (req, res) => {
-        const service = await ServiceModel.findByIdAndDelete({
+    getService: asyncUtil(async (req, res) => {
+        const service = await ServiceModel.findById({
             _id: req.params.id,
         }).exec();
         return AppResponse.success(req, res)(service);
+    }),
+    removeService: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+        const service = data.map(async (item) => {
+            return await ServiceModel.findByIdAndDelete({
+                _id: item,
+            }).exec();
+        });
+        const response = await Promise.all(service);
+        return AppResponse.success(req, res)(response, 'Delete successfully');
     }),
 };
