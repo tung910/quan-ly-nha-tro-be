@@ -9,4 +9,9 @@ router.post('/create', motelRoomController.createMotelRoom);
 router.put('/edit/:id', motelRoomController.editMotelRoom);
 router.delete('/delete/:id', motelRoomController.removeMotelRoom);
 
+router.get(
+    '/statistical/room-status',
+    motelRoomController.statisticalRoomStatus
+);
+
 module.exports = router;
