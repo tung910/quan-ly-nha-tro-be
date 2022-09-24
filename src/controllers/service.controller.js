@@ -23,6 +23,12 @@ module.exports = {
         ).exec();
         return AppResponse.success(req, res)(service);
     }),
+    getService: asyncUtil(async (req, res) => {
+        const service = await ServiceModel.findById({
+            _id: req.params.id,
+        }).exec();
+        return AppResponse.success(req, res)(service);
+    }),
     removeService: asyncUtil(async (req, res) => {
         const { data } = req.body;
         const service = data.map(async (item) => {
