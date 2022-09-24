@@ -1,4 +1,4 @@
-const UserModel = require("~/models/user.model");
+const UserModel = require('~/models/user.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 
