@@ -4,7 +4,7 @@ const router = express.Router();
 const customerController = require('~/controllers/customer.controller');
 
 router.get('/list', customerController.getAllCustomer);
-router.post('/add', customerController.addCustomer);
+router.post('/create', customerController.addCustomer);
 router.put('/edit/:id', customerController.editCustomer);
 router.delete('/:id', customerController.deleteCustomer);
 router.get('/:id', customerController.detailCustomer);
