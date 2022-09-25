@@ -3,6 +3,9 @@ const asyncUtil = require('~/helpers/asyncUtil');
 const jwt = require('jsonwebtoken');
 const AppResponse = require('~/helpers/response');
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
+const { log } = require("console");
+const saltRounds = 10;
 
 module.exports = {
     signin: asyncUtil(async (req, res) => {
@@ -11,26 +14,34 @@ module.exports = {
         if (!user) {
             console.log('tài khoản k tồn tại!');
             const msg = 'tài khoản không tồn tại!';
-            AppResponse.fail(req,res)(msg);
-            return;
-        }
-        if (user.password !== password) {
-            console.log('mật khẩu không chính xác!');
-            const msg = 'mật khẩu không chính xác!';
             AppResponse.fail(req, res)(msg);
             return;
         }
 
-        const token = jwt.sign({ _id: user._id }, "datn_tw13", { expiresIn: 60 * 60 });
-        return AppResponse.success(req, res)('token', token)('user', user);
+        console.log('hash pasword:', user.password);
+        bcrypt.compare(password, user.password, (err, result) => {
+            if (err) {
+                console.log('not ok', err);
+                AppResponse.fail(req, res)(msg);
+                return;
+            } else {
+                console.log('ok', result);
+                const token = jwt.sign({ _id: user._id }, "datn_tw13", { expiresIn: 60 * 60 });
+                const data = {
+                    token,
+                    user
+                }
+                return AppResponse.success(req, res)(data);
+            }
+        })
     }),
 
 
     signup: asyncUtil(async (req, res) => {
-        const { email, name, password } = req.body;
+        const { email, name, cccd, password, address, phoneNumber } = req.body;
         const existUser = await UserModel.findOne({ email }).exec();
         if (existUser) {
-            console.log('tài khoản tồn tại!');
+            console.log('tài khoản đã tồn tại!');
             return AppResponse.fail(req, res);
         }
 
@@ -56,8 +67,17 @@ module.exports = {
             })
         });
 
-        const user = await UserModel(req.body).save();
-        return AppResponse.success(req, res)(user);
+        bcrypt.genSalt(saltRounds, (err, salt) => {
+            bcrypt.hash(password, salt, async (err, hash) => {
+                encryptedPassword = hash;
+                console.log('hash:', hash);
+                const user = {
+                    ...req.body, password: encryptedPassword
+                }
+                await UserModel(user).save();
+                return AppResponse.success(req, res)(user);
+            });
+        })
     })
 }
 

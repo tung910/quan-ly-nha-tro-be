@@ -24,7 +24,6 @@
     "dependencies": {
         "@types/node": "^18.7.19",
         "bcrypt": "^5.0.1",
-        "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
         "create-hmac": "^1.1.7",
         "crypto": "^1.0.1",
