@@ -13,21 +13,13 @@ const DataPowerSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-        month: {
-            type: Date,
+        customerName: {
+            type: String,
             required: true,
         },
-        year: {
-            type: Date,
+        roomName: {
+            type: String,
             required: true,
-        },
-        customerId: {
-            type: mongoose.ObjectId,
-            ref: 'Customer',
-        },
-        motelRoomId: {
-            type: mongoose.ObjectId,
-            ref: 'MotelRoom',
         },
         motelId: {
             type: mongoose.ObjectId,
