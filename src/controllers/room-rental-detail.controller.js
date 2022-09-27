@@ -8,14 +8,15 @@ module.exports = {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
+        const roomRentalDetail = await RoomRentalDetail(CustomerInfo).save();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
             {
                 isRent: true,
                 customerName: CustomerInfo.customerName,
+                roomRentID: roomRentalDetail._id,
             }
         ).exec();
-        const roomRentalDetail = await RoomRentalDetail(CustomerInfo).save();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
