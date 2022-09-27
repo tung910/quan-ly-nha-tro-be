@@ -39,4 +39,21 @@ module.exports = {
         const motelRoom = await MotelRoomModel.findById({ _id: req.params.id });
         return AppResponse.success(req, res)(motelRoom);
     }),
+    statisticalRoomStatus: asyncUtil(async (req, res) => {
+        const areRenting = [];
+        const emptyRooms = [];
+        const rooms = await MotelRoomModel.find({});
+        rooms.forEach((room) => {
+            if (room.isRent) {
+                areRenting.push(room);
+            } else {
+                emptyRooms.push(room);
+            }
+        });
+        const response = [
+            { statusName: 'Đang thuê', areRenting },
+            { statusName: 'Phòng trống', emptyRooms },
+        ];
+        return AppResponse.success(req, res)(response);
+    }),
 };

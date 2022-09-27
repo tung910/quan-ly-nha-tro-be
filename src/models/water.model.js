@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const DataPowerSchema = new mongoose.Schema(
+const WaterSchema = new mongoose.Schema(
     {
         newValue: {
             type: Number,
@@ -13,20 +13,28 @@ const DataPowerSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
-        customerName: {
-            type: String,
+        month: {
+            type: Date,
             required: true,
         },
-        roomName: {
-            type: String,
+        year: {
+            type: Date,
             required: true,
+        },
+        customerId: {
+            type: mongoose.ObjectId,
+            ref: 'Customer',
+        },
+        motelRoomId: {
+            type: mongoose.ObjectId,
+            ref: 'MotelRoom',
         },
         motelId: {
             type: mongoose.ObjectId,
             ref: 'Motel',
         },
     },
-    { collection: 'DataPower', timestamps: true }
+    { collection: 'Water', timestamps: true }
 );
 
-module.exports = mongoose.model('DataPower', DataPowerSchema);
+module.exports = mongoose.model('Water', WaterSchema);

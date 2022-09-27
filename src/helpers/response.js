@@ -1,7 +1,7 @@
 module.exports = {
     success(req, res) {
-        return (data) => {
-            const finalMessage = 'Successfully';
+        return (data, message) => {
+            const finalMessage = message || 'Successfully';
             const finalData = data || null;
             res.status(200).json({
                 status_code: 200,
