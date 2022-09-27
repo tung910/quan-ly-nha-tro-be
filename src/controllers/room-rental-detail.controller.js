@@ -2,12 +2,18 @@ const RoomRentalDetail = require('~/models/room-rental-detail.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const MotelRoomModel = require('~/models/motel-room.model');
+const DataPowerModel = require('~/models/data-power.model');
+const DataWaterModel = require('~/models/water.model');
 
 module.exports = {
     createRoomRentalDetail: asyncUtil(async (req, res) => {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
+        console.log("data: ", CustomerInfo, Member, Service, Contract);
+        // return;
+        await DataPowerModel.create(CustomerInfo);
+        await DataWaterModel.create(CustomerInfo);
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
             {

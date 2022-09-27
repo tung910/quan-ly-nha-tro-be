@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const AppResponse = require('~/helpers/response');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const { log } = require("console");
 const saltRounds = 10;
 
 module.exports = {
@@ -81,3 +80,5 @@ module.exports = {
     })
 }
 
+// đăng nhập nó sẽ 1 mã otp khoảng 6 số và set thời gian cho nó là 1 phút
+// đăng nhập xong sẽ hiện ra thêm 1 cái input để nhập mã otp nếu đúng thí success
