@@ -54,6 +54,10 @@ const MotelRoomSchema = new mongoose.Schema(
             type: mongoose.ObjectId,
             ref: 'Customer',
         },
+        roomRentID: {
+            type: mongoose.ObjectId,
+            ref: 'RoomRentalDetail',
+        },
     },
     { collection: 'MotelRoom', timestamps: true }
 );
