@@ -3,23 +3,23 @@ const DataPowerSchema = new mongoose.Schema(
     {
         newValue: {
             type: Number,
-            required: true,
+            default: 0,
         },
         oldValue: {
             type: Number,
-            required: true,
+            default: 0,
         },
         useValue: {
             type: Number,
-            required: true,
+            default: 0,
         },
         customerName: {
             type: String,
-            required: true,
+            default: '',
         },
         roomName: {
             type: String,
-            required: true,
+            default: '',
         },
         motelId: {
             type: mongoose.ObjectId,
