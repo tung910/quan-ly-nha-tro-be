@@ -19,9 +19,9 @@ module.exports = {
             {
                 isRent: true,
                 customerName: CustomerInfo.customerName,
+                roomRentID: roomRentalDetail._id,
             }
         ).exec();
-        const roomRentalDetail = await RoomRentalDetail(CustomerInfo).save();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
