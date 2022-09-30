@@ -11,12 +11,10 @@ module.exports = {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
         const roomRentalDetail = await RoomRentalDetail(CustomerInfo).save();
-        console.log('customer', CustomerInfo.motelRoomID);
         const test = await DataPowerModel.findOneAndUpdate(
             { roomName: CustomerInfo.roomName },
             { customerName: CustomerInfo.customerName }
         ).exec();
-        console.log("test",test)
         await DataWaterModel.findOneAndUpdate(
             CustomerInfo.roomName,
             { customerName: CustomerInfo.customerName }

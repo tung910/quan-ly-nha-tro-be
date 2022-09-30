@@ -17,8 +17,7 @@ module.exports = {
     }),
     createMotelRoom: asyncUtil(async (req, res) => {
         const { data } = req.body;
-        const crea = await DataPowerModel.create(data);
-        console.log("crate",crea)
+        await DataPowerModel.create(data);
         await DataWaterModel.create(data);
         const motelRoom = await MotelRoomModel.create(data);
         return AppResponse.success(req, res)(motelRoom);
