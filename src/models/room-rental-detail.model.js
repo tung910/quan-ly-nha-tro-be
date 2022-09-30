@@ -7,6 +7,10 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             require: true,
             minlength: 5,
         },
+        roomName: {
+            type: String,
+            default: '',
+        },
         motelRoomID: {
             type: mongoose.ObjectId,
             ref: 'MotelRoom',

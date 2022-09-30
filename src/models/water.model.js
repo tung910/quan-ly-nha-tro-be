@@ -21,7 +21,7 @@ const WaterSchema = new mongoose.Schema(
             type: String,
             default: '',
         },
-        motelId: {
+        motelID: {
             type: mongoose.ObjectId,
             ref: 'Motel',
         },
