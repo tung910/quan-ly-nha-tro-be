@@ -10,10 +10,17 @@ module.exports = {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
-        console.log("data: ", CustomerInfo, Member, Service, Contract);
-        // return;
-        await DataPowerModel.create(CustomerInfo);
-        await DataWaterModel.create(CustomerInfo);
+        const roomRentalDetail = await RoomRentalDetail(CustomerInfo).save();
+        console.log('customer', CustomerInfo.motelRoomID);
+        const test = await DataPowerModel.findOneAndUpdate(
+            { roomName: CustomerInfo.roomName },
+            { customerName: CustomerInfo.customerName }
+        ).exec();
+        console.log("test",test)
+        await DataWaterModel.findOneAndUpdate(
+            CustomerInfo.roomName,
+            { customerName: CustomerInfo.customerName }
+        ).exec();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
             {

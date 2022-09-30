@@ -20,7 +20,7 @@ module.exports = {
     }),
     listWater: asyncUtil(async (req, res) => {
         const water = await WaterModel.find({})
-            .populate({ path: 'motelId', select: 'name' });
+            .populate({ path: 'motelID', select: 'name' });
             
 
         return AppResponse.success(req, res)(water);
