@@ -11,7 +11,7 @@ module.exports = {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
         const roomRentalDetail = await RoomRentalDetail(CustomerInfo).save();
-        const test = await DataPowerModel.findOneAndUpdate(
+        await DataPowerModel.findOneAndUpdate(
             { roomName: CustomerInfo.roomName },
             { customerName: CustomerInfo.customerName }
         ).exec();
