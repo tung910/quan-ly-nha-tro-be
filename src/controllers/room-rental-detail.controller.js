@@ -10,15 +10,18 @@ module.exports = {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
-        const roomRentalDetail = await RoomRentalDetail(CustomerInfo).save();
+        const roomRentalDetail = await RoomRentalDetail({
+            ...CustomerInfo,
+            service: Service,
+            member: Member,
+        }).save();
         await DataPowerModel.findOneAndUpdate(
             { roomName: CustomerInfo.roomName },
             { customerName: CustomerInfo.customerName }
         ).exec();
-        await DataWaterModel.findOneAndUpdate(
-            CustomerInfo.roomName,
-            { customerName: CustomerInfo.customerName }
-        ).exec();
+        await DataWaterModel.findOneAndUpdate(CustomerInfo.roomName, {
+            customerName: CustomerInfo.customerName,
+        }).exec();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
             {
@@ -53,6 +56,13 @@ module.exports = {
             },
             data,
             { new: true }
+        ).exec();
+        await MotelRoomModel.findByIdAndUpdate(
+            { _id: data.motelRoomID },
+            {
+                isRent: true,
+                customerName: data.customerName,
+            }
         ).exec();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
