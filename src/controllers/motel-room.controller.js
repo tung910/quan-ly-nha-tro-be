@@ -1,4 +1,6 @@
 const MotelRoomModel = require('~/models/motel-room.model');
+const DataPowerModel = require('~/models/data-power.model');
+const DataWaterModel = require('~/models/water.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 
@@ -15,6 +17,8 @@ module.exports = {
     }),
     createMotelRoom: asyncUtil(async (req, res) => {
         const { data } = req.body;
+        await DataPowerModel.create(data);
+        await DataWaterModel.create(data);
         const motelRoom = await MotelRoomModel.create(data);
         return AppResponse.success(req, res)(motelRoom);
     }),
@@ -38,5 +42,22 @@ module.exports = {
     getMotelRoom: asyncUtil(async (req, res) => {
         const motelRoom = await MotelRoomModel.findById({ _id: req.params.id });
         return AppResponse.success(req, res)(motelRoom);
+    }),
+    statisticalRoomStatus: asyncUtil(async (req, res) => {
+        const areRenting = [];
+        const emptyRooms = [];
+        const rooms = await MotelRoomModel.find({});
+        rooms.forEach((room) => {
+            if (room.isRent) {
+                areRenting.push(room);
+            } else {
+                emptyRooms.push(room);
+            }
+        });
+        const response = [
+            { statusName: 'Đang thuê', areRenting },
+            { statusName: 'Phòng trống', emptyRooms },
+        ];
+        return AppResponse.success(req, res)(response);
     }),
 };

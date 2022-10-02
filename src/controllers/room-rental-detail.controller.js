@@ -2,20 +2,34 @@ const RoomRentalDetail = require('~/models/room-rental-detail.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const MotelRoomModel = require('~/models/motel-room.model');
+const DataPowerModel = require('~/models/data-power.model');
+const DataWaterModel = require('~/models/water.model');
 
 module.exports = {
     createRoomRentalDetail: asyncUtil(async (req, res) => {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
+        const roomRentalDetail = await RoomRentalDetail({
+            ...CustomerInfo,
+            service: Service,
+            member: Member,
+        }).save();
+        await DataPowerModel.findOneAndUpdate(
+            { roomName: CustomerInfo.roomName },
+            { customerName: CustomerInfo.customerName }
+        ).exec();
+        await DataWaterModel.findOneAndUpdate(CustomerInfo.roomName, {
+            customerName: CustomerInfo.customerName,
+        }).exec();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
             {
                 isRent: true,
                 customerName: CustomerInfo.customerName,
+                roomRentID: roomRentalDetail._id,
             }
         ).exec();
-        const roomRentalDetail = await RoomRentalDetail(CustomerInfo).save();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -42,6 +56,13 @@ module.exports = {
             },
             data,
             { new: true }
+        ).exec();
+        await MotelRoomModel.findByIdAndUpdate(
+            { _id: data.motelRoomID },
+            {
+                isRent: true,
+                customerName: data.customerName,
+            }
         ).exec();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),

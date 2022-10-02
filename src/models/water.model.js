@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const DataPowerSchema = new mongoose.Schema(
+const WaterSchema = new mongoose.Schema(
     {
         newValue: {
             type: Number,
@@ -26,7 +26,7 @@ const DataPowerSchema = new mongoose.Schema(
             ref: 'Motel',
         },
     },
-    { collection: 'DataPower', timestamps: true }
+    { collection: 'Water', timestamps: true }
 );
 
-module.exports = mongoose.model('DataPower', DataPowerSchema);
+module.exports = mongoose.model('Water', WaterSchema);
