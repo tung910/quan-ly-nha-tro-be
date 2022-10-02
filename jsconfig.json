@@ -6,7 +6,8 @@
             "~/models/*": ["./src/models/*"],
             "~/controllers/*": ["./src/controllers/*"],
             "~/middleware/*": ["./src/middleware/*"],
-            "~/helpers/*": ["./src/helpers/*"]
+            "~/helpers/*": ["./src/helpers/*"],
+            "~/services/*": ["./src/services/*"]
         }
     },
     "include": ["src/**/*"]
