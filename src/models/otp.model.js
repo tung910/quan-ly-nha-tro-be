@@ -11,7 +11,7 @@ const OtpSchema = new Schema(
         time: {
             type: Date,
             default: Date.now,
-            index: { expires: 30 }, //60s
+            index: { expires: 60 }, //60s
         },
     },
     {
