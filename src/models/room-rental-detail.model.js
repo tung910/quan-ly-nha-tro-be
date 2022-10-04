@@ -67,10 +67,10 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             // số lần thanh toán
             type: String,
         },
-        member: {
+        Member: {
             type: Array,
         },
-        service: {
+        Service: {
             type: Array,
         },
         priceRoom: {
