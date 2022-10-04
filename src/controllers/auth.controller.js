@@ -40,8 +40,9 @@ module.exports = {
         const { email, name, cccd, password, address, phoneNumber } = req.body;
         const existUser = await UserModel.findOne({ email }).exec();
         if (existUser) {
+            const msg = 'tài khoản đã tồn tại!';
             console.log('tài khoản đã tồn tại!');
-            return AppResponse.fail(req, res);
+            return AppResponse.fail(req, res)(msg);
         }
 
         let transporter = nodemailer.createTransport({
@@ -52,10 +53,10 @@ module.exports = {
             },
         });
         await transporter.sendMail({
-            from: 'vuonglvph15121@fpt.edu.vn',
+            from: 'TRỌ VƯƠNG ANH',
             to: `${email}`,
             subject: "TRỌ VƯƠNG ANH XIN CHÀO THÀNH VIÊN MỚI!",
-            html: `<p>Trọ Vương Anh xin cảm ơn bạn ${name} đã lựa chọn dịch vụ của chúng tôi! 
+            html: `<p>Trọ Vương Anh xin cảm ơn bạn <b>${name}</b> đã lựa chọn dịch vụ của chúng tôi! 
                     Mọi thắc mắc xin liên hệ qua số điện thoại : <b>033333333</b> </p><br><b>Trân trọng!</b>`,
         }, (error) => {
             if (error) {
