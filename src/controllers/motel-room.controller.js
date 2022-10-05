@@ -1,4 +1,6 @@
 const MotelRoomModel = require('~/models/motel-room.model');
+const DataPowerModel = require('~/models/data-power.model');
+const DataWaterModel = require('~/models/water.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 
@@ -15,6 +17,8 @@ module.exports = {
     }),
     createMotelRoom: asyncUtil(async (req, res) => {
         const { data } = req.body;
+        await DataPowerModel.create(data);
+        await DataWaterModel.create(data);
         const motelRoom = await MotelRoomModel.create(data);
         return AppResponse.success(req, res)(motelRoom);
     }),

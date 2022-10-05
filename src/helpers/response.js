@@ -13,8 +13,8 @@ module.exports = {
         };
     },
     fail(req, res) {
-        return (data) => {
-            const finalMessage = 'Fail';
+        return (data, message) => {
+            const finalMessage = message || 'Fail';
             const finalData = data || null;
             res.status(500).json({
                 status_code: 500,

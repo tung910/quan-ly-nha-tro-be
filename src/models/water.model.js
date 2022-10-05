@@ -3,33 +3,25 @@ const WaterSchema = new mongoose.Schema(
     {
         newValue: {
             type: Number,
-            required: true,
+            default: 0,
         },
         oldValue: {
             type: Number,
-            required: true,
+            default: 0,
         },
         useValue: {
             type: Number,
-            required: true,
+            default: 0,
         },
-        month: {
-            type: Date,
-            required: true,
+        customerName: {
+            type: String,
+            default: '',
         },
-        year: {
-            type: Date,
-            required: true,
+        roomName: {
+            type: String,
+            default: '',
         },
-        customerId: {
-            type: mongoose.ObjectId,
-            ref: 'Customer',
-        },
-        motelRoomId: {
-            type: mongoose.ObjectId,
-            ref: 'MotelRoom',
-        },
-        motelId: {
+        motelID: {
             type: mongoose.ObjectId,
             ref: 'Motel',
         },

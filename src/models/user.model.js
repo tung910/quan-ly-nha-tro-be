@@ -1,36 +1,42 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-const UserSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        minLength: 5
+const UserSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            minLength: 5,
+        },
+        email: {
+            type: String,
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        citizenIdentificationNumber: {
+            type: Number,
+        },
+        address: {
+            type: String,
+        },
+        phone: {
+            type: Number,
+        },
+        role: {
+            type: Number,
+            default: 1,
+        },
     },
-    email: {
-        type: String,
-        unique: true
+    { timestamps: true }
+);
+
+UserSchema.methods = {
+    async authenticate(password) {
+        const isValid = await bcrypt.compare(password, this.password);
+        return isValid;
     },
-    password: {
-        type: String,
-        required: true
-    },
-    cccd: {
-        type: String,
-        required: true
-    },
-    address: {
-        type: String,
-        required: true,
-    },
-    phoneNumber: {
-        type: String,
-        required: true
-    }, role: {
-        type: Number,
-        default: 1
-    }
-}, { collection: "User", timestamps: true });
+};
 
 module.exports = mongoose.model('User', UserSchema);
-
-

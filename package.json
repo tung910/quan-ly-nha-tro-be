@@ -3,12 +3,11 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
-    "messagebird": "^2.1.4",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
         "start:dev": "nodemon --inspect src/app.js",
         "start": "node src/app.js",
-        "beautiful": "lint-staged"
+        "beautiful": "lint-staged",
+        "format": "prettier --single-quote --trailing-comma es5 --tab-width 4 --write ."
     },
     "husky": {
         "hooks": {
@@ -16,30 +15,22 @@
         }
     },
     "lint-staged": {
-        "src/**/*.{js,json}": "prettier --single-quote --trailing-comma all --tab-width 4 --write"
+        "src/**/*.{js,json}": "prettier --single-quote --trailing-comma all --tab-width 4 --write ."
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@types/node": "^18.7.19",
         "bcrypt": "^5.0.1",
         "cors": "^2.8.5",
-        "create-hmac": "^1.1.7",
-        "crypto": "^1.0.1",
-        "crypto-js": "^4.1.1",
         "dotenv": "^16.0.1",
         "express": "^4.18.1",
         "express-jwt": "^7.7.5",
         "jsonwebtoken": "^8.5.1",
-        "messagebird": "^3.8.1",
         "module-alias": "^2.2.2",
         "mongoose": "^6.5.3",
         "nodemailer": "^6.7.8",
-        "passport": "^0.6.0",
-        "passport-jwt": "^4.0.0",
-        "passport-local": "^1.0.0",
-        "uuid": "^9.0.0",
+        "otp-generator": "^4.0.0",
         "winston": "^3.8.1"
     },
     "devDependencies": {
@@ -56,6 +47,7 @@
         "~/models": "src/models",
         "~/controllers": "src/controllers",
         "~/middleware": "src/middleware",
-        "~/helpers": "src/helpers"
+        "~/helpers": "src/helpers",
+        "~/services": "src/services"
     }
 }

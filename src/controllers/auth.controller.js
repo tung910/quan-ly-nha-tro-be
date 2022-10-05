@@ -1,86 +1,85 @@
-const UserModel = require("~/models/user.model");
-const asyncUtil = require('~/helpers/asyncUtil');
-const jwt = require('jsonwebtoken');
-const AppResponse = require('~/helpers/response');
+const OtpGenerator = require('otp-generator');
 const nodemailer = require('nodemailer');
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+const jwt = require('jsonwebtoken');
+
+const UserModel = require('~/models/user.model');
+const AppResponse = require('~/helpers/response');
+const asyncUtil = require('~/helpers/asyncUtil');
+const { insertOtp } = require('~/services/otp.service');
+const { verifyOtp } = require('~/services/user.service');
 
 module.exports = {
     signin: asyncUtil(async (req, res) => {
         const { email, password } = req.body;
         const user = await UserModel.findOne({ email }).exec();
         if (!user) {
-            console.log('tài khoản k tồn tại!');
-            const msg = 'tài khoản không tồn tại!';
-            AppResponse.fail(req, res)(msg);
-            return;
+            return AppResponse.fail(req, res)(null, 'Tài khoản không tồn tại');
+        }
+        const isLogin = await user.authenticate(password);
+        if (!isLogin) {
+            return AppResponse.fail(req, res)(null, 'Password is not correct');
         }
 
-        console.log('hash pasword:', user.password);
-        bcrypt.compare(password, user.password, (err, result) => {
-            if (err) {
-                console.log('not ok');
-                const msg = "mật khẩu không chính xác!";
-                AppResponse.fail(req, res)(msg);
-                return;
-            } else {
-                console.log('ok');
-                const token = jwt.sign({ _id: user._id }, "datn_tw13", { expiresIn: 60 * 60 });
-                const data = {
-                    token,
-                    user
-                }
-                return AppResponse.success(req, res)(data);
-            }
-        })
+        const token = jwt.sign({ _id: user._id }, 'datn_tw13', {
+            expiresIn: 60 * 60,
+        });
+        const options = {
+            maxAge: 24 * 60 * 60, // Expires after 1 day
+            secure: true,
+            httpOnly: true,
+            sameSite: 'none',
+        };
+        res.cookie('token', token, options);
+        return AppResponse.success(req, res)({ token, user });
     }),
-
-
+    logout: asyncUtil(async (req, res) => {
+        res.clearCookie('token');
+        return AppResponse.success(req, res)('', 'Log out successfully');
+    }),
     signup: asyncUtil(async (req, res) => {
-        const { email, name, cccd, password, address, phoneNumber } = req.body;
+        const { email, password, name, phone } = req.body;
         const existUser = await UserModel.findOne({ email }).exec();
         if (existUser) {
-            const msg = 'tài khoản đã tồn tại!';
-            console.log('tài khoản đã tồn tại!');
-            return AppResponse.fail(req, res)(msg);
+            return AppResponse.fail(req, res)('', 'Email already exists');
         }
-
+        const OTP = OtpGenerator.generate(6, {
+            digits: true,
+            lowerCaseAlphabets: false,
+            specialChars: false,
+            upperCaseAlphabets: false,
+        });
         let transporter = nodemailer.createTransport({
-            service: "gmail",
+            service: 'gmail',
             auth: {
-                user: "vuonglvph15121@fpt.edu.vn",
-                pass: "eivechqvbvxvpzkn",
+                user: process.env.EMAIL_APP,
+                pass: process.env.PASS_APP,
             },
         });
-        await transporter.sendMail({
-            from: 'TRỌ VƯƠNG ANH',
-            to: `${email}`,
-            subject: "TRỌ VƯƠNG ANH XIN CHÀO THÀNH VIÊN MỚI!",
-            html: `<p>Trọ Vương Anh xin cảm ơn bạn <b>${name}</b> đã lựa chọn dịch vụ của chúng tôi! 
-                    Mọi thắc mắc xin liên hệ qua số điện thoại : <b>033333333</b> </p><br><b>Trân trọng!</b>`,
-        }, (error) => {
-            if (error) {
-                return AppResponse.fail(error, res);
+        await transporter.sendMail(
+            {
+                from: process.env.EMAIL_APP,
+                to: `${email}`,
+                subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
+                html: `<p>Trọ Vương Anh xin cảm ơn bạn ${name} đã lựa chọn dịch vụ của chúng tôi! <br />
+                Mã OTP của bạn là: ${OTP}
+                  <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b>033333333</b> </p><br><b>Trân trọng!</b>`,
+            },
+            (error) => {
+                if (error) return AppResponse.fail(error, res);
             }
-            return res.json({
-                message: `gửi mail thành công đến địa chỉ email: ${email}`
-            })
-        });
-
-        bcrypt.genSalt(saltRounds, (err, salt) => {
-            bcrypt.hash(password, salt, async (err, hash) => {
-                encryptedPassword = hash;
-                console.log('hash:', hash);
-                const user = {
-                    ...req.body, password: encryptedPassword
-                }
-                await UserModel(user).save();
-                return AppResponse.success(req, res)(user);
-            });
-        })
-    })
-}
-
-// đăng nhập nó sẽ 1 mã otp khoảng 6 số và set thời gian cho nó là 1 phút
-// đăng nhập xong sẽ hiện ra thêm 1 cái input để nhập mã otp nếu đúng thí success
+        );
+        await insertOtp({ otp: OTP, email, password, name, phone });
+        return AppResponse.success(req, res)(
+            '',
+            `Vui lòng kiểm tra email của bạn: ${email}`
+        );
+    }),
+    verifyOtp: asyncUtil(async (req, res) => {
+        const { email, otp } = req.body;
+        const user = await verifyOtp({ email, otp });
+        if (user.code_status === 200) {
+            return AppResponse.success(req, res)(user.data);
+        }
+        return AppResponse.fail(req, res)(null, user.message);
+    }),
+};
