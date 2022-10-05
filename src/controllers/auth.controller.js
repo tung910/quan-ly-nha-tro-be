@@ -20,11 +20,12 @@ module.exports = {
         console.log('hash pasword:', user.password);
         bcrypt.compare(password, user.password, (err, result) => {
             if (err) {
-                console.log('not ok', err);
+                console.log('not ok');
+                const msg = "mật khẩu không chính xác!";
                 AppResponse.fail(req, res)(msg);
                 return;
             } else {
-                console.log('ok', result);
+                console.log('ok');
                 const token = jwt.sign({ _id: user._id }, "datn_tw13", { expiresIn: 60 * 60 });
                 const data = {
                     token,
