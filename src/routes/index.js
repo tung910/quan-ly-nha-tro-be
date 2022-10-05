@@ -17,7 +17,7 @@ function routes(app) {
     app.use('/api/room-rental-detail', roomRentalDetailRouter);
     app.use('/api/data-power', powerRoute);
     app.use('/api/data-water', waterRoute);
-    app.user('/api/revenue-statistics', revenueStatisticsRoute);
+    app.use('/api/revenue-statistics', revenueStatisticsRoute);
 }
 
 module.exports = routes;
