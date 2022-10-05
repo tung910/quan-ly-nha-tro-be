@@ -48,8 +48,6 @@ module.exports = {
             specialChars: false,
             upperCaseAlphabets: false,
         });
-        await insertOtp({ otp: OTP, email, password, name, phone });
-
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -70,6 +68,7 @@ module.exports = {
                 if (error) return AppResponse.fail(error, res);
             }
         );
+        await insertOtp({ otp: OTP, email, password, name, phone });
         return AppResponse.success(req, res)(
             '',
             `Vui lòng kiểm tra email của bạn: ${email}`
