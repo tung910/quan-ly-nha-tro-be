@@ -52,6 +52,11 @@ module.exports = {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
+        if(CustomerInfo=='' || null) {
+            console.log('yêu cầu nhập đủ thông tin!');
+            const msg = 'yêu cầu nhập đủ thông tin!';
+            return AppResponse.fail(req,res)(msg);
+        }
         const roomRentalDetail = await RoomRentalDetail.findOneAndUpdate(
             {
                 _id: req.params.id,
