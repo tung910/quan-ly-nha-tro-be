@@ -49,19 +49,34 @@ module.exports = {
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     editRoomRentalDetail: asyncUtil(async (req, res) => {
-        const { data } = req.body;
+        const {
+            data: { CustomerInfo, Member, Service, Contract },
+        } = req.body;
         const roomRentalDetail = await RoomRentalDetail.findOneAndUpdate(
             {
                 _id: req.params.id,
             },
-            data,
+            {
+                ...CustomerInfo,
+                service: Service,
+                member: Member,
+            },
             { new: true }
         ).exec();
+
+        await DataPowerModel.findOneAndUpdate(
+            { roomName: CustomerInfo.roomName },
+            { customerName: CustomerInfo.customerName }
+        ).exec();
+        await DataWaterModel.findOneAndUpdate(CustomerInfo.roomName, {
+            customerName: CustomerInfo.customerName,
+        }).exec();
         await MotelRoomModel.findByIdAndUpdate(
-            { _id: data.motelRoomID },
+            { _id: CustomerInfo.motelRoomID },
             {
                 isRent: true,
-                customerName: data.customerName,
+                customerName: CustomerInfo.customerName,
+                roomRentID: roomRentalDetail._id,
             }
         ).exec();
         return AppResponse.success(req, res)(roomRentalDetail);
