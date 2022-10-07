@@ -17,6 +17,12 @@ const WaterSchema = new mongoose.Schema(
             type: String,
             default: '',
         },
+        month: {
+            type: String,
+        },
+        year: {
+            type: String,
+        },
         roomName: {
             type: String,
             default: '',
