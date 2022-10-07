@@ -8,6 +8,8 @@ const powerRoute = require('./data-power.route');
 const waterRoute = require('./water.route')
 const revenueStatisticsRoute = require('./revenue-statistics.route');
 
+const { exportWordContract } = require('~/services/export.service');
+
 function routes(app) {
     app.use('/api', userRouter);
     app.use('/api/motel-room', motelRoomRoute);
@@ -18,6 +20,8 @@ function routes(app) {
     app.use('/api/data-power', powerRoute);
     app.use('/api/data-water', waterRoute);
     app.use('/api/revenue-statistics', revenueStatisticsRoute);
+
+    app.get('/export-word-contract/:rentalId', exportWordContract);
 }
 
 module.exports = routes;
