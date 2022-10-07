@@ -21,7 +21,7 @@ function routes(app) {
     app.use('/api/data-water', waterRoute);
     app.use('/api/revenue-statistics', revenueStatisticsRoute);
 
-    app.get('/export-word-contract/:rentalId', exportWordContract);
+    app.get('/api/export-word-contract/:rentalId', exportWordContract);
 }
 
 module.exports = routes;
