@@ -31,6 +31,10 @@ const WaterSchema = new mongoose.Schema(
             type: mongoose.ObjectId,
             ref: 'Motel',
         },
+        motelRoomID: {
+            type: mongoose.ObjectId,
+            ref: 'MotelRoom',
+        },
     },
     { collection: 'Water', timestamps: true }
 );

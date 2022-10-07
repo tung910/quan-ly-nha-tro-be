@@ -31,6 +31,10 @@ const DataPowerSchema = new mongoose.Schema(
             type: mongoose.ObjectId,
             ref: 'Motel',
         },
+        motelRoomID: {
+            type: mongoose.ObjectId,
+            ref: 'MotelRoom',
+        },
     },
     { collection: 'DataPower', timestamps: true }
 );
