@@ -19,9 +19,12 @@ module.exports = {
             { roomName: CustomerInfo.roomName },
             { customerName: CustomerInfo.customerName }
         ).exec();
-        await DataWaterModel.findOneAndUpdate(CustomerInfo.roomName, {
-            customerName: CustomerInfo.customerName,
-        }).exec();
+        await DataWaterModel.findOneAndUpdate(
+            { roomName: CustomerInfo.roomName },
+            {
+                customerName: CustomerInfo.customerName,
+            }
+        ).exec();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
             {
