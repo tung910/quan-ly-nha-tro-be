@@ -17,6 +17,12 @@ const DataPowerSchema = new mongoose.Schema(
             type: String,
             default: '',
         },
+        month: {
+            type: String,
+        },
+        year: {
+            type: String,
+        },
         roomName: {
             type: String,
             default: '',
@@ -24,6 +30,10 @@ const DataPowerSchema = new mongoose.Schema(
         motelID: {
             type: mongoose.ObjectId,
             ref: 'Motel',
+        },
+        motelRoomID: {
+            type: mongoose.ObjectId,
+            ref: 'MotelRoom',
         },
     },
     { collection: 'DataPower', timestamps: true }
