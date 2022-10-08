@@ -4,6 +4,8 @@ const AppResponse = require('~/helpers/response');
 const MotelRoomModel = require('~/models/motel-room.model');
 const DataPowerModel = require('~/models/data-power.model');
 const DataWaterModel = require('~/models/water.model');
+const CalculatorMoneyModel = require('~/models/calculator-money.model');
+const roomRentalDetailModel = require('~/models/room-rental-detail.model');
 
 module.exports = {
     createRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -15,11 +17,11 @@ module.exports = {
             service: Service,
             member: Member,
         }).save();
-        await DataPowerModel.findOneAndUpdate(
+        const { _id: dataPowerID } = await DataPowerModel.findOneAndUpdate(
             { roomName: CustomerInfo.roomName },
             { customerName: CustomerInfo.customerName }
         ).exec();
-        await DataWaterModel.findOneAndUpdate(
+        const { _id: dataWaterID } = await DataWaterModel.findOneAndUpdate(
             { roomName: CustomerInfo.roomName },
             {
                 customerName: CustomerInfo.customerName,
@@ -33,6 +35,16 @@ module.exports = {
                 roomRentID: roomRentalDetail._id,
             }
         ).exec();
+        const date = new Date(CustomerInfo.startDate);
+        const month = (date.getMonth() + 1).toString();
+        const year = date.getFullYear().toString();
+        await CalculatorMoneyModel.create({
+            roomRentalDetailID: roomRentalDetail._id,
+            dataPowerID: dataPowerID,
+            dataWaterID: dataWaterID,
+            month: month,
+            year: year,
+        });
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -55,10 +67,10 @@ module.exports = {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
-        if(CustomerInfo=='' || null) {
+        if (CustomerInfo == '' || null) {
             console.log('yêu cầu nhập đủ thông tin!');
             const msg = 'yêu cầu nhập đủ thông tin!';
-            return AppResponse.fail(req,res)(msg);
+            return AppResponse.fail(req, res)(msg);
         }
         const roomRentalDetail = await RoomRentalDetail.findOneAndUpdate(
             {
@@ -72,11 +84,11 @@ module.exports = {
             { new: true }
         ).exec();
 
-        await DataPowerModel.findOneAndUpdate(
+        const { _id: dataPowerID } = await DataPowerModel.findOneAndUpdate(
             { roomName: CustomerInfo.roomName },
             { customerName: CustomerInfo.customerName }
         ).exec();
-        await DataWaterModel.findOneAndUpdate(CustomerInfo.roomName, {
+        const { _id: dataWaterID }  = await DataWaterModel.findOneAndUpdate(CustomerInfo.roomName, {
             customerName: CustomerInfo.customerName,
         }).exec();
         await MotelRoomModel.findByIdAndUpdate(
@@ -87,6 +99,16 @@ module.exports = {
                 roomRentID: roomRentalDetail._id,
             }
         ).exec();
+        const date = new Date(CustomerInfo.startDate);
+        const month = (date.getMonth() + 1).toString();
+        const year = date.getFullYear().toString();
+        await CalculatorMoneyModel.create({
+            roomRentalDetailID: roomRentalDetail._id,
+            dataPowerID: dataPowerID,
+            dataWaterID: dataWaterID,
+            month: month,
+            year: year,
+        });
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
 };
