@@ -78,7 +78,7 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             require: true,
         },
         startDate: {
-            type: Date,
+            type: String,
             require: true,
         },
         paymentPeriod: {

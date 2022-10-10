@@ -67,7 +67,7 @@ module.exports = {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
-        if (CustomerInfo == '' || null) {
+        if (CustomerInfo == '' || CustomerInfo == null) {
             console.log('yêu cầu nhập đủ thông tin!');
             const msg = 'yêu cầu nhập đủ thông tin!';
             return AppResponse.fail(req, res)(msg);
