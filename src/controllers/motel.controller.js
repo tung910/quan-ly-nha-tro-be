@@ -35,6 +35,13 @@ module.exports = {
         await MotelModel.findOneAndDelete({
             _id: req.params.id,
         }).exec();
+
+        //xóa roomRentalDetail
+        await motelRoomModel.findByIdAndDelete({
+            motelID: req.params.id
+        })
+        //xóa hóa đơn
+        // return;
         
         await roomRentalDetailModel.findOneAndDelete({})
         return AppResponse.success(req, res);
