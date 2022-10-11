@@ -12,7 +12,13 @@ module.exports = {
     listCalculatorMoney: asyncUtil(async (req, res) => {
         const calculators = await CalculatorMoneyModel.find({})
             .populate('dataPowerID')
-            .populate('dataWaterID')
+            .populate([
+                'dataWaterID',
+                {
+                    path: 'dataWaterID',
+                    populate: { path: 'motelID', select: 'name' },
+                },
+            ])
             .populate('roomRentalDetailID');
         return AppResponse.success(req, res)(calculators);
     }),
@@ -29,25 +35,52 @@ module.exports = {
             })
             .populate({
                 path: 'roomRentalDetailID',
-                select: ['service', 'customerName', 'roomName','priceRoom'],
+                select: ['service', 'customerName', 'roomName', 'priceRoom'],
             });
-        list.map(async(item) => {
-            item.roomRentalDetailID.service.map((serviceItem) => {
-                if (serviceItem.isUse) {
-                    serviceItem.serviceName === 'Nước'
-                        ? (item.totalAmount +=
-                              item.dataWaterID.useValue * serviceItem.unitPrice)
-                        : serviceItem.serviceName === 'Điện'
-                        ? (item.totalAmount +=
-                              item.dataPowerID.useValue * serviceItem.unitPrice)
-                        : (item.totalAmount += serviceItem.unitPrice);
-                }
-              });
-              item.totalAmount += item.roomRentalDetailID.priceRoom
-              item.remainAmount = item.totalAmount;
+        list.map(async (item) => {
+            if (item.totalAmount === 0) {
+                item.roomRentalDetailID.service.map((serviceItem) => {
+                    if (serviceItem.isUse) {
+                        serviceItem.serviceName === 'Nước'
+                            ? (item.totalAmount +=
+                                  item.dataWaterID.useValue *
+                                  serviceItem.unitPrice)
+                            : serviceItem.serviceName === 'Điện'
+                            ? (item.totalAmount +=
+                                  item.dataPowerID.useValue *
+                                  serviceItem.unitPrice)
+                            : (item.totalAmount += serviceItem.unitPrice);
+                    }
+                });
+                item.totalAmount += item.roomRentalDetailID.priceRoom;
+                item.remainAmount = item.totalAmount;
 
-            await CalculatorMoneyModel.findByIdAndUpdate({_id:item._id},item,{new:true}).exec()
+                await CalculatorMoneyModel.findByIdAndUpdate(
+                    { _id: item._id },
+                    item,
+                    { new: true }
+                ).exec();
+            }
         });
         return AppResponse.success(req, res)(list);
+    }),
+    detailCalculator: asyncUtil(async (req, res) => {
+        const calculator = await CalculatorMoneyModel.find({
+            _id: req.params.id,
+        })
+            .populate({
+                path: 'dataPowerID',
+                select: ['useValue', 'oldValue', 'newValue'],
+            })
+            .populate({
+                path: 'dataWaterID',
+                populate: { path: 'motelID', select: 'name' },
+                select: ['useValue', 'oldValue', 'newValue'],
+            })
+            .populate({
+                path: 'roomRentalDetailID',
+                select: ['service', 'customerName', 'roomName', 'priceRoom'],
+            });
+        return AppResponse.success(req, res)(calculator);
     }),
 };
