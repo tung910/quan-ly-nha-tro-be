@@ -21,7 +21,7 @@ const validateInSchema = Joi.object().keys({
 
 router.post('/list', RoomDepositController.getAllRoomDeposit);
 router.post(
-    '/add-or-update/:id',
+    '/add-or-update',
     validateRequest(validateInSchema),
     RoomDepositController.addOrUpdate
 );
