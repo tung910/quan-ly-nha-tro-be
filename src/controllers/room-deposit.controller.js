@@ -1,13 +1,27 @@
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const RoomDepositModel = require('~/models/room-deposit.model');
-const Joi = require('joi');
 
 module.exports = {
     getAllRoomDeposit: asyncUtil(async (req, res) => {
-        const { data } = req.body;
-        const response = await RoomDepositModel.find({});
-        res.json(response);
+        const {
+            data: { fromDate, toDate },
+        } = req.body;
+        if (new Date(fromDate) > new Date(toDate)) {
+            return AppResponse.fail(
+                req,
+                res,
+                400
+            )(null, 'Vui lòng kiểm tra lại');
+        }
+        const RoomDeposit = await RoomDepositModel.find({
+            bookingDate: {
+                $gt: new Date(fromDate),
+                $lt: new Date(toDate),
+            },
+        });
+
+        return AppResponse.success(req, res)(RoomDeposit);
     }),
     addOrUpdate: asyncUtil(async (req, res) => {
         const { isUpdate, data } = req.body;
@@ -34,5 +48,14 @@ module.exports = {
                 'Update successfully'
             );
         }
+    }),
+    removeRoomDeposit: asyncUtil(async (req, res) => {
+        const roomDeposit = await RoomDepositModel.findByIdAndDelete(
+            req.params.id
+        );
+        return AppResponse.success(req, res)(
+            roomDeposit,
+            'Delete successfully'
+        );
     }),
 };
