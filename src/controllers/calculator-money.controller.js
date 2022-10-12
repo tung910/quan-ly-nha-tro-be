@@ -1,4 +1,8 @@
 const CalculatorMoneyModel = require('~/models/calculator-money.model');
+const MotelRoomModel = require('~/models/motel-room.model');
+const DataPowerModel = require('~/models/data-power.model');
+const RoomRentalDetail = require('~/models/room-rental-detail.model');
+const DataWaterModel = require('~/models/water.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 
@@ -10,67 +14,67 @@ module.exports = {
     }),
 
     listCalculatorMoney: asyncUtil(async (req, res) => {
-        const calculators = await CalculatorMoneyModel.find({})
+        const { data } = req.body;
+        let obj = {};
+        if (data) {
+            obj = data;
+        }
+        const calculators = await CalculatorMoneyModel.find(obj)
             .populate('dataPowerID')
-            .populate([
-                'dataWaterID',
-                {
-                    path: 'dataWaterID',
-                    populate: { path: 'motelID', select: 'name' },
-                },
-            ])
+            .populate('dataWaterID')
+            .populate('motelID')
             .populate('roomRentalDetailID');
         return AppResponse.success(req, res)(calculators);
     }),
     calculatorAllMoney: asyncUtil(async (req, res) => {
         const { data } = req.body;
-        // const month = data.month;
-        let obj = {};
-        if (data) {
-            obj = data;
-        }
-        const calculatorMoney = (list) => {
-            list.map(async (item) => {
-                if (item.totalAmount === 0) {
-                    item.roomRentalDetailID.service.map((serviceItem) => {
+        const list =  await Promise.all(
+            data.map(async (item) => {
+                const find = await CalculatorMoneyModel.findOne({
+                    roomRentalDetailID: item.roomRentalDetailID,
+                });
+                if (!find) {
+                  const add =  await CalculatorMoneyModel.create(item);
+                    const dataPower = await DataPowerModel.findOne({
+                        _id: add.dataPowerID,
+                    });
+                    const dataWater = await DataWaterModel.findOne({
+                        _id: add.dataWaterID,
+                    });
+                    const roomRentalDetail = await RoomRentalDetail.findOne({
+                        _id: add.roomRentalDetailID,
+                    });
+                    roomRentalDetail.service.map((serviceItem) => {
                         if (serviceItem.isUse) {
                             serviceItem.serviceName === 'Nước'
-                                ? (item.totalAmount +=
-                                      item.dataWaterID.useValue *
+                                ? (add.totalAmount +=
+                                      dataWater.useValue *
                                       serviceItem.unitPrice)
                                 : serviceItem.serviceName === 'Điện'
-                                ? (item.totalAmount +=
-                                      item.dataPowerID.useValue *
+                                ? (add.totalAmount +=
+                                      dataPower.useValue *
                                       serviceItem.unitPrice)
-                                : (item.totalAmount += serviceItem.unitPrice);
+                                : (add.totalAmount += serviceItem.unitPrice);
                         }
                     });
-                    item.totalAmount += item.roomRentalDetailID.priceRoom;
-                    item.remainAmount = item.totalAmount;
+                    add.totalAmount += roomRentalDetail.priceRoom;
+                    add.remainAmount = add.totalAmount;
                     await CalculatorMoneyModel.findByIdAndUpdate(
-                        { _id: item._id },
-                        item,
-                        { new: true }
+                        { _id: add._id },
+                        add,
+                        {
+                            new: true,
+                        }
                     ).exec();
+                    item = add
+                    return item;
+                } else {
+                    item = find;
+                    return item;
                 }
-            });
-            return AppResponse.success(req, res)(list);
-        };
-        const list = await CalculatorMoneyModel.find(obj)
-            .populate({
-                path: 'dataPowerID',
-                select: ['useValue', 'oldValue', 'newValue'],
             })
-            .populate({
-                path: 'dataWaterID',
-                populate: { path: 'motelID', select: 'name' },
-                select: ['useValue', 'oldValue', 'newValue'],
-            })
-            .populate({
-                path: 'roomRentalDetailID',
-                select: ['service', 'customerName', 'roomName', 'priceRoom'],
-            });
-        await calculatorMoney(list);
+        );
+        return AppResponse.success(req, res)(list);
     }),
 
     detailCalculator: asyncUtil(async (req, res) => {
