@@ -27,7 +27,7 @@ module.exports = {
     }),
     getDataWaterByMotelRoom: asyncUtil(async (req, res) => {
         const dataWater = await WaterModel.find({
-            motelRoomID: { _id: req.params.motelRoomId },
+            motelRoomID: req.params.motelRoomId,
         });
         return AppResponse.success(req, res)(dataWater);
     }),
