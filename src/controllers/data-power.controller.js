@@ -18,9 +18,17 @@ module.exports = {
         return AppResponse.success(req, res)(power);
     }),
     getListPower: asyncUtil(async (req, res) => {
-        const power = await DataPowerModel.find({})
-            .populate({ path: 'motelID', select: 'name' });
+        const power = await DataPowerModel.find({}).populate({
+            path: 'motelID',
+            select: 'name',
+        });
 
         return AppResponse.success(req, res)(power);
+    }),
+    getDataPowerByMotelRoom: asyncUtil(async (req, res) => {
+        const dataWater = await DataPowerModel.findOne({
+            motelRoomID: req.params.motelRoomId,
+        });
+        return AppResponse.success(req, res)(dataWater);
     }),
 };
