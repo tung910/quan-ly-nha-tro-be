@@ -4,7 +4,7 @@ const calculatorMoneyController = require('~/controllers/calculator-money.contro
 
 router.get('/list', calculatorMoneyController.listCalculatorMoney);
 router.get('/detail/:id', calculatorMoneyController.detailCalculator);
-router.put('/calculator', calculatorMoneyController.calculatorAllMoney);
+router.post('/calculator', calculatorMoneyController.calculatorAllMoney);
 router.post('/create', calculatorMoneyController.calculatorMoney);
 
 module.exports = router;
