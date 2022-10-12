@@ -28,13 +28,13 @@ module.exports = {
     }),
     calculatorAllMoney: asyncUtil(async (req, res) => {
         const { data } = req.body;
-        const list =  await Promise.all(
+        const list = await Promise.all(
             data.map(async (item) => {
                 const find = await CalculatorMoneyModel.findOne({
                     roomRentalDetailID: item.roomRentalDetailID,
                 });
                 if (!find) {
-                  const add =  await CalculatorMoneyModel.create(item);
+                    const add = await CalculatorMoneyModel.create(item);
                     const dataPower = await DataPowerModel.findOne({
                         _id: add.dataPowerID,
                     });
@@ -66,11 +66,51 @@ module.exports = {
                             new: true,
                         }
                     ).exec();
-                    item = add
+                    item = add;
                     return item;
                 } else {
-                    item = find;
-                    return item;
+                    if (find.month === item.month) {
+                        item = find;
+                        return item;
+                    } else {
+                        const add = await CalculatorMoneyModel.create(item);
+                        const dataPower = await DataPowerModel.findOne({
+                            _id: add.dataPowerID,
+                        });
+                        const dataWater = await DataWaterModel.findOne({
+                            _id: add.dataWaterID,
+                        });
+                        const roomRentalDetail = await RoomRentalDetail.findOne(
+                            {
+                                _id: add.roomRentalDetailID,
+                            }
+                        );
+                        roomRentalDetail.service.map((serviceItem) => {
+                            if (serviceItem.isUse) {
+                                serviceItem.serviceName === 'Nước'
+                                    ? (add.totalAmount +=
+                                          dataWater.useValue *
+                                          serviceItem.unitPrice)
+                                    : serviceItem.serviceName === 'Điện'
+                                    ? (add.totalAmount +=
+                                          dataPower.useValue *
+                                          serviceItem.unitPrice)
+                                    : (add.totalAmount +=
+                                          serviceItem.unitPrice);
+                            }
+                        });
+                        add.totalAmount += roomRentalDetail.priceRoom;
+                        add.remainAmount = add.totalAmount;
+                        await CalculatorMoneyModel.findByIdAndUpdate(
+                            { _id: add._id },
+                            add,
+                            {
+                                new: true,
+                            }
+                        ).exec();
+                        item = add;
+                        return item;
+                    }
                 }
             })
         );
