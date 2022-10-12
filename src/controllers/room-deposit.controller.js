@@ -40,7 +40,7 @@ module.exports = {
             return AppResponse.success(req, res)(roomDeposit);
         } else {
             const roomDeposit = await RoomDepositModel.findByIdAndUpdate(
-                req.params.id,
+                req.query.id,
                 data
             );
             return AppResponse.success(req, res)(
