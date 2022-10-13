@@ -23,6 +23,10 @@ module.exports = {
 
         return AppResponse.success(req, res)(RoomDeposit);
     }),
+    getRoomDeposit: asyncUtil(async (req, res) => {
+        const RoomDeposit = await RoomDepositModel.findById(req.params.id);
+        return AppResponse.success(req, res)(RoomDeposit);
+    }),
     addOrUpdate: asyncUtil(async (req, res) => {
         const { isUpdate, data } = req.body;
         if (!isUpdate) {
