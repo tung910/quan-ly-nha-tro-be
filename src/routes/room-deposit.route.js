@@ -25,6 +25,7 @@ router.post(
     validateRequest(validateInSchema),
     RoomDepositController.addOrUpdate
 );
+router.get('/detail/:id', RoomDepositController.getRoomDeposit);
 router.delete('/delete/:id', RoomDepositController.removeRoomDeposit);
 
 module.exports = router;
