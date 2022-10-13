@@ -31,20 +31,27 @@ module.exports = {
         }).exec();
         return AppResponse.success(req, res)(motel);
     }),
+
     deleteMotel: asyncUtil(async (req, res) => {
         //xóa nhà
-        await MotelModel.findOneAndDelete({
+        const data =  await MotelModel.findOneAndDelete({
             _id: req.params.id,
         }).exec();
 
-        //xóa roomRentalDetail
-        await motelRoomModel.findByIdAndDelete({
+        //xóa phòng trọ
+        await motelRoomModel.findOneAndDelete({
             motelID: req.params.id
-        })
-        // xóa caculator
-        await calculatorMoneyModel.findByIdAndDelete({ motelID: req.params.id});
+        }).exec();
+        // xóa hóa đơn
+        await calculatorMoneyModel.findOneAndDelete({ motelID: req.params.id }).exec();
 
-        await roomRentalDetailModel.findOneAndDelete({})
-        return AppResponse.success(req, res);
+        // xóa chi tiết thêm phòng
+        const motel  = await MotelModel.find({});        
+        await roomRentalDetailModel.findOneAndDelete({
+            roomName: motel[0].name
+        })
+
+        await roomRentalDetailModel.findOneAndDelete({ motelID: req.params.id }).exec();
+        return AppResponse.success(req, res)(data);
     })
 };
