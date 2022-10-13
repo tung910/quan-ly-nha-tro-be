@@ -17,16 +17,6 @@ module.exports = {
             service: Service,
             member: Member,
         }).save();
-        const { _id: dataPowerID } = await DataPowerModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
-            { customerName: CustomerInfo.customerName }
-        ).exec();
-        const { _id: dataWaterID } = await DataWaterModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
-            {
-                customerName: CustomerInfo.customerName,
-            }
-        ).exec();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
             {
@@ -35,16 +25,6 @@ module.exports = {
                 roomRentID: roomRentalDetail._id,
             }
         ).exec();
-        const date = new Date(CustomerInfo.startDate);
-        const month = (date.getMonth() + 1).toString();
-        const year = date.getFullYear().toString();
-        await CalculatorMoneyModel.create({
-            roomRentalDetailID: roomRentalDetail._id,
-            dataPowerID: dataPowerID,
-            dataWaterID: dataWaterID,
-            month: month,
-            year: year,
-        });
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -83,14 +63,6 @@ module.exports = {
             },
             { new: true }
         ).exec();
-
-        const { _id: dataPowerID } = await DataPowerModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
-            { customerName: CustomerInfo.customerName }
-        ).exec();
-        const { _id: dataWaterID }  = await DataWaterModel.findOneAndUpdate(CustomerInfo.roomName, {
-            customerName: CustomerInfo.customerName,
-        }).exec();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
             {
@@ -99,16 +71,6 @@ module.exports = {
                 roomRentID: roomRentalDetail._id,
             }
         ).exec();
-        const date = new Date(CustomerInfo.startDate);
-        const month = (date.getMonth() + 1).toString();
-        const year = date.getFullYear().toString();
-        await CalculatorMoneyModel.create({
-            roomRentalDetailID: roomRentalDetail._id,
-            dataPowerID: dataPowerID,
-            dataWaterID: dataWaterID,
-            month: month,
-            year: year,
-        });
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
 };

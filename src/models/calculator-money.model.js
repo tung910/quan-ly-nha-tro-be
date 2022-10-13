@@ -10,9 +10,24 @@ const CalculatorMoneySchema = new mongoose.Schema(
             type: mongoose.ObjectId,
             ref: 'DataPower',
         },
+        motelID: {
+            type: mongoose.ObjectId,
+            ref: 'Motel',
+        },
         roomRentalDetailID: {
             type: mongoose.ObjectId,
             ref: 'RoomRentalDetail',
+        },
+        payer: {
+            type: String,
+            default: '',
+        },
+        dateOfPayment: {
+            type: Date,
+        },
+        paymentMethod: {
+            type: Number,
+            default: 0,
         },
         month: {
             type: String,
@@ -33,7 +48,7 @@ const CalculatorMoneySchema = new mongoose.Schema(
             default: 0,
         },
     },
-    { timestamps: true }
+    { collection: 'CalculatorMoney', timestamps: true }
 );
 
 module.exports = mongoose.model('CalculatorMoney', CalculatorMoneySchema);
