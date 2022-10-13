@@ -3,6 +3,7 @@ const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const motelRoomModel = require('~/models/motel-room.model');
 const roomRentalDetailModel = require('~/models/room-rental-detail.model');
+const calculatorMoneyModel = require('~/models/calculator-money.model');
 
 module.exports = {
     getAllMotel: asyncUtil(async (req, res) => {
@@ -40,9 +41,9 @@ module.exports = {
         await motelRoomModel.findByIdAndDelete({
             motelID: req.params.id
         })
-        //xóa hóa đơn
-        // return;
-        
+        // xóa caculator
+        await calculatorMoneyModel.findByIdAndDelete({ motelID: req.params.id});
+
         await roomRentalDetailModel.findOneAndDelete({})
         return AppResponse.success(req, res);
     })
