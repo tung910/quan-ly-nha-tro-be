@@ -33,19 +33,15 @@ module.exports = {
     }),
 
     deleteMotel: asyncUtil(async (req, res) => {
-        //xóa nhà
         const data =  await MotelModel.findOneAndDelete({
             _id: req.params.id,
         }).exec();
 
-        //xóa phòng trọ
         await motelRoomModel.findOneAndDelete({
             motelID: req.params.id
         }).exec();
-        // xóa hóa đơn
         await calculatorMoneyModel.findOneAndDelete({ motelID: req.params.id }).exec();
 
-        // xóa chi tiết thêm phòng
         const motel  = await MotelModel.find({});        
         await roomRentalDetailModel.findOneAndDelete({
             roomName: motel[0].name
