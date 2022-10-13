@@ -20,7 +20,9 @@ module.exports = {
                 $gt: new Date(fromDate),
                 $lt: new Date(toDate),
             },
-        });
+        })
+            .populate('motelRoomId')
+            .populate('motelId');
 
         return AppResponse.success(req, res)(RoomDeposit);
     }),
