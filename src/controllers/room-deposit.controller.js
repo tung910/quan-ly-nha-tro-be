@@ -1,6 +1,7 @@
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const RoomDepositModel = require('~/models/room-deposit.model');
+const MotelRoomModel = require('~/models/motel-room.model');
 
 module.exports = {
     getAllRoomDeposit: asyncUtil(async (req, res) => {
@@ -33,6 +34,14 @@ module.exports = {
             const exitRoomDeposit = await RoomDepositModel.findOne({
                 motelRoomId: data.motelRoomId,
             });
+            const motelRoom = await MotelRoomModel.findById(data.motelRoomId);
+            if (motelRoom.isRent) {
+                return AppResponse.fail(
+                    req,
+                    res,
+                    400
+                )(null, 'Phòng đã có người ở');
+            }
             if (exitRoomDeposit) {
                 return AppResponse.fail(
                     req,
@@ -43,6 +52,18 @@ module.exports = {
             const roomDeposit = await RoomDepositModel.create(data);
             return AppResponse.success(req, res)(roomDeposit);
         } else {
+            if (data?.motelRoomId) {
+                const motelRoom = await MotelRoomModel.findById(
+                    data.motelRoomId
+                );
+                if (motelRoom.isRent) {
+                    return AppResponse.fail(
+                        req,
+                        res,
+                        400
+                    )(null, 'Phòng đã có người ở');
+                }
+            }
             const roomDeposit = await RoomDepositModel.findByIdAndUpdate(
                 req.query.id,
                 data
