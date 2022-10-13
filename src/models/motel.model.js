@@ -10,15 +10,15 @@ const MotelSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        province: { //tỉnh
+        province: {
             type: String,
             required: true,
         },
-        district: { //quận huyện
+        district: {
             type: String,
             required: true,
         },
-        commune: { // phường xã
+        commune: {
             type: String,
             required: true,
         },
