@@ -17,6 +17,16 @@ module.exports = {
             service: Service,
             member: Member,
         }).save();
+        await DataPowerModel.findOneAndUpdate(
+            { roomName: CustomerInfo.roomName },
+            { customerName: CustomerInfo.customerName }
+        ).exec();
+        await DataWaterModel.findOneAndUpdate(
+            { roomName: CustomerInfo.roomName },
+            {
+                customerName: CustomerInfo.customerName,
+            }
+        ).exec();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
             {
@@ -62,6 +72,16 @@ module.exports = {
                 member: Member,
             },
             { new: true }
+        ).exec();
+        await DataPowerModel.findOneAndUpdate(
+            { roomName: CustomerInfo.roomName },
+            { customerName: CustomerInfo.customerName }
+        ).exec();
+        await DataWaterModel.findOneAndUpdate(
+            { roomName: CustomerInfo.roomName },
+            {
+                customerName: CustomerInfo.customerName,
+            }
         ).exec();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: CustomerInfo.motelRoomID },
