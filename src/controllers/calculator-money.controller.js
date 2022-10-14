@@ -136,4 +136,10 @@ module.exports = {
             });
         return AppResponse.success(req, res)(calculator);
     }),
+    deleteCalculator: asyncUtil(async (req, res) => {
+        const calculator = await CalculatorMoneyModel.findByIdAndDelete({
+            _id: req.params.id,
+        });
+        return AppResponse.success(req, res)(calculator);
+    }),
 };

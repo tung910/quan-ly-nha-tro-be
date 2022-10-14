@@ -6,5 +6,6 @@ router.get('/list', calculatorMoneyController.listCalculatorMoney);
 router.get('/detail/:id', calculatorMoneyController.detailCalculator);
 router.post('/calculator', calculatorMoneyController.calculatorAllMoney);
 router.post('/create', calculatorMoneyController.calculatorMoney);
+router.delete('/delete/:id', calculatorMoneyController.deleteCalculator);
 
 module.exports = router;
