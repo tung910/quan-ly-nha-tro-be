@@ -5,18 +5,22 @@ const CalculatorMoneySchema = new mongoose.Schema(
         dataWaterID: {
             type: mongoose.ObjectId,
             ref: 'Water',
+            required: true,
         },
         dataPowerID: {
             type: mongoose.ObjectId,
             ref: 'DataPower',
+            required: true,
         },
         motelID: {
             type: mongoose.ObjectId,
             ref: 'Motel',
+            required: true,
         },
         roomRentalDetailID: {
             type: mongoose.ObjectId,
             ref: 'RoomRentalDetail',
+            required: true,
         },
         payer: {
             type: String,
@@ -31,9 +35,11 @@ const CalculatorMoneySchema = new mongoose.Schema(
         },
         month: {
             type: String,
+            required: true,
         },
         year: {
             type: String,
+            required: true,
         },
         remainAmount: {
             type: Number,
