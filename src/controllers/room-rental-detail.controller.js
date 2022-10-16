@@ -1,11 +1,9 @@
 const RoomRentalDetail = require('~/models/room-rental-detail.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
-const MotelRoomModel = require('~/models/motel-room.model');
-const DataPowerModel = require('~/models/data-power.model');
+const MotelRoomModel = require('~/models/motel-room.model'); 
 const DataWaterModel = require('~/models/water.model');
-const CalculatorMoneyModel = require('~/models/calculator-money.model');
-const roomRentalDetailModel = require('~/models/room-rental-detail.model');
+const DataPowerModel = require('~/models/data-power.model');
 
 module.exports = {
     createRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -42,6 +40,20 @@ module.exports = {
                 roomRentID: roomRentalDetail._id,
             }
         ).exec();
+        await DataWaterModel.findOneAndUpdate(
+            {
+                roomName: CustomerInfo.roomName,
+                motelID: CustomerInfo.motelID,
+            },
+            { motelRoomID: CustomerInfo.motelRoomID }
+        );
+        await DataPowerModel.findOneAndUpdate(
+            {
+                roomName: CustomerInfo.roomName,
+                motelID: CustomerInfo.motelID,
+            },
+            { motelRoomID: CustomerInfo.motelRoomID }
+        );
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {

@@ -30,4 +30,10 @@ module.exports = {
 
         return AppResponse.success(req, res)(power);
     }),
+    getDataPowerByMotelRoom: asyncUtil(async (req, res) => {
+        const dataWater = await DataPowerModel.findOne({
+            motelRoomID: req.params.motelRoomId,
+        });
+        return AppResponse.success(req, res)(dataWater);
+    }),
 };
