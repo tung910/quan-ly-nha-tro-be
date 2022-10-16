@@ -28,6 +28,7 @@ const CalculatorMoneySchema = new mongoose.Schema(
         },
         dateOfPayment: {
             type: Date,
+            default:'',
         },
         paymentMethod: {
             type: Number,
