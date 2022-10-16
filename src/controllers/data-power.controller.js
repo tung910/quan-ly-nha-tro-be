@@ -18,7 +18,12 @@ module.exports = {
         return AppResponse.success(req, res)(power);
     }),
     getListPower: asyncUtil(async (req, res) => {
-        const power = await DataPowerModel.find({}).populate({
+        const { data } = req.body;
+        let obj = {};
+        if (data) {
+            obj = data;
+        }
+        const power = await DataPowerModel.find(obj).populate({
             path: 'motelID',
             select: 'name',
         });

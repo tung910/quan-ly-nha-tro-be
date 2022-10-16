@@ -21,10 +21,11 @@ const validateInSchema = Joi.object().keys({
 
 router.post('/list', RoomDepositController.getAllRoomDeposit);
 router.post(
-    '/add-or-update/:id',
+    '/add-or-update',
     validateRequest(validateInSchema),
     RoomDepositController.addOrUpdate
 );
+router.get('/detail/:id', RoomDepositController.getRoomDeposit);
 router.delete('/delete/:id', RoomDepositController.removeRoomDeposit);
 
 module.exports = router;
