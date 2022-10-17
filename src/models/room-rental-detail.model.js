@@ -4,7 +4,7 @@ const RoomRentalDetailSchema = new mongoose.Schema(
     {
         customerName: {
             type: String,
-            require: true,
+            required: true,
             minlength: 5,
         },
         roomName: {
@@ -21,16 +21,16 @@ const RoomRentalDetailSchema = new mongoose.Schema(
         },
         citizenIdentification: {
             type: Number,
-            require: true,
+            required: true,
         },
         address: {
             type: String,
-            require: true,
+            required: true,
         },
         dateRange: {
             // ngày cấp
             type: String,
-            require: true,
+            required: true,
         },
         issuedBy: {
             // Nơi cấp
@@ -48,7 +48,7 @@ const RoomRentalDetailSchema = new mongoose.Schema(
         },
         phone: {
             type: Number,
-            require: true,
+            required: true,
         },
         rentalStartDate: {
             type: String,
@@ -75,11 +75,11 @@ const RoomRentalDetailSchema = new mongoose.Schema(
         },
         priceRoom: {
             type: Number,
-            require: true,
+            required: true,
         },
         startDate: {
             type: String,
-            require: true,
+            required: true,
         },
         paymentPeriod: {
             type: String,
