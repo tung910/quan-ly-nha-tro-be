@@ -1,24 +1,21 @@
 var { expressjwt } = require('express-jwt');
 
-module.exports = {
-    checkAuth: (req, res, next) => {
-        const isAdmin = true;
-        if (isAdmin) {
-            next();
-        } else {
-            res.redirect('/');
-        }
-    },
-};
+// module.exports = {
+//     checkAuth: (req, res, next) => {
+//         const isAdmin = true;
+//         if (isAdmin) {
+//             next();
+//         } else {
+//             res.redirect('/');
+//         }
+//     },
+// };
 module.exports = {
     requireSignin: expressJWT({
         secret: 'datn_tw13',
         algorithms: ['HS256'],
         requestProperty: 'auth',
     }),
-};
-
-module.exports = {
     isAuth: (req, res, next) => {
         const user = req.profile._id == req.auth._id;
         if (!user) {
@@ -28,8 +25,6 @@ module.exports = {
         }
         next();
     },
-};
-module.exports = {
     isAdmin: (req, res, next) => {
         if (req.profile.role == 0) {
             return res.status(401).json({
@@ -38,4 +33,13 @@ module.exports = {
         }
         next();
     },
+    checkAuth: (req, res, next) => {
+        const isAdmin = true;
+        if (isAdmin) {
+            next();
+        } else {
+            res.redirect('/');
+        }
+    },
 };
+
