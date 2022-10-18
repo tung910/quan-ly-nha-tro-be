@@ -8,7 +8,7 @@ module.exports = {
         const water = await WaterModel(data).save();
         return AppResponse.success(req, res)(water);
     }),
-    
+
     updateWater: asyncUtil(async (req, res) => {
         const { data } = req.body;
         const water = await WaterModel.findOneAndUpdate(
@@ -19,10 +19,16 @@ module.exports = {
         return AppResponse.success(req, res)(water);
     }),
     listWater: asyncUtil(async (req, res) => {
-        const water = await WaterModel.find({})
-            .populate({ path: 'motelID', select: 'name' });
-            
-
+        const water = await WaterModel.find({}).populate({
+            path: 'motelID',
+            select: 'name',
+        });
         return AppResponse.success(req, res)(water);
+    }),
+    getDataWaterByMotelRoom: asyncUtil(async (req, res) => {
+        const dataWater = await WaterModel.findOne({
+            motelRoomID: req.params.motelRoomId,
+        });
+        return AppResponse.success(req, res)(dataWater);
     }),
 };

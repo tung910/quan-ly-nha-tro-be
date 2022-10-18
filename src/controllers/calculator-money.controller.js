@@ -1,4 +1,5 @@
 const CalculatorMoneyModel = require('~/models/calculator-money.model');
+const RevenueStatisticsModel = require('~/models/revenue-statistics.models');
 const MotelRoomModel = require('~/models/motel-room.model');
 const nodemailer = require('nodemailer');
 const DataPowerModel = require('~/models/data-power.model');
@@ -139,5 +140,19 @@ module.exports = {
 
         console.log('cacalculator',calculator);
         return AppResponse.success(req, res)(calculator);
+    }),
+    deleteCalculator: asyncUtil(async (req, res) => {
+        const calculator = await CalculatorMoneyModel.findByIdAndDelete({
+            _id: req.params.id,
+        });
+        return AppResponse.success(req, res)(calculator);
+    }),
+    paymentMoney: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+        const paymentMoney = await CalculatorMoneyModel.findByIdAndUpdate({
+            _id: req.params.id,
+        },data,{new:true});
+        await RevenueStatisticsModel.create(data)
+        return AppResponse.success(req, res)(paymentMoney);
     }),
 };

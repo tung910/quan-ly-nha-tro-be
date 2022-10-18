@@ -6,7 +6,7 @@ const MotelRoomModel = require('~/models/motel-room.model');
 module.exports = {
     getAllRoomDeposit: asyncUtil(async (req, res) => {
         const {
-            data: { fromDate, toDate },
+            data: { fromDate, toDate, motelId, motelRoomId },
         } = req.body;
         if (new Date(fromDate) > new Date(toDate)) {
             return AppResponse.fail(
@@ -15,13 +15,23 @@ module.exports = {
                 400
             )(null, 'Vui lòng kiểm tra lại');
         }
-        const RoomDeposit = await RoomDepositModel.find({
+
+        let options = {
             bookingDate: {
                 $gt: new Date(fromDate),
                 $lt: new Date(toDate),
             },
-        });
-
+        };
+        if (motelId || motelRoomId) {
+            options = {
+                ...options,
+                motelId: motelId,
+                motelRoomId: motelRoomId,
+            };
+        }
+        const RoomDeposit = await RoomDepositModel.find(options)
+            .populate('motelRoomId')
+            .populate('motelId');
         return AppResponse.success(req, res)(RoomDeposit);
     }),
     getRoomDeposit: asyncUtil(async (req, res) => {
