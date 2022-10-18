@@ -1,5 +1,6 @@
 const CalculatorMoneyModel = require('~/models/calculator-money.model');
 const MotelRoomModel = require('~/models/motel-room.model');
+const nodemailer = require('nodemailer');
 const DataPowerModel = require('~/models/data-power.model');
 const RoomRentalDetail = require('~/models/room-rental-detail.model');
 const DataWaterModel = require('~/models/water.model');
@@ -48,13 +49,13 @@ module.exports = {
                         if (serviceItem.isUse) {
                             serviceItem.serviceName === 'Nước'
                                 ? (add.totalAmount +=
-                                      dataWater.useValue *
-                                      serviceItem.unitPrice)
+                                    dataWater.useValue *
+                                    serviceItem.unitPrice)
                                 : serviceItem.serviceName === 'Điện'
-                                ? (add.totalAmount +=
-                                      dataPower.useValue *
-                                      serviceItem.unitPrice)
-                                : (add.totalAmount += serviceItem.unitPrice);
+                                    ? (add.totalAmount +=
+                                        dataPower.useValue *
+                                        serviceItem.unitPrice)
+                                    : (add.totalAmount += serviceItem.unitPrice);
                         }
                     });
                     add.totalAmount += roomRentalDetail.priceRoom;
@@ -89,14 +90,14 @@ module.exports = {
                             if (serviceItem.isUse) {
                                 serviceItem.serviceName === 'Nước'
                                     ? (add.totalAmount +=
-                                          dataWater.useValue *
-                                          serviceItem.unitPrice)
+                                        dataWater.useValue *
+                                        serviceItem.unitPrice)
                                     : serviceItem.serviceName === 'Điện'
-                                    ? (add.totalAmount +=
-                                          dataPower.useValue *
-                                          serviceItem.unitPrice)
-                                    : (add.totalAmount +=
-                                          serviceItem.unitPrice);
+                                        ? (add.totalAmount +=
+                                            dataPower.useValue *
+                                            serviceItem.unitPrice)
+                                        : (add.totalAmount +=
+                                            serviceItem.unitPrice);
                             }
                         });
                         add.totalAmount += roomRentalDetail.priceRoom;
@@ -121,6 +122,7 @@ module.exports = {
         const calculator = await CalculatorMoneyModel.find({
             _id: req.params.id,
         })
+
             .populate({
                 path: 'dataPowerID',
                 select: ['useValue', 'oldValue', 'newValue'],
@@ -134,6 +136,8 @@ module.exports = {
                 path: 'roomRentalDetailID',
                 select: ['service', 'customerName', 'roomName', 'priceRoom'],
             });
+
+        console.log('cacalculator',calculator);
         return AppResponse.success(req, res)(calculator);
     }),
 };
