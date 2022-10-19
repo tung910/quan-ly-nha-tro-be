@@ -1,15 +1,5 @@
 var { expressjwt } = require('express-jwt');
 
-// module.exports = {
-//     checkAuth: (req, res, next) => {
-//         const isAdmin = true;
-//         if (isAdmin) {
-//             next();
-//         } else {
-//             res.redirect('/');
-//         }
-//     },
-// };
 module.exports = {
     requireSignin: expressjwt({
         secret: 'datn_tw13',
