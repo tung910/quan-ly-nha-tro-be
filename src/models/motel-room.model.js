@@ -58,6 +58,9 @@ const MotelRoomSchema = new mongoose.Schema(
             type: mongoose.ObjectId,
             ref: 'RoomRentalDetail',
         },
+        avatarCustomer: {
+            type: String,
+        },
     },
     { collection: 'MotelRoom', timestamps: true }
 );

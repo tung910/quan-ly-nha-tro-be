@@ -1,7 +1,7 @@
 const RoomRentalDetail = require('~/models/room-rental-detail.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
-const MotelRoomModel = require('~/models/motel-room.model'); 
+const MotelRoomModel = require('~/models/motel-room.model');
 const DataWaterModel = require('~/models/water.model');
 const DataPowerModel = require('~/models/data-power.model');
 
@@ -38,6 +38,7 @@ module.exports = {
                 isRent: true,
                 customerName: CustomerInfo.customerName,
                 roomRentID: roomRentalDetail._id,
+                avatarCustomer: CustomerInfo.image,
             }
         ).exec();
         await DataWaterModel.findOneAndUpdate(
