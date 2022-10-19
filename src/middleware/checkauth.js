@@ -11,7 +11,7 @@ var { expressjwt } = require('express-jwt');
 //     },
 // };
 module.exports = {
-    requireSignin: expressJWT({
+    requireSignin: expressjwt({
         secret: 'datn_tw13',
         algorithms: ['HS256'],
         requestProperty: 'auth',
