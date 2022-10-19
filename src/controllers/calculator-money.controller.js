@@ -123,7 +123,6 @@ module.exports = {
         const calculator = await CalculatorMoneyModel.find({
             _id: req.params.id,
         })
-
             .populate({
                 path: 'dataPowerID',
                 select: ['useValue', 'oldValue', 'newValue'],
@@ -138,9 +137,34 @@ module.exports = {
                 select: ['service', 'customerName', 'roomName', 'priceRoom'],
             });
 
-        console.log('cacalculator',calculator);
+
+        // tim den email trong hoa usser trong hoa don roi gui mail tt ve day
+        console.log('cacalculator', calculator);
+
+        //send to email
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_APP,
+                pass: process.env.PASS_APP,
+            },
+        });
+        // await transporter.sendMail(
+        //     {
+        //         from: process.env.EMAIL_APP,
+        //         to: `${email}`,
+        //         subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
+        //         html: `<p>Trọ Vương Anh xin cảm ơn bạn ${name} đã lựa chọn dịch vụ của chúng tôi! <br />
+        //         Mã OTP của bạn là: ${OTP}
+        //           <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b>033333333</b> </p><br><b>Trân trọng!</b>`,
+        //     },
+        //     (error) => {
+        //         if (error) return AppResponse.fail(error, res);
+        //     }
+        // );
         return AppResponse.success(req, res)(calculator);
     }),
+
     deleteCalculator: asyncUtil(async (req, res) => {
         const calculator = await CalculatorMoneyModel.findByIdAndDelete({
             _id: req.params.id,
@@ -151,7 +175,7 @@ module.exports = {
         const { data } = req.body;
         const paymentMoney = await CalculatorMoneyModel.findByIdAndUpdate({
             _id: req.params.id,
-        },data,{new:true});
+        }, data, { new: true });
         await RevenueStatisticsModel.create(data)
         return AppResponse.success(req, res)(paymentMoney);
     }),
