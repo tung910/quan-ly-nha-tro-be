@@ -164,11 +164,19 @@ module.exports = {
         const motelID = calculator[0].motelID;
         const motel = motelModel.find({ motelID: motelID });
         const motelName = motel[0].name;
-
         // lấy tiền đã thu
 
+        
+        
         // lấy tiền tháng thanh toán
         const month = calculator[0].month;
+        
+        //lấy dịch vụ, tiền nhà
+        const dataWaterID = calculator[0].dataWaterID;
+
+
+        const dataPowerID = calculator[0].dataPowerID;
+
 
         //send to email
         let transporter = nodemailer.createTransport({
