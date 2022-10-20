@@ -18,14 +18,13 @@ module.exports = {
         });
     },
     getUserById: asyncUtil(async (req, res, next) => {
-        console.log('req', req.headers.userid);
-        const user = await userModel.findById(req.headers.userid);
+        const user = await userModel.findById({ _id: req.headers.userid });
         req.profile = user;
         req.profile.password = undefined;
         next();
     }),
     isAuth: (req, res, next) => {
-        const user = req.headers.userid == req.auth._id;
+        const user = req.profile._id == req.auth._id;
         if (!user) {
             return res.status(402).json({
                 message: 'Bạn không được phép truy cập',
