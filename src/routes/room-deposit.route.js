@@ -2,8 +2,13 @@ const express = require('express');
 const Joi = require('joi');
 const router = express.Router();
 const RoomDepositController = require('~/controllers/room-deposit.controller');
-const { getUserById } = require('~/controllers/user.controller');
-const { requireSignin, isAuth, isAdmin } = require('~/middleware/checkauth');
+
+const {
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
+} = require('~/middleware/checkauth');
 const validateRequest = require('~/middleware/validation');
 
 const validateInSchema = Joi.object().keys({
@@ -22,32 +27,35 @@ const validateInSchema = Joi.object().keys({
 });
 
 router.post(
-    '/list/:userId',
-    requireSignin,
+    '/list',
+    check,
+    getUserById,
     isAuth,
     RoomDepositController.getAllRoomDeposit
 );
 router.post(
-    '/add-or-update/:userId',
-    requireSignin,
+    '/add-or-update',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     validateRequest(validateInSchema),
     RoomDepositController.addOrUpdate
 );
 router.get(
-    '/detail/:id/:userId',
-    requireSignin,
+    '/detail/:id',
+    check,
+    getUserById,
     isAuth,
     RoomDepositController.getRoomDeposit
 );
 router.delete(
-    '/delete/:id/:userId',
-    requireSignin,
+    '/delete/:id',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     RoomDepositController.removeRoomDeposit
 );
 
-router.param('userId', getUserById);
 module.exports = router;
