@@ -8,6 +8,8 @@ const DataWaterModel = require('~/models/water.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const motelModel = require('~/models/motel.model');
+const serviceModel = require('~/models/service.model');
+const dataPowerModel = require('~/models/data-power.model');
 
 module.exports = {
     calculatorMoney: asyncUtil(async (req, res) => {
@@ -159,25 +161,34 @@ module.exports = {
             _id: req.params.id,
         })
 
+        console.log('cacular:',calculator);
+        return;
 
-        // lấy tên phòng
+        // lấy tên phòng ok
         const motelID = calculator[0].motelID;
         const motel = motelModel.find({ motelID: motelID });
         const motelName = motel[0].name;
-        // lấy tiền đã thu
 
-        
-        
-        // lấy tiền tháng thanh toán
+        // lấy tiền đã thu ok
+
+
+        // lấy tiền tháng thanh toán ok
         const month = calculator[0].month;
         
         //lấy dịch vụ, tiền nhà
-        const dataWaterID = calculator[0].dataWaterID;
+        // lấy tên vs số tiêu thu
+        // const dataWaterID = calculator[0].dataWaterID;
+        // const dataWater = serviceModel.find({dataPowerID:dataPowerID})
+        // const dataWaterName = dataWater[0].serviceName;
+        // const unitPrice = dataWater[0].unitPrice;
+
+
 
 
         const dataPowerID = calculator[0].dataPowerID;
+        // const dataPower = DataPowerModel
 
-
+        const totalAmount = calculator[0].totalAmount;
         //send to email
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -186,6 +197,8 @@ module.exports = {
                 pass: process.env.PASS_APP,
             },
         });
+
+        return;
         await transporter.sendMail(
             {
                 from: process.env.EMAIL_APP,
@@ -206,6 +219,13 @@ module.exports = {
                         <tbody>
                             <tr>
                                 <td>1</td>
+                                <td>${month}</td>
+                                <td>${month}</td>
+                                <td>${month}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Tổng</b></td>
+                                <td>${totalAmount}đ</td>
                             </tr>
                         </tbody>
                 </table>`,

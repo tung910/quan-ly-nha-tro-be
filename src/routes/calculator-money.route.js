@@ -16,12 +16,14 @@ router.get(
     isAuth,
     calculatorMoneyController.detailCalculator
 );
-router.get(
+
+router.post(
     '/sendMailBill/:id/:userId',
     requireSignin,
     isAuth,
     calculatorMoneyController.sendMailBill
 );
+
 router.post(
     '/calculator/:userId',
     requireSignin,
