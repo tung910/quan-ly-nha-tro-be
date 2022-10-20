@@ -1,18 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const calculatorMoneyController = require('~/controllers/calculator-money.controller');
-const { getUserById } = require('~/controllers/user.controller');
-const { requireSignin, isAuth, isAdmin } = require('~/middleware/checkauth');
+
+const {
+    check,
+    isAuth,
+    isAdmin,
+    getUserById,
+} = require('~/middleware/checkauth');
 
 router.post(
-    '/list/:userId',
-    requireSignin,
+    '/list',
+    check,
+    getUserById,
     isAuth,
     calculatorMoneyController.listCalculatorMoney
 );
 router.get(
-    '/detail/:id/:userId',
-    requireSignin,
+    '/detail/:id',
+    check,
+    getUserById,
     isAuth,
     calculatorMoneyController.detailCalculator
 );
@@ -25,33 +32,36 @@ router.post(
 );
 
 router.post(
-    '/calculator/:userId',
-    requireSignin,
+    '/calculator',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     calculatorMoneyController.calculatorAllMoney
 );
 router.post(
-    '/create/:userId',
-    requireSignin,
+    '/create',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     calculatorMoneyController.calculatorMoney
 );
 router.delete(
-    '/delete/:id/:userId',
-    requireSignin,
+    '/delete/:id',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     calculatorMoneyController.deleteCalculator
 );
 router.put(
-    '/payment/:id/:userId',
-    requireSignin,
+    '/payment/:id',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     calculatorMoneyController.paymentMoney
 );
 
-router.param('userId', getUserById);
 module.exports = router;

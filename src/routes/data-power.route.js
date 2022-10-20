@@ -1,35 +1,37 @@
 const express = require('express');
 const router = express.Router();
 const powerController = require('~/controllers/data-power.controller');
-const { getUserById } = require('~/controllers/user.controller');
-const { requireSignin, isAuth, isAdmin } = require('~/middleware/checkauth');
+
+const {
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
+} = require('~/middleware/checkauth');
 
 router.post(
-    '/create/:userId',
-    requireSignin,
+    '/create',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     powerController.createPower
 );
+router.get('/list', check, getUserById, isAuth, powerController.getListPower);
 router.get(
-    '/list/:userId',
-    requireSignin,
-    isAuth,
-    powerController.getListPower
-);
-router.get(
-    '/detail/:motelRoomId/:userId',
-    requireSignin,
+    '/detail/:motelRoomId',
+    check,
+    getUserById,
     isAuth,
     powerController.getDataPowerByMotelRoom
 );
 router.put(
-    '/edit/:id/:userId',
-    requireSignin,
+    '/edit/:id',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     powerController.updatePower
 );
 
-router.param('userId', getUserById);
 module.exports = router;
