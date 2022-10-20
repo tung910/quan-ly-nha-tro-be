@@ -1,11 +1,42 @@
 const express = require('express');
 const router = express.Router();
 const serviceController = require('~/controllers/service.controller');
+const { getUserById } = require('~/controllers/user.controller');
+const { requireSignin, isAuth, isAdmin } = require('~/middleware/checkauth');
 
-router.get('/list', serviceController.getAllService);
-router.get('/detail/:id', serviceController.getService);
-router.post('/create', serviceController.createService);
-router.put('/edit/:id', serviceController.updateService);
-router.delete('/delete', serviceController.removeService);
+router.get(
+    '/list/:userId',
+    requireSignin,
+    isAuth,
+    serviceController.getAllService
+);
+router.get(
+    '/detail/:id/:userId',
+    requireSignin,
+    isAuth,
+    serviceController.getService
+);
+router.post(
+    '/create/:userId',
+    requireSignin,
+    isAuth,
+    isAdmin,
+    serviceController.createService
+);
+router.put(
+    '/edit/:id/:userId',
+    requireSignin,
+    isAuth,
+    isAdmin,
+    serviceController.updateService
+);
+router.delete(
+    '/delete/:userId',
+    requireSignin,
+    isAuth,
+    isAdmin,
+    serviceController.removeService
+);
 
+router.param('userId', getUserById);
 module.exports = router;

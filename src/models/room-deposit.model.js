@@ -6,20 +6,20 @@ const RoomDepositSchema = new Schema(
         motelId: {
             type: mongoose.ObjectId,
             ref: 'Motel',
-            require: true,
+            required: true,
         },
         motelRoomId: {
             type: mongoose.ObjectId,
             ref: 'MotelRoom',
-            require: true,
+            required: true,
         },
         fullName: {
             type: String,
-            require: true,
+            required: true,
         },
         bookingDate: {
             type: Date,
-            require: true,
+            required: true,
         },
         telephone: {
             type: Number,
@@ -29,7 +29,7 @@ const RoomDepositSchema = new Schema(
         },
         dateOfArrival: {
             type: Date,
-            require: true,
+            required: true,
         },
         hasCancel: {
             type: Boolean,
