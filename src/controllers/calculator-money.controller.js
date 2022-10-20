@@ -7,6 +7,7 @@ const RoomRentalDetail = require('~/models/room-rental-detail.model');
 const DataWaterModel = require('~/models/water.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
+const motelModel = require('~/models/motel.model');
 
 module.exports = {
     calculatorMoney: asyncUtil(async (req, res) => {
@@ -136,32 +137,6 @@ module.exports = {
                 path: 'roomRentalDetailID',
                 select: ['service', 'customerName', 'roomName', 'priceRoom'],
             });
-
-
-        // tim den email trong hoa usser trong hoa don roi gui mail tt ve day
-        console.log('cacalculator', calculator);
-
-        //send to email
-        let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_APP,
-                pass: process.env.PASS_APP,
-            },
-        });
-        // await transporter.sendMail(
-        //     {
-        //         from: process.env.EMAIL_APP,
-        //         to: `${email}`,
-        //         subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
-        //         html: `<p>Trọ Vương Anh xin cảm ơn bạn ${name} đã lựa chọn dịch vụ của chúng tôi! <br />
-        //         Mã OTP của bạn là: ${OTP}
-        //           <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b>033333333</b> </p><br><b>Trân trọng!</b>`,
-        //     },
-        //     (error) => {
-        //         if (error) return AppResponse.fail(error, res);
-        //     }
-        // );
         return AppResponse.success(req, res)(calculator);
     }),
 
@@ -179,4 +154,57 @@ module.exports = {
         await RevenueStatisticsModel.create(data)
         return AppResponse.success(req, res)(paymentMoney);
     }),
+    sendMailBill: asyncUtil(async (req, res) => {
+        const calculator = await CalculatorMoneyModel.find({
+            _id: req.params.id,
+        })
+
+
+        // lấy tên phòng
+        const motelID = calculator[0].motelID;
+        const motel = motelModel.find({ motelID: motelID });
+        const motelName = motel[0].name;
+
+        // lấy tiền đã thu
+
+        // lấy tiền tháng thanh toán
+        const month = calculator[0].month;
+
+        //send to email
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_APP,
+                pass: process.env.PASS_APP,
+            },
+        });
+        await transporter.sendMail(
+            {
+                from: process.env.EMAIL_APP,
+                to: `${email}`,
+                subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
+                html: `
+                <h2>Hóa Đơn Tiền Nhà</h2>
+                <h4>Phòng ${motelName}</h4>
+                <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Tháng</th>
+                                <th>Đã thu</th>
+                                <th>Tổng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                </table>`,
+            },
+            (error) => {
+                if (error) return AppResponse.fail(error, res);
+            }
+        );
+    })
 };
