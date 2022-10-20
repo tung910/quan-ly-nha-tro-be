@@ -3,8 +3,13 @@ const Joi = require('joi');
 const router = express.Router();
 
 const motelRoomController = require('~/controllers/motel-room.controller');
-const { getUserById } = require('~/controllers/user.controller');
-const { requireSignin, isAuth, isAdmin } = require('~/middleware/checkauth');
+//
+const {
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
+} = require('~/middleware/checkauth');
 const validateRequest = require('~/middleware/validation');
 
 const validateInSchema = Joi.object().keys({
@@ -25,47 +30,51 @@ const validateInSchema = Joi.object().keys({
 });
 
 router.get(
-    '/list/:userId',
-    requireSignin,
+    '/list',
+    check,
+    getUserById,
     isAuth,
     motelRoomController.getAllMotelRoom
 );
 router.get(
-    '/detail/:id/:userId',
-    requireSignin,
+    '/detail/:id',
+    check,
+    getUserById,
     isAuth,
     motelRoomController.getMotelRoom
 );
 router.post(
-    '/create/:userId',
-    requireSignin,
+    '/create',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     validateRequest(validateInSchema),
     motelRoomController.createMotelRoom
 );
 router.put(
-    '/edit/:id/:userId',
-    requireSignin,
+    '/edit/:id',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     motelRoomController.editMotelRoom
 );
 router.delete(
-    '/delete/:id/:userId',
-    requireSignin,
+    '/delete/:id',
+    check,
+    getUserById,
     isAuth,
     isAdmin,
     motelRoomController.removeMotelRoom
 );
 
 router.get(
-    '/statistical/room-status/:userId',
-    requireSignin,
+    '/statistical/room-status',
+    check,
+    getUserById,
     isAuth,
     motelRoomController.statisticalRoomStatus
 );
-
-router.param('userId', getUserById);
 
 module.exports = router;
