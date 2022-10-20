@@ -3,12 +3,12 @@ const Customer = new mongoose.Schema(
     {
         name: {
             type: String,
-            require: true,
+            required: true,
             minLength: 5,
         },
         phoneNumber: {
             type: String,
-            require: true,
+            required: true,
         },
         gender: {
             type: Number,
@@ -20,14 +20,14 @@ const Customer = new mongoose.Schema(
         },
         birthPlace: {
             type: String,
-            require: true,
+            required: true,
         },
         carNumber: {
             type: String,
         },
         issuedBy: {
             type: String,
-            require: true,
+            required: true,
         },
         deposit: {
             type: Number,
@@ -35,23 +35,23 @@ const Customer = new mongoose.Schema(
         },
         startDay: {
             type: Date,
-            require: true,
+            required: true,
         },
         email: {
             type: String,
-            require: true,
+            required: true,
         },
         dateRange: {
             type: Date,
-            require: true,
+            required: true,
         },
         dateOfBirth: {
             type: Date,
-            require: true,
+            required: true,
         },
         citizenIdentificationNumber: {
             type: String,
-            require: true,
+            required: true,
         },
     },
     { collection: 'Customer', timestamps: true }

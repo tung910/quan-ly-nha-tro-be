@@ -8,19 +8,19 @@ const ServiceSchema = new mongoose.Schema(
         },
         serviceName: {
             type: String,
-            require: true,
+            required: true,
         },
         unitPrice: {
             type: Number,
-            require: true,
+            required: true,
         },
         serviceTypeId: {
             type: Number,
-            require: true,
+            required: true,
         },
         serviceTypeName: {
             type: String,
-            require: true,
+            required: true,
         },
         note: {
             type: String,

@@ -4,7 +4,7 @@ const MotelRoomSchema = new mongoose.Schema(
     {
         roomName: {
             type: String,
-            require: true,
+            required: true,
             minLength: 3,
         },
         customerName: {
@@ -23,15 +23,15 @@ const MotelRoomSchema = new mongoose.Schema(
         },
         width: {
             type: Number,
-            require: true,
+            required: true,
         },
         height: {
             type: Number,
-            require: true,
+            required: true,
         },
         unitPrice: {
             type: Number,
-            require: true,
+            required: true,
         },
         lease: {
             type: Array,
