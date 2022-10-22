@@ -4,6 +4,8 @@ const AppResponse = require('~/helpers/response');
 const MotelRoomModel = require('~/models/motel-room.model');
 const DataWaterModel = require('~/models/water.model');
 const DataPowerModel = require('~/models/data-power.model');
+const UserModel = require('~/models/user.model');
+const bcrypt = require('bcrypt');
 
 module.exports = {
     createRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -15,6 +17,17 @@ module.exports = {
             service: Service,
             member: Member,
         }).save();
+        const password = await bcrypt.hash("123456789",10)
+        const account = {
+            email: CustomerInfo.email,
+            password: password,
+            role: 0,
+            phone: CustomerInfo.phone,
+            name: CustomerInfo.customerName,
+            citizenIdentificationNumber: CustomerInfo.citizenIdentification,
+            address:CustomerInfo.address
+        };
+        await UserModel.create(account)
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
             { roomName: CustomerInfo.roomName },
@@ -41,20 +54,7 @@ module.exports = {
                 avatarCustomer: CustomerInfo.image,
             }
         ).exec();
-        await DataWaterModel.findOneAndUpdate(
-            {
-                roomName: CustomerInfo.roomName,
-                motelID: CustomerInfo.motelID,
-            },
-            { motelRoomID: CustomerInfo.motelRoomID }
-        );
-        await DataPowerModel.findOneAndUpdate(
-            {
-                roomName: CustomerInfo.roomName,
-                motelID: CustomerInfo.motelID,
-            },
-            { motelRoomID: CustomerInfo.motelRoomID }
-        );
+       
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
