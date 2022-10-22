@@ -177,16 +177,14 @@ module.exports = {
         
         //lấy dịch vụ, tiền nhà
         // lấy tên vs số tiêu thu
-        // const dataWaterID = calculator[0].dataWaterID;
-        // const dataWater = serviceModel.find({dataPowerID:dataPowerID})
-        // const dataWaterName = dataWater[0].serviceName;
-        // const unitPrice = dataWater[0].unitPrice;
-
-
-
+        const dataWaterID = calculator[0].dataWaterID;
+        const dataWater = serviceModel.find({dataPowerID:dataPowerID})
+        const dataWaterName = dataWater[0].serviceName;
+        const unitPrice = dataWater[0].unitPrice;
 
         const dataPowerID = calculator[0].dataPowerID;
-        // const dataPower = DataPowerModel
+        const dataPower = DataPowerModel
+
 
         const totalAmount = calculator[0].totalAmount;
         //send to email

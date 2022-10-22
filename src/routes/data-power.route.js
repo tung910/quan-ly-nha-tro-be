@@ -11,26 +11,27 @@ const {
 
 router.post(
     '/create',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     powerController.createPower
 );
 router.get('/list', check, getUserById, isAuth, powerController.getListPower);
 router.get(
     '/detail/:motelRoomId',
-    check,
-    getUserById,
-    isAuth,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     powerController.getDataPowerByMotelRoom
 );
 router.put(
     '/edit/:id',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     powerController.updatePower
 );
 

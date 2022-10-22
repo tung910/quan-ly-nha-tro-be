@@ -34,46 +34,49 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     motelRoomController.getAllMotelRoom
 );
 router.get(
     '/detail/:id',
-    check,
-    getUserById,
-    isAuth,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     motelRoomController.getMotelRoom
 );
 router.post(
     '/create',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     validateRequest(validateInSchema),
     motelRoomController.createMotelRoom
 );
 router.put(
     '/edit/:id',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     motelRoomController.editMotelRoom
 );
 router.delete(
     '/delete/:id',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     motelRoomController.removeMotelRoom
 );
 
 router.get(
     '/statistical/room-status',
-    check,
-    getUserById,
-    isAuth,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     motelRoomController.statisticalRoomStatus
 );
 

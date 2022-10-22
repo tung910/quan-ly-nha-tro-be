@@ -28,33 +28,35 @@ const validateInSchema = Joi.object().keys({
 
 router.post(
     '/list',
-    check,
-    getUserById,
-    isAuth,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     RoomDepositController.getAllRoomDeposit
 );
 router.post(
     '/add-or-update',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     validateRequest(validateInSchema),
     RoomDepositController.addOrUpdate
 );
 router.get(
     '/detail/:id',
-    check,
-    getUserById,
-    isAuth,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     RoomDepositController.getRoomDeposit
 );
 router.delete(
     '/delete/:id',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     RoomDepositController.removeRoomDeposit
 );
 

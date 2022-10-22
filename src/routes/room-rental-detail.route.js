@@ -12,40 +12,42 @@ const {
 
 router.get(
     '/list',
-    check,
-    getUserById,
-    isAuth,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     roomRentalDetailController.getAllRoomRentalDetail
 );
 router.get(
     '/:id',
-    check,
-    getUserById,
-    isAuth,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     roomRentalDetailController.getRoomRentalDetail
 );
 router.put(
     '/edit/:id',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     roomRentalDetailController.editRoomRentalDetail
 );
 router.delete(
     '/delete/:id',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     roomRentalDetailController.deleteRoomRentalDetail
 );
 router.post(
     '/create',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     roomRentalDetailController.createRoomRentalDetail
 );
 

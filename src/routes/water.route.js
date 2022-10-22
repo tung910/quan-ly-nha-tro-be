@@ -11,26 +11,27 @@ const {
 
 router.post(
     '/create',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     waterController.createWater
 );
 router.get('/list', check, getUserById, isAuth, waterController.listWater);
 router.get(
     '/detail/:motelRoomId',
-    check,
-    getUserById,
-    isAuth,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     waterController.getDataWaterByMotelRoom
 );
 router.put(
     '/edit/:id',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    //check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     waterController.updateWater
 );
 
