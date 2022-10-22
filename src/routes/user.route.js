@@ -31,7 +31,7 @@ router.put(
     userController.updatePassword
 );
 router.delete(
-    '/users/delet/:id',
+    '/users/delete/:id',
     check,
     getUserById,
     isAuth,
