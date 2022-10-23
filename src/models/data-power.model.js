@@ -30,12 +30,10 @@ const DataPowerSchema = new mongoose.Schema(
         motelID: {
             type: mongoose.ObjectId,
             ref: 'Motel',
-            required: true,
         },
         motelRoomID: {
             type: mongoose.ObjectId,
             ref: 'MotelRoom',
-            required: true,
         },
     },
     { collection: 'DataPower', timestamps: true }
