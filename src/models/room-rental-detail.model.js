@@ -20,7 +20,7 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             ref: 'User',
         },
         citizenIdentification: {
-            type: Number,
+            type: String,
             required: true,
         },
         address: {
@@ -47,7 +47,7 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             type: String,
         },
         phone: {
-            type: Number,
+            type: String,
             required: true,
         },
         rentalStartDate: {
