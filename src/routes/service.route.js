@@ -11,42 +11,42 @@ const {
 
 router.get(
     '/list',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     serviceController.getAllService
 );
 router.get(
     '/detail/:id',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     serviceController.getService
 );
 router.post(
     '/create',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     serviceController.createService
 );
 router.put(
     '/edit/:id',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     serviceController.updateService
 );
 router.delete(
     '/delete',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     serviceController.removeService
 );
 

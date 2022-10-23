@@ -11,34 +11,34 @@ const {
 
 router.get(
     '/list',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     customerController.getAllCustomer
 );
 router.post(
     '/create',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     customerController.addCustomer
 );
 router.put(
     '/edit/:id',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     customerController.editCustomer
 );
 router.delete(
     '/:id',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     customerController.deleteCustomer
 );
 router.get('/:id', customerController.detailCustomer);

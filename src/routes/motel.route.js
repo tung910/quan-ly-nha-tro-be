@@ -10,29 +10,31 @@ const {
     isAdmin,
 } = require('~/middleware/checkauth');
 
-router.get('/list', check, getUserById, isAuth, motelController.getAllMotel);
+router.get('/list',
+     check, getUserById, isAuth,
+    motelController.getAllMotel);
 router.post(
     '/create',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     motelController.createMotel
 );
 router.put(
     '/edit/:id',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     motelController.editMotel
 );
 router.delete(
     '/delete/:id',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     motelController.deleteMotel
 );
 router.get('/:id', motelController.detailMotel);

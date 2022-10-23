@@ -11,60 +11,60 @@ const {
 
 router.post(
     '/list',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     calculatorMoneyController.listCalculatorMoney
 );
 router.get(
     '/detail/:id',
-    //check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     calculatorMoneyController.detailCalculator
 );
 
 router.post(
     '/sendMailBill/:id',
-    // check,
-    // getUserById,
-    // isAuth,
+    check,
+    getUserById,
+    isAuth,
     calculatorMoneyController.sendMailBill
 );
 
 router.post(
     '/calculator',
-    // check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     calculatorMoneyController.calculatorAllMoney
 );
 router.post(
     '/create',
-    // check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     calculatorMoneyController.calculatorMoney
 );
 
 router.delete(
     '/delete/:id',
-    // check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     calculatorMoneyController.deleteCalculator
 );
 router.put(
     '/payment/:id',
-    // check,
-    // getUserById,
-    // isAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
     calculatorMoneyController.paymentMoney
 );
 

@@ -156,36 +156,48 @@ module.exports = {
         await RevenueStatisticsModel.create(data)
         return AppResponse.success(req, res)(paymentMoney);
     }),
+
+
     sendMailBill: asyncUtil(async (req, res) => {
+        return console.log(req.params.id);
+
         const calculator = await CalculatorMoneyModel.find({
             _id: req.params.id,
         })
 
-        console.log('cacular:',calculator);
-        return;
+        const roomRentalDetail = await RoomRentalDetail.find({ _id: calculator[0].roomRentalDetailID });
+
 
         // lấy tên phòng ok
         const motelID = calculator[0].motelID;
-        const motel = motelModel.find({ motelID: motelID });
+        // console.log('Motel id: =>',motelID);
+        const motel = await motelModel.find({ motelID: motelID });
         const motelName = motel[0].name;
 
-        // lấy tiền đã thu ok
-
-
-        // lấy tiền tháng thanh toán ok
+        // lấy tháng thanh toán ok
         const month = calculator[0].month;
-        
+
         //lấy dịch vụ, tiền nhà
-        // lấy tên vs số tiêu thu
+        // lấy tên vs số tiêu thu Nước
         const dataWaterID = calculator[0].dataWaterID;
-        const dataWater = serviceModel.find({dataPowerID:dataPowerID})
-        const dataWaterName = dataWater[0].serviceName;
-        const unitPrice = dataWater[0].unitPrice;
+
+        const dataWater = await DataWaterModel.find({ motelID: motelID })
+        const oldValue = dataWater[0].oldValue;
+        const newValue = dataWater[0].newValue;
+        const useValue = dataWater[0].useValue;
+
+        // const dataWater = await DataPowerModel.find({ dataPowerID: dataWaterID })
+        // const oldValue = dataWater[0].oldValue;
+        // const newValue = dataWater[0].newValue;
+        // const useValue = dataWater[0].useValue;
+
+
+        console.log(oldValue, newValue, useValue);
 
         const dataPowerID = calculator[0].dataPowerID;
-        const dataPower = DataPowerModel
+        // const dataPower = DataPowerModel
 
-
+        // tính tổng
         const totalAmount = calculator[0].totalAmount;
         //send to email
         let transporter = nodemailer.createTransport({
@@ -210,14 +222,15 @@ module.exports = {
                             <tr>
                                 <th>#</th>
                                 <th>Tháng</th>
-                                <th>Đã thu</th>
-                                <th>Tổng</th>
+                                <th>Số điện tiêu thụ</th>
+                                <th>Số nước tiêu thụ</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>1</td>
                                 <td>${month}</td>
+                                <td>Số cũ ${oldValue}/ Số mới: ${newValue}/ Sử dụng:${useValue}</td>
                                 <td>${month}</td>
                                 <td>${month}</td>
                             </tr>
