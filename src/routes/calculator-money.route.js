@@ -26,7 +26,7 @@ router.get(
     calculatorMoneyController.detailCalculator
 );
 
-router.post(
+router.get(
     '/sendMailBill/:id',
     check,
     getUserById,

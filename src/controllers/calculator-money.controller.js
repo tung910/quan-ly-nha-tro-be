@@ -10,6 +10,7 @@ const AppResponse = require('~/helpers/response');
 const motelModel = require('~/models/motel.model');
 const serviceModel = require('~/models/service.model');
 const dataPowerModel = require('~/models/data-power.model');
+const roomRentalDetailModel = require('~/models/room-rental-detail.model');
 
 module.exports = {
     calculatorMoney: asyncUtil(async (req, res) => {
@@ -159,47 +160,43 @@ module.exports = {
 
 
     sendMailBill: asyncUtil(async (req, res) => {
-        return console.log(req.params.id);
 
         const calculator = await CalculatorMoneyModel.find({
             _id: req.params.id,
-        })
+        }).exec();
 
-        const roomRentalDetail = await RoomRentalDetail.find({ _id: calculator[0].roomRentalDetailID });
+        const roomRentalDetailID = calculator[0].roomRentalDetailID;
+        const roomRentalDetail = await roomRentalDetailModel.find({ _id: roomRentalDetailID });
+        const email = roomRentalDetail.email;
 
-
-        // lấy tên phòng ok
         const motelID = calculator[0].motelID;
-        // console.log('Motel id: =>',motelID);
         const motel = await motelModel.find({ motelID: motelID });
         const motelName = motel[0].name;
 
-        // lấy tháng thanh toán ok
         const month = calculator[0].month;
 
-        //lấy dịch vụ, tiền nhà
-        // lấy tên vs số tiêu thu Nước
+
         const dataWaterID = calculator[0].dataWaterID;
-
-        const dataWater = await DataWaterModel.find({ motelID: motelID })
-        const oldValue = dataWater[0].oldValue;
-        const newValue = dataWater[0].newValue;
-        const useValue = dataWater[0].useValue;
-
-        // const dataWater = await DataPowerModel.find({ dataPowerID: dataWaterID })
-        // const oldValue = dataWater[0].oldValue;
-        // const newValue = dataWater[0].newValue;
-        // const useValue = dataWater[0].useValue;
-
-
-        console.log(oldValue, newValue, useValue);
-
         const dataPowerID = calculator[0].dataPowerID;
-        // const dataPower = DataPowerModel
 
-        // tính tổng
+        const dataWater = await DataWaterModel.find({ _id: dataWaterID })
+        const oldValueWater = dataWater[0].oldValue;
+        const newValueWater = dataWater[0].newValue;
+        const useValueWater = dataWater[0].useValue;
+        const unitPriceWater = 20000;
+        const totalWater = useValueWater * unitPriceWater;
+
+        const dataPower = await DataPowerModel.find({ _id: dataPowerID })
+        const oldValue = dataPower[0].oldValue;
+        const newValue = dataPower[0].newValue;
+        const useValue = dataPower[0].useValue;
+        const unitPrice = 3000;
+        const totalPower = useValue * unitPrice;
+
         const totalAmount = calculator[0].totalAmount;
-        //send to email
+
+        const total = totalWater + totalPower + totalAmount;
+
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -208,7 +205,6 @@ module.exports = {
             },
         });
 
-        return;
         await transporter.sendMail(
             {
                 from: process.env.EMAIL_APP,
@@ -217,26 +213,49 @@ module.exports = {
                 html: `
                 <h2>Hóa Đơn Tiền Nhà</h2>
                 <h4>Phòng ${motelName}</h4>
+                <h4>Tháng ${month}</h4>
                 <table>
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Tháng</th>
-                                <th>Số điện tiêu thụ</th>
-                                <th>Số nước tiêu thụ</th>
+                                <th>Số cũ</th>
+                                <th>Số mới</th>
+                                <th>Số tiêu thụ</th>
+                                <th>Đơn giá</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>1</td>
-                                <td>${month}</td>
-                                <td>Số cũ ${oldValue}/ Số mới: ${newValue}/ Sử dụng:${useValue}</td>
-                                <td>${month}</td>
-                                <td>${month}</td>
+                                <td>Số điện</td>
+                                <td>${oldValue}</td>
+                                <td>${newValue}</td>
+                                <td>${useValue}</td>
+                                <td>${unitPrice}</td>
+                                <td>${totalPower}</td>
+                            </tr>
+                            <tr>
+                                <td>Số nước</td>
+                                <td>${oldValueWater}</td>
+                                <td>${newValueWater}</td>
+                                <td>${useValueWater}</td>
+                                <td>${unitPriceWater}</td>
+                                <td>${totalWater}</td>
+                            </tr>
+                            <tr>
+                                <td>Tiền phòng</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>${totalAmount}</td>
                             </tr>
                             <tr>
                                 <td><b>Tổng</b></td>
-                                <td>${totalAmount}đ</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>${total}</b></td>
                             </tr>
                         </tbody>
                 </table>`,
@@ -245,5 +264,8 @@ module.exports = {
                 if (error) return AppResponse.fail(error, res);
             }
         );
+
+        const data = {total: total};
+        return AppResponse.success(req, res)(data);
     })
 };
