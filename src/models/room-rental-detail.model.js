@@ -65,7 +65,7 @@ const RoomRentalDetailSchema = new mongoose.Schema(
         },
         payEachTime: {
             // số lần thanh toán
-            type: String,
+            type: Number,
         },
         member: {
             type: Array,
@@ -82,11 +82,12 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             required: true,
         },
         paymentPeriod: {
-            type: String,
+            type: Number,
             default: 10,
         },
         email: {
             type: String,
+            required: true
         },
     },
     { timestamps: true }

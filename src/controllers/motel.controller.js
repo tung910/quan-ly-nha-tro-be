@@ -40,6 +40,7 @@ module.exports = {
         await motelRoomModel.findOneAndDelete({
             motelID: req.params.id
         }).exec();
+        
         await calculatorMoneyModel.findOneAndDelete({ motelID: req.params.id }).exec();
 
         const motel  = await MotelModel.find({});        

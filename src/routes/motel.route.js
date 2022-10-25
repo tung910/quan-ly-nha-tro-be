@@ -10,7 +10,9 @@ const {
     isAdmin,
 } = require('~/middleware/checkauth');
 
-router.get('/list', check, getUserById, isAuth, motelController.getAllMotel);
+router.get('/list',
+     check, getUserById, isAuth,
+    motelController.getAllMotel);
 router.post(
     '/create',
     check,

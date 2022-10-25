@@ -14,6 +14,7 @@ router.post(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     calculatorMoneyController.listCalculatorMoney
 );
 router.get(
@@ -21,8 +22,18 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     calculatorMoneyController.detailCalculator
 );
+
+router.get(
+    '/sendMailBill/:id',
+    check,
+    getUserById,
+    isAuth,
+    calculatorMoneyController.sendMailBill
+);
+
 router.post(
     '/calculator',
     check,
@@ -39,6 +50,7 @@ router.post(
     isAdmin,
     calculatorMoneyController.calculatorMoney
 );
+
 router.delete(
     '/delete/:id',
     check,

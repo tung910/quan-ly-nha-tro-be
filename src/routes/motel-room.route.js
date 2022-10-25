@@ -34,6 +34,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     motelRoomController.getAllMotelRoom
 );
 router.get(
@@ -41,6 +42,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     motelRoomController.getMotelRoom
 );
 router.post(
@@ -74,6 +76,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     motelRoomController.statisticalRoomStatus
 );
 

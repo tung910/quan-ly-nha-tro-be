@@ -14,6 +14,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     serviceController.getAllService
 );
 router.get(
@@ -21,6 +22,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     serviceController.getService
 );
 router.post(

@@ -14,6 +14,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     customerController.getAllCustomer
 );
 router.post(

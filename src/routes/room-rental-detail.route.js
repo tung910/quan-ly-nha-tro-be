@@ -15,6 +15,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     roomRentalDetailController.getAllRoomRentalDetail
 );
 router.get(
@@ -22,6 +23,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     roomRentalDetailController.getRoomRentalDetail
 );
 router.put(

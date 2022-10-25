@@ -23,6 +23,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     waterController.getDataWaterByMotelRoom
 );
 router.put(
