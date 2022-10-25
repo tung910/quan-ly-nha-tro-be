@@ -31,6 +31,7 @@ router.post(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     RoomDepositController.getAllRoomDeposit
 );
 router.post(
@@ -47,6 +48,7 @@ router.get(
     check,
     getUserById,
     isAuth,
+    isAdmin,
     RoomDepositController.getRoomDeposit
 );
 router.delete(
