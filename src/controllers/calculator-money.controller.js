@@ -167,34 +167,26 @@ module.exports = {
 
         const roomRentalDetailID = calculator[0].roomRentalDetailID;
         const roomRentalDetail = await roomRentalDetailModel.find({ _id: roomRentalDetailID });
-        const email = roomRentalDetail.email;
-
+        const email = roomRentalDetail[0].email;
         const motelID = calculator[0].motelID;
         const motel = await motelModel.find({ motelID: motelID });
         const motelName = motel[0].name;
-
         const month = calculator[0].month;
-
-
         const dataWaterID = calculator[0].dataWaterID;
         const dataPowerID = calculator[0].dataPowerID;
-
         const dataWater = await DataWaterModel.find({ _id: dataWaterID })
         const oldValueWater = dataWater[0].oldValue;
         const newValueWater = dataWater[0].newValue;
         const useValueWater = dataWater[0].useValue;
         const unitPriceWater = 20000;
         const totalWater = useValueWater * unitPriceWater;
-
         const dataPower = await DataPowerModel.find({ _id: dataPowerID })
         const oldValue = dataPower[0].oldValue;
         const newValue = dataPower[0].newValue;
         const useValue = dataPower[0].useValue;
         const unitPrice = 3000;
         const totalPower = useValue * unitPrice;
-
         const totalAmount = calculator[0].totalAmount;
-
         const total = totalWater + totalPower + totalAmount;
 
         let transporter = nodemailer.createTransport({
@@ -212,7 +204,7 @@ module.exports = {
                 subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
                 html: `
                 <h2>Hóa Đơn Tiền Nhà</h2>
-                <h4>Phòng ${motelName}</h4>
+                <h4>Nhà ${motelName}</h4>
                 <h4>Tháng ${month}</h4>
                 <table>
                         <thead>
@@ -222,6 +214,7 @@ module.exports = {
                                 <th>Số mới</th>
                                 <th>Số tiêu thụ</th>
                                 <th>Đơn giá</th>
+                                <th>Tổng</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -230,16 +223,16 @@ module.exports = {
                                 <td>${oldValue}</td>
                                 <td>${newValue}</td>
                                 <td>${useValue}</td>
-                                <td>${unitPrice}</td>
-                                <td>${totalPower}</td>
+                                <td>${unitPrice}đ</td>
+                                <td>${totalPower}đ</td>
                             </tr>
                             <tr>
                                 <td>Số nước</td>
                                 <td>${oldValueWater}</td>
                                 <td>${newValueWater}</td>
                                 <td>${useValueWater}</td>
-                                <td>${unitPriceWater}</td>
-                                <td>${totalWater}</td>
+                                <td>${unitPriceWater}đ</td>
+                                <td>${totalWater}đ</td>
                             </tr>
                             <tr>
                                 <td>Tiền phòng</td>
@@ -247,7 +240,7 @@ module.exports = {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>${totalAmount}</td>
+                                <td>${totalAmount}đ</td>
                             </tr>
                             <tr>
                                 <td><b>Tổng</b></td>
@@ -255,7 +248,7 @@ module.exports = {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><b>${total}</b></td>
+                                <td><b>${total}đ</b></td>
                             </tr>
                         </tbody>
                 </table>`,
@@ -265,7 +258,7 @@ module.exports = {
             }
         );
 
-        const data = {total: total};
+        const data = { total: total };
         return AppResponse.success(req, res)(data);
     })
 };
