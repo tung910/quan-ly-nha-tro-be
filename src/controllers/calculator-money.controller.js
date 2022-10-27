@@ -18,7 +18,6 @@ module.exports = {
         const calculator = await CalculatorMoneyModel(data).save();
         return AppResponse.success(req, res)(calculator);
     }),
-
     listCalculatorMoney: asyncUtil(async (req, res) => {
         const { data } = req.body;
         let obj = {};
@@ -122,7 +121,6 @@ module.exports = {
         );
         return AppResponse.success(req, res)(list);
     }),
-
     detailCalculator: asyncUtil(async (req, res) => {
         const calculator = await CalculatorMoneyModel.find({
             _id: req.params.id,
@@ -149,6 +147,7 @@ module.exports = {
         });
         return AppResponse.success(req, res)(calculator);
     }),
+    
     paymentMoney: asyncUtil(async (req, res) => {
         const { data } = req.body;
         const paymentMoney = await CalculatorMoneyModel.findByIdAndUpdate({
@@ -157,7 +156,6 @@ module.exports = {
         await RevenueStatisticsModel.create(data)
         return AppResponse.success(req, res)(paymentMoney);
     }),
-
 
     sendMailBill: asyncUtil(async (req, res) => {
 

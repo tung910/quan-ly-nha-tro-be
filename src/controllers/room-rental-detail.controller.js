@@ -133,4 +133,21 @@ module.exports = {
         ).exec();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
+    changeRoomRentalDetail: asyncUtil(async (req, res) => {
+        const {
+            data: { CustomerInfo, Member, Service, Contract },
+        } = req.body;
+
+        const roomRentalDetail = await RoomRentalDetail.findOneAndUpdate(
+            {
+                _id: req.params.id,
+            },
+            {
+                ...CustomerInfo,
+                service: Service,
+                member: Member,
+            },
+            { new: true }).exec();
+
+    })
 };
