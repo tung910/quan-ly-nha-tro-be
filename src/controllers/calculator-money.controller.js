@@ -153,7 +153,6 @@ module.exports = {
         const paymentMoney = await CalculatorMoneyModel.findByIdAndUpdate({
             _id: req.params.id,
         }, data, { new: true });
-        await RevenueStatisticsModel.create(data)
         return AppResponse.success(req, res)(paymentMoney);
     }),
 

@@ -22,13 +22,17 @@ const CalculatorMoneySchema = new mongoose.Schema(
             ref: 'RoomRentalDetail',
             required: true,
         },
+        paymentStatus: {
+            type: Boolean,
+            default: false,
+        },
         payer: {
             type: String,
             default: '',
         },
         dateOfPayment: {
-            type: Date,
-            default:'',
+            type: String,
+            default: '',
         },
         paymentMethod: {
             type: Number,
