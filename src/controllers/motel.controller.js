@@ -33,17 +33,19 @@ module.exports = {
     }),
 
     deleteMotel: asyncUtil(async (req, res) => {
-        const data =  await MotelModel.findOneAndDelete({
-            _id: req.params.id,
-        }).exec();
+        // const data = await MotelModel.findOneAndDelete({
+        //     _id: req.params.id,
+        // }).exec();
 
-        await motelRoomModel.findOneAndDelete({
+        const motelRoom = await motelRoomModel.findOne({
             motelID: req.params.id
         }).exec();
-        
+
+        return console.log(motelRoom);
+
         await calculatorMoneyModel.findOneAndDelete({ motelID: req.params.id }).exec();
 
-        const motel  = await MotelModel.find({});        
+        const motel = await MotelModel.find({});
         await roomRentalDetailModel.findOneAndDelete({
             roomName: motel[0].name
         })

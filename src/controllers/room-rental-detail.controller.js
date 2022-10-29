@@ -192,7 +192,7 @@ module.exports = {
             lease: leaseOld,
             isDebit: isDebitOld,
             isRent: false,
-            avatarCustomer: undefined
+            avatarCustomer: "https://res.cloudinary.com/dhfndew6y/image/upload/v1666108397/upload-by-nodejs/kbd0oqh53vnet31epfdf.png"
         }
         dataOld.roomRentID = undefined;
         //update phòng cũ
