@@ -50,13 +50,13 @@ router.post(
     isAdmin,
     roomRentalDetailController.createRoomRentalDetail
 );
-router.put(
+router.post(
     '/change-room/:id',
     check,
     getUserById,
     isAuth,
     isAdmin,
-    roomRentalDetailController.ChangeRoomRentalDetail
+    roomRentalDetailController.changeRoomRentalDetail
 );
 
 module.exports = router;
