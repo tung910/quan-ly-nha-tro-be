@@ -25,7 +25,7 @@ module.exports = {
             obj = data;
         }
         const today = new Date();
-        const currentMonth = (today.getMonth() + 2).toString();
+        const currentMonth = (today.getMonth() + 1).toString();
         const currentDataWater = await WaterModel.find({
             month: currentMonth,
         });
