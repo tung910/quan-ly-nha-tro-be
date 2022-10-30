@@ -33,15 +33,13 @@ module.exports = {
     }),
 
     deleteMotel: asyncUtil(async (req, res) => {
-        // const data = await MotelModel.findOneAndDelete({
-        //     _id: req.params.id,
-        // }).exec();
-
-        const motelRoom = await motelRoomModel.findOne({
-            motelID: req.params.id
+        const data = await MotelModel.findOneAndDelete({
+            _id: req.params.id,
         }).exec();
 
-        return console.log(motelRoom);
+        await motelRoomModel.findOneAndDelete({
+            motelID: req.params.id
+        }).exec();
 
         await calculatorMoneyModel.findOneAndDelete({ motelID: req.params.id }).exec();
 
@@ -51,6 +49,8 @@ module.exports = {
         })
 
         await roomRentalDetailModel.findOneAndDelete({ motelID: req.params.id }).exec();
+
+        //thiếu xóa điện nc
         return AppResponse.success(req, res)(data);
     })
 };
