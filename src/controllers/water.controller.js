@@ -19,16 +19,50 @@ module.exports = {
         return AppResponse.success(req, res)(water);
     }),
     listWater: asyncUtil(async (req, res) => {
-        const water = await WaterModel.find({}).populate({
-            path: 'motelID',
-            select: 'name',
+        const { data } = req.body;
+        let obj = {};
+        if (data) {
+            obj = data;
+        }
+        const today = new Date();
+        const currentMonth = (today.getMonth() + 1).toString();
+        const currentDataWater = await WaterModel.find({
+            month: currentMonth,
         });
-        return AppResponse.success(req, res)(water);
+        if (currentDataWater.length === 0) {
+            const listMotelRoom = await MotelRoomModel.find({});
+            await Promise.all(
+                listMotelRoom.map(async (item) => {
+                    await WaterModel.create({
+                        customerName: item.customerName,
+                        month: currentMonth,
+                        year: item.year,
+                        roomName: item.roomName,
+                        motelID: item.motelID,
+                        motelRoomID: item._id,
+                    });
+                })
+            );
+            const water = await WaterModel.find(obj).populate({
+                path: 'motelID',
+                select: 'name',
+            });
+            return AppResponse.success(req, res)(water);
+        } else {
+            const water = await WaterModel.find(obj).populate({
+                path: 'motelID',
+                select: 'name',
+            });
+
+            return AppResponse.success(req, res)(water);
+        }
     }),
     getDataWaterByMotelRoom: asyncUtil(async (req, res) => {
-        const dataWater = await WaterModel.findOne({
-            motelRoomID: req.params.motelRoomId,
-        });
+      const {data} = req.body
+      if (data) {
+          obj = data;
+      }
+        const dataWater = await WaterModel.findOne(obj);
         return AppResponse.success(req, res)(dataWater);
     }),
 };

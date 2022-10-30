@@ -17,11 +17,11 @@ router.post(
     isAdmin,
     powerController.createPower
 );
-router.get('/list',
+router.post('/list',
      check, getUserById, isAuth, 
     powerController.getListPower);
-router.get(
-    '/detail/:motelRoomId',
+router.post(
+    '/detail',
     check,
     getUserById,
     isAuth,

@@ -17,9 +17,9 @@ router.post(
     isAdmin,
     waterController.createWater
 );
-router.get('/list', check, getUserById, isAuth, waterController.listWater);
-router.get(
-    '/detail/:motelRoomId',
+router.post('/list', check, getUserById, isAuth, waterController.listWater);
+router.post(
+    '/detail',
     check,
     getUserById,
     isAuth,
