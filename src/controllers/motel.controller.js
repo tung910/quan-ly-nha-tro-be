@@ -33,22 +33,24 @@ module.exports = {
     }),
 
     deleteMotel: asyncUtil(async (req, res) => {
-        const data =  await MotelModel.findOneAndDelete({
+        const data = await MotelModel.findOneAndDelete({
             _id: req.params.id,
         }).exec();
 
         await motelRoomModel.findOneAndDelete({
             motelID: req.params.id
         }).exec();
-        
+
         await calculatorMoneyModel.findOneAndDelete({ motelID: req.params.id }).exec();
 
-        const motel  = await MotelModel.find({});        
+        const motel = await MotelModel.find({});
         await roomRentalDetailModel.findOneAndDelete({
             roomName: motel[0].name
         })
 
         await roomRentalDetailModel.findOneAndDelete({ motelID: req.params.id }).exec();
+
+        //thiếu xóa điện nc
         return AppResponse.success(req, res)(data);
     })
 };

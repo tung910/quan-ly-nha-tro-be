@@ -50,5 +50,13 @@ router.post(
     isAdmin,
     roomRentalDetailController.createRoomRentalDetail
 );
+router.post(
+    '/change-room/:id',
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
+    roomRentalDetailController.changeRoomRentalDetail
+);
 
 module.exports = router;
