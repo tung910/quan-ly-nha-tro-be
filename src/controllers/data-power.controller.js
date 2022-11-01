@@ -26,17 +26,19 @@ module.exports = {
         }
         const today = new Date();
         const currentMonth = (today.getMonth() + 1).toString();
+        const prevMonth = today.getMonth().toString();
         const currentDataPower = await DataPowerModel.find({
             month: currentMonth,
         });
+        const prevDataPower = await DataPowerModel.find({month:prevMonth});
         if (currentDataPower.length === 0) {
-            const listMotelRoom = await MotelRoomModel.find({});
             await Promise.all(
-                listMotelRoom.map(async (item) => {
+                prevDataPower.map(async (item) => {
                     await DataPowerModel.create({
                         customerName: item.customerName,
                         month: currentMonth,
                         year: item.year,
+                        oldValue:item.newValue,
                         roomName: item.roomName,
                         motelID: item.motelID,
                         motelRoomID: item._id,

@@ -1,4 +1,5 @@
 const WaterModel = require('~/models/water.model');
+const MotelRoomModel = require('~/models/motel-room.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 
@@ -26,16 +27,18 @@ module.exports = {
         }
         const today = new Date();
         const currentMonth = (today.getMonth() + 1).toString();
-        const currentDataWater = await WaterModel.find({
-            month: currentMonth,
-        });
+         const prevMonth = today.getMonth().toString();
+         const currentDataWater = await WaterModel.find({
+             month: currentMonth,
+         });
+         const prevDataWater = await WaterModel.find({ month: prevMonth });
         if (currentDataWater.length === 0) {
-            const listMotelRoom = await MotelRoomModel.find({});
             await Promise.all(
-                listMotelRoom.map(async (item) => {
+                prevDataWater.map(async (item) => {
                     await WaterModel.create({
                         customerName: item.customerName,
                         month: currentMonth,
+                        oldValue:item.newValue,
                         year: item.year,
                         roomName: item.roomName,
                         motelID: item.motelID,
