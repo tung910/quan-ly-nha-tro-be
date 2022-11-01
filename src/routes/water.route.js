@@ -17,7 +17,11 @@ router.post(
     isAdmin,
     waterController.createWater
 );
-router.post('/list', check, getUserById, isAuth, waterController.listWater);
+router.post('/list', 
+    check, 
+    getUserById, 
+    isAuth, 
+    waterController.listWater);
 router.post(
     '/detail',
     check,
