@@ -28,43 +28,34 @@ module.exports = {
         const today = new Date();
         const currentMonth = (today.getMonth() + 1).toString();
         const prevMonth = today.getMonth().toString();
-        const currentDataWater = await WaterModel.find({
-            month: currentMonth,
-        });
+        // const currentDataWater = await WaterModel.find({
+        //     month: currentMonth,
+        // });
         const prevDataWater = await WaterModel.find({ month: prevMonth });
-        if (currentDataWater.length === 0) {
-            await Promise.all(
-                prevDataWater.map(async (item) => {
-                    const isExist = await WaterModel.findOneAndUpdate(
-                        { motelRoomID: item.motelRoomID, month: currentMonth },
-                        { oldValue: item.newValue }
-                    ).exec();
-                    if (!isExist) {
-                        await WaterModel.create({
-                            customerName: item.customerName,
-                            month: currentMonth,
-                            oldValue: item.newValue,
-                            year: item.year,
-                            roomName: item.roomName,
-                            motelID: item.motelID,
-                            motelRoomID: item.motelRoomID,
-                        });
-                    }
-                })
-            );
-            const water = await WaterModel.find(obj).populate({
-                path: 'motelID',
-                select: 'name',
-            });
-            return AppResponse.success(req, res)(water);
-        } else {
-            const water = await WaterModel.find(obj).populate({
-                path: 'motelID',
-                select: 'name',
-            });
-
-            return AppResponse.success(req, res)(water);
-        }
+        await Promise.all(
+            prevDataWater.map(async (item) => {
+                const isExist = await WaterModel.findOneAndUpdate(
+                    { motelRoomID: item.motelRoomID, month: currentMonth },
+                    { oldValue: item.newValue }
+                );
+                if (isExist === null) {
+                    const test = await WaterModel.create({
+                        customerName: item.customerName,
+                        month: currentMonth,
+                        oldValue: item.newValue,
+                        year: item.year,
+                        roomName: item.roomName,
+                        motelID: item.motelID,
+                        motelRoomID: item.motelRoomID,
+                    });
+                }
+            })
+        );
+        const water = await WaterModel.find(obj).populate({
+            path: 'motelID',
+            select: 'name',
+        });
+        return AppResponse.success(req, res)(water);
     }),
     getDataWaterByMotelRoom: asyncUtil(async (req, res) => {
         const { data } = req.body;
