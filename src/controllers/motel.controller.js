@@ -4,6 +4,8 @@ const AppResponse = require('~/helpers/response');
 const motelRoomModel = require('~/models/motel-room.model');
 const roomRentalDetailModel = require('~/models/room-rental-detail.model');
 const calculatorMoneyModel = require('~/models/calculator-money.model');
+const waterModel = require('~/models/water.model');
+const dataPowerModel = require('~/models/data-power.model');
 
 module.exports = {
     getAllMotel: asyncUtil(async (req, res) => {
@@ -33,24 +35,31 @@ module.exports = {
     }),
 
     deleteMotel: asyncUtil(async (req, res) => {
-        const data = await MotelModel.findOneAndDelete({
+        const motel = await MotelModel.findOne({ _id: req.params.id }).exec();
+        await MotelModel.findOneAndDelete({
             _id: req.params.id,
         }).exec();
 
-        await motelRoomModel.findOneAndDelete({
-            motelID: req.params.id
-        }).exec();
-
-        await calculatorMoneyModel.findOneAndDelete({ motelID: req.params.id }).exec();
-
-        const motel = await MotelModel.find({});
-        await roomRentalDetailModel.findOneAndDelete({
-            roomName: motel[0].name
+        const motelRoom = await motelRoomModel.find({ motelID: req.params.id });
+        motelRoom.map(async (item) => {
+            motelRoomModel.findOneAndDelete({ _id: item._id }).exec();
         })
 
-        await roomRentalDetailModel.findOneAndDelete({ motelID: req.params.id }).exec();
+        const calculator = await calculatorMoneyModel.find({ motelID: req.params.id }).exec();
+        calculator.map((item) => {
+            calculatorMoneyModel.findOneAndDelete({ _id: item._id }).exec();
+        })
 
-        //thiếu xóa điện nc
-        return AppResponse.success(req, res)(data);
+        const water = await waterModel.find({ motelID: req.params.id });
+        water.map((item) => {
+            waterModel.findOneAndDelete({ _id: item._id }).exec();
+        })
+
+        const datapower = await dataPowerModel.find({ motelID: req.params.id });
+        datapower.map((item) => {
+            dataPowerModel.findOneAndDelete({ _id: item._id }).exec();
+        })
+
+        return AppResponse.success(req, res)(motel);
     })
 };
