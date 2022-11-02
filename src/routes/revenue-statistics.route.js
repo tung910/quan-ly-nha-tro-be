@@ -5,6 +5,6 @@ const { check, getUserById, checkAuth, isAdmin } = require('~/middleware/checkau
 
 router.get('/list',check,getUserById,checkAuth,isAdmin, revenueStatisticsController.listRevenueStatistics);
 router.post('/payment-tracking',check,getUserById,checkAuth,isAdmin, revenueStatisticsController.getTotalPayment);
-router.post('/add',check,getUserById,checkAuth,isAdmin, revenueStatisticsController.addTotalPayment);
+router.post('/add-or-update',check,getUserById,checkAuth,isAdmin, revenueStatisticsController.addOrUpdate);
 
 module.exports = router;
