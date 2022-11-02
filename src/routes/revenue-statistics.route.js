@@ -18,18 +18,18 @@ router.get(
 );
 router.post(
     '/payment-tracking',
-    // check,
-    // getUserById,
-    // checkAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    checkAuth,
+    isAdmin,
     revenueStatisticsController.getTotalPayment
 );
 router.post(
     '/add-or-update',
-    // check,
-    // getUserById,
-    // checkAuth,
-    // isAdmin,
+    check,
+    getUserById,
+    checkAuth,
+    isAdmin,
     revenueStatisticsController.addOrUpdate
 );
 
