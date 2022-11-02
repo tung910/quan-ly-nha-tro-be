@@ -14,31 +14,39 @@ module.exports = {
         const existTotalPayment = await RevenueStatisticsModel.findOne({
             month: data.month,
         });
-        const obj = {};
+        let obj = {};
+        obj.month = data.month;
+        obj.year = data.year;
+        obj.totalPaymentAmount = 0;
+        obj.totalPaymentUnpaid = 0;
+        obj.totalBillPaid = 0;
+        obj.totalBillUnpaid = 0;
         const listBill = await CalculatorMoneyModel.find({ month: data.month });
-        obj.totalBill = listBill.length
+        obj.totalBill = listBill.length;
         listBill.map((item) => {
-          obj.totalPaymentAmount += item.payAmount;
-          obj.totalPaymentUnpaid += item.remainAmount;
+            obj.totalPaymentAmount += item.payAmount;
+            obj.totalPaymentUnpaid += item.remainAmount;
             if (item.paymentStatus) {
                 obj.totalBillPaid++;
             } else {
                 obj.totalBillUnpaid++;
             }
         });
-        console.log("obj",obj)
-        console.log('listBill', listBill);
-        // if (existTotalPayment) {
-        //     updateTotalPayment = await RevenueStatisticsModel.findOneAndUpdate(
-        //         {
-        //             month: data.month,
-        //         },
-        //         {}
-        //     );
-        // }
+        console.log('obj', obj);
+        // console.log('listBill', listBill);
+        if (existTotalPayment) {
+            updateTotalPayment = await RevenueStatisticsModel.findOneAndUpdate(
+                {
+                    month: data.month,
+                },
+                { obj }
+            );
+            return AppResponse.success(req, res)(updateTotalPayment);
+        } else {
+            addTotalPayment = await RevenueStatisticsModel.create(obj);
+            return AppResponse.success(req, res)(addTotalPayment);
+        }
         // const revenueStatistics = await RevenueStatisticsModel.create(data);
-
-        return AppResponse.success(req, res)(listBill);
     }),
     getTotalPayment: asyncUtil(async (req, res) => {
         const { data } = req.body;
