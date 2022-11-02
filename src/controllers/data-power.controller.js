@@ -30,19 +30,26 @@ module.exports = {
         const currentDataPower = await DataPowerModel.find({
             month: currentMonth,
         });
-        const prevDataPower = await DataPowerModel.find({month:prevMonth});
+        const prevDataPower = await DataPowerModel.find({ month: prevMonth });
+        console.log('prevDataPower', prevDataPower);
         if (currentDataPower.length === 0) {
             await Promise.all(
                 prevDataPower.map(async (item) => {
-                    await DataPowerModel.create({
-                        customerName: item.customerName,
-                        month: currentMonth,
-                        year: item.year,
-                        oldValue:item.newValue,
-                        roomName: item.roomName,
-                        motelID: item.motelID,
-                        motelRoomID: item._id,
-                    });
+                    const isExist = await DataPowerModel.findOneAndUpdate(
+                        { motelRoomID: item.motelRoomID, month: currentMonth },
+                        { oldValue: item.newValue }
+                    ).exec();
+                    if (!isExist) {
+                        await DataPowerModel.create({
+                            customerName: item.customerName,
+                            month: currentMonth,
+                            year: item.year,
+                            oldValue: item.newValue,
+                            roomName: item.roomName,
+                            motelID: item.motelID,
+                            motelRoomID: item.motelRoomID,
+                        });
+                    }
                 })
             );
             const power = await DataPowerModel.find(obj).populate({

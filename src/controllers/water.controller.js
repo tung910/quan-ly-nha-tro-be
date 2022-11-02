@@ -27,23 +27,29 @@ module.exports = {
         }
         const today = new Date();
         const currentMonth = (today.getMonth() + 1).toString();
-         const prevMonth = today.getMonth().toString();
-         const currentDataWater = await WaterModel.find({
-             month: currentMonth,
-         });
-         const prevDataWater = await WaterModel.find({ month: prevMonth });
+        const prevMonth = today.getMonth().toString();
+        const currentDataWater = await WaterModel.find({
+            month: currentMonth,
+        });
+        const prevDataWater = await WaterModel.find({ month: prevMonth });
         if (currentDataWater.length === 0) {
             await Promise.all(
                 prevDataWater.map(async (item) => {
-                    await WaterModel.create({
-                        customerName: item.customerName,
-                        month: currentMonth,
-                        oldValue:item.newValue,
-                        year: item.year,
-                        roomName: item.roomName,
-                        motelID: item.motelID,
-                        motelRoomID: item._id,
-                    });
+                    const isExist = await WaterModel.findOneAndUpdate(
+                        { motelRoomID: item.motelRoomID, month: currentMonth },
+                        { oldValue: item.newValue }
+                    ).exec();
+                    if (!isExist) {
+                        await WaterModel.create({
+                            customerName: item.customerName,
+                            month: currentMonth,
+                            oldValue: item.newValue,
+                            year: item.year,
+                            roomName: item.roomName,
+                            motelID: item.motelID,
+                            motelRoomID: item.motelRoomID,
+                        });
+                    }
                 })
             );
             const water = await WaterModel.find(obj).populate({
@@ -61,10 +67,10 @@ module.exports = {
         }
     }),
     getDataWaterByMotelRoom: asyncUtil(async (req, res) => {
-      const {data} = req.body
-      if (data) {
-          obj = data;
-      }
+        const { data } = req.body;
+        if (data) {
+            obj = data;
+        }
         const dataWater = await WaterModel.findOne(obj);
         return AppResponse.success(req, res)(dataWater);
     }),
