@@ -53,13 +53,13 @@ module.exports = {
                         if (serviceItem.isUse) {
                             serviceItem.serviceName === 'Nước'
                                 ? (add.totalAmount +=
-                                    dataWater.useValue *
-                                    serviceItem.unitPrice)
+                                      dataWater.useValue *
+                                      serviceItem.unitPrice)
                                 : serviceItem.serviceName === 'Điện'
-                                    ? (add.totalAmount +=
-                                        dataPower.useValue *
-                                        serviceItem.unitPrice)
-                                    : (add.totalAmount += serviceItem.unitPrice);
+                                ? (add.totalAmount +=
+                                      dataPower.useValue *
+                                      serviceItem.unitPrice)
+                                : (add.totalAmount += serviceItem.unitPrice);
                         }
                     });
                     add.totalAmount += roomRentalDetail.priceRoom;
@@ -94,14 +94,14 @@ module.exports = {
                             if (serviceItem.isUse) {
                                 serviceItem.serviceName === 'Nước'
                                     ? (add.totalAmount +=
-                                        dataWater.useValue *
-                                        serviceItem.unitPrice)
+                                          dataWater.useValue *
+                                          serviceItem.unitPrice)
                                     : serviceItem.serviceName === 'Điện'
-                                        ? (add.totalAmount +=
-                                            dataPower.useValue *
-                                            serviceItem.unitPrice)
-                                        : (add.totalAmount +=
-                                            serviceItem.unitPrice);
+                                    ? (add.totalAmount +=
+                                          dataPower.useValue *
+                                          serviceItem.unitPrice)
+                                    : (add.totalAmount +=
+                                          serviceItem.unitPrice);
                             }
                         });
                         add.totalAmount += roomRentalDetail.priceRoom;
@@ -147,23 +147,28 @@ module.exports = {
         });
         return AppResponse.success(req, res)(calculator);
     }),
-    
+
     paymentMoney: asyncUtil(async (req, res) => {
         const { data } = req.body;
-        const paymentMoney = await CalculatorMoneyModel.findByIdAndUpdate({
-            _id: req.params.id,
-        }, data, { new: true });
+        const paymentMoney = await CalculatorMoneyModel.findByIdAndUpdate(
+            {
+                _id: req.params.id,
+            },
+            data,
+            { new: true }
+        );
         return AppResponse.success(req, res)(paymentMoney);
     }),
 
     sendMailBill: asyncUtil(async (req, res) => {
-
         const calculator = await CalculatorMoneyModel.find({
             _id: req.params.id,
         }).exec();
 
         const roomRentalDetailID = calculator[0].roomRentalDetailID;
-        const roomRentalDetail = await roomRentalDetailModel.find({ _id: roomRentalDetailID });
+        const roomRentalDetail = await roomRentalDetailModel.find({
+            _id: roomRentalDetailID,
+        });
         const email = roomRentalDetail[0].email;
         const motelID = calculator[0].motelID;
         const motel = await motelModel.find({ motelID: motelID });
@@ -171,13 +176,13 @@ module.exports = {
         const month = calculator[0].month;
         const dataWaterID = calculator[0].dataWaterID;
         const dataPowerID = calculator[0].dataPowerID;
-        const dataWater = await DataWaterModel.find({ _id: dataWaterID })
+        const dataWater = await DataWaterModel.find({ _id: dataWaterID });
         const oldValueWater = dataWater[0].oldValue;
         const newValueWater = dataWater[0].newValue;
         const useValueWater = dataWater[0].useValue;
         const unitPriceWater = 20000;
         const totalWater = useValueWater * unitPriceWater;
-        const dataPower = await DataPowerModel.find({ _id: dataPowerID })
+        const dataPower = await DataPowerModel.find({ _id: dataPowerID });
         const oldValue = dataPower[0].oldValue;
         const newValue = dataPower[0].newValue;
         const useValue = dataPower[0].useValue;
@@ -257,5 +262,5 @@ module.exports = {
 
         const data = { total: total };
         return AppResponse.success(req, res)(data);
-    })
+    }),
 };

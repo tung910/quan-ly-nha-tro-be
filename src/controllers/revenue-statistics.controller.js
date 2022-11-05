@@ -58,4 +58,20 @@ module.exports = {
 
         return AppResponse.success(req, res)(revenueStatistics);
     }),
+    monthlyRevenue: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+        let options = {};
+        if (data) {
+            options = {
+                year: data.year,
+            };
+        }
+        const revenueStatistics = await RevenueStatisticsModel?.find(
+            options
+        )?.sort({
+            month: 1,
+        });
+
+        return AppResponse.success(req, res)(revenueStatistics);
+    }),
 };
