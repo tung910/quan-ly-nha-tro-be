@@ -32,5 +32,12 @@ router.post(
     isAdmin,
     revenueStatisticsController.addOrUpdate
 );
-
+router.post(
+    '/monthly-revenue',
+    check,
+    getUserById,
+    checkAuth,
+    isAdmin,
+    revenueStatisticsController.monthlyRevenue
+);
 module.exports = router;

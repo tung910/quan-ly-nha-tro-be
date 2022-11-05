@@ -21,7 +21,7 @@ module.exports = {
         }
 
         const token = jwt.sign({ _id: user._id }, 'datn_tw13', {
-            expiresIn: 60 * 60,
+            expiresIn: 24 * 60 * 60,
         });
         const options = {
             maxAge: 24 * 60 * 60, // Expires after 1 day
