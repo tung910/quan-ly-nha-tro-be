@@ -32,8 +32,6 @@ module.exports = {
                 obj.totalBillUnpaid++;
             }
         });
-        console.log('obj', obj);
-        // console.log('listBill', listBill);
         if (existTotalPayment) {
             updateTotalPayment = await RevenueStatisticsModel.findOneAndUpdate(
                 {
@@ -46,7 +44,6 @@ module.exports = {
             addTotalPayment = await RevenueStatisticsModel.create(obj);
             return AppResponse.success(req, res)(addTotalPayment);
         }
-        // const revenueStatistics = await RevenueStatisticsModel.create(data);
     }),
     getTotalPayment: asyncUtil(async (req, res) => {
         const { data } = req.body;
@@ -54,7 +51,7 @@ module.exports = {
         if (data) {
             obj = data;
         }
-        const revenueStatistics = await RevenueStatisticsModel.findOne({ obj });
+        const revenueStatistics = await RevenueStatisticsModel.findOne(obj);
 
         return AppResponse.success(req, res)(revenueStatistics);
     }),
