@@ -11,8 +11,10 @@ module.exports = {
     }),
     addOrUpdate: asyncUtil(async (req, res) => {
         const { data } = req.body;
+        const [month, year] = data.date.split('/');
         const existTotalPayment = await RevenueStatisticsModel.findOne({
-            month: data.month,
+            month: month,
+            year: year,
         });
         let obj = {};
         obj.month = data.month;
@@ -21,7 +23,10 @@ module.exports = {
         obj.totalPaymentUnpaid = 0;
         obj.totalBillPaid = 0;
         obj.totalBillUnpaid = 0;
-        const listBill = await CalculatorMoneyModel.find({ month: data.month });
+        const listBill = await CalculatorMoneyModel.find({
+            month: month,
+            year: year,
+        });
         obj.totalBill = listBill.length;
         listBill.map((item) => {
             obj.totalPaymentAmount += item.payAmount;
@@ -35,9 +40,11 @@ module.exports = {
         if (existTotalPayment) {
             updateTotalPayment = await RevenueStatisticsModel.findOneAndUpdate(
                 {
-                    month: data.month,
+                    month: month,
+                    year: year,
                 },
-                { obj }
+                obj,
+                { new: true }
             );
             return AppResponse.success(req, res)(updateTotalPayment);
         } else {
