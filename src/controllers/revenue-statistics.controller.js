@@ -14,6 +14,7 @@ module.exports = {
         const existTotalPayment = await RevenueStatisticsModel.findOne({
             month: data.month,
         });
+        console.log('existTotalPayment', existTotalPayment);
         let obj = {};
         obj.month = data.month;
         obj.year = data.year;
@@ -37,7 +38,8 @@ module.exports = {
                 {
                     month: data.month,
                 },
-                { obj }
+                obj,
+                { new: true }
             );
             return AppResponse.success(req, res)(updateTotalPayment);
         } else {
