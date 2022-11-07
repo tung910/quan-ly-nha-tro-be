@@ -14,7 +14,6 @@ module.exports = {
         const existTotalPayment = await RevenueStatisticsModel.findOne({
             month: data.month,
         });
-        console.log('existTotalPayment', existTotalPayment);
         let obj = {};
         obj.month = data.month;
         obj.year = data.year;
@@ -22,7 +21,10 @@ module.exports = {
         obj.totalPaymentUnpaid = 0;
         obj.totalBillPaid = 0;
         obj.totalBillUnpaid = 0;
-        const listBill = await CalculatorMoneyModel.find({ month: data.month });
+        const listBill = await CalculatorMoneyModel.find({
+            month: data.month,
+            year: data.year,
+        });
         obj.totalBill = listBill.length;
         listBill.map((item) => {
             obj.totalPaymentAmount += item.payAmount;
@@ -37,6 +39,7 @@ module.exports = {
             updateTotalPayment = await RevenueStatisticsModel.findOneAndUpdate(
                 {
                     month: data.month,
+                    year: data.year,
                 },
                 obj,
                 { new: true }
