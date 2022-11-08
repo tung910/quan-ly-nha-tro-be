@@ -75,6 +75,34 @@ module.exports = {
                     return item;
                 } else {
                     if (find.month === item.month) {
+                        find.totalAmount = 0;
+                        const dataPower = await DataPowerModel.findOne({
+                            _id: find.dataPowerID,
+                        });
+                        const dataWater = await DataWaterModel.findOne({
+                            _id: find.dataWaterID,
+                        });
+                        const roomRentalDetail = await RoomRentalDetail.findOne(
+                            {
+                                _id: find.roomRentalDetailID,
+                            }
+                        );
+                        roomRentalDetail.service.map((serviceItem) => {
+                            if (serviceItem.isUse) {
+                                find.totalAmount += serviceItem.unitPrice;
+                            }
+                        });
+                        find.totalAmount += dataPower.useValue * 3000;
+                        find.totalAmount += dataWater.useValue * 3000;
+                        find.totalAmount += roomRentalDetail.priceRoom;
+                        find.remainAmount = find.totalAmount;
+                        await CalculatorMoneyModel.findByIdAndUpdate(
+                            { _id: find._id },
+                            find,
+                            {
+                                new: true,
+                            }
+                        ).exec();
                         item = find;
                         return item;
                     } else {
@@ -92,18 +120,11 @@ module.exports = {
                         );
                         roomRentalDetail.service.map((serviceItem) => {
                             if (serviceItem.isUse) {
-                                serviceItem.serviceName === 'Nước'
-                                    ? (add.totalAmount +=
-                                          dataWater.useValue *
-                                          serviceItem.unitPrice)
-                                    : serviceItem.serviceName === 'Điện'
-                                    ? (add.totalAmount +=
-                                          dataPower.useValue *
-                                          serviceItem.unitPrice)
-                                    : (add.totalAmount +=
-                                          serviceItem.unitPrice);
+                                find.totalAmount += serviceItem.unitPrice;
                             }
                         });
+                        add.totalAmount += dataPower.useValue * 3000;
+                        add.totalAmount += dataWater.useValue * 3000;
                         add.totalAmount += roomRentalDetail.priceRoom;
                         add.remainAmount = add.totalAmount;
                         await CalculatorMoneyModel.findByIdAndUpdate(
@@ -119,6 +140,7 @@ module.exports = {
                 }
             })
         );
+        
         return AppResponse.success(req, res)(list);
     }),
     detailCalculator: asyncUtil(async (req, res) => {
