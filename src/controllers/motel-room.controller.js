@@ -3,6 +3,9 @@ const DataPowerModel = require('~/models/data-power.model');
 const DataWaterModel = require('~/models/water.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
+const roomRentalDetailModel = require('~/models/room-rental-detail.model');
+const waterModel = require('~/models/water.model');
+const dataPowerModel = require('~/models/data-power.model');
 
 module.exports = {
     getAllMotelRoom: asyncUtil(async (req, res) => {
@@ -37,6 +40,22 @@ module.exports = {
         const motelRoom = await MotelRoomModel.findByIdAndDelete({
             _id: req.params.id,
         }).exec();
+
+        const roomRentalDetail = await roomRentalDetailModel.find({ motelRoomID: req.params.id });
+        roomRentalDetail.map((item) => {
+            roomRentalDetailModel.findOneAndDelete({ _id: item.id });
+        })
+
+        const water = await waterModel.find({ motelRoomID: req.params.id });
+        water.map((item) => {
+            waterModel.findOneAndDelete({ _id: item._id }).exec();
+        })
+
+        const datapower = await dataPowerModel.find({ motelRoomID: req.params.id });
+        datapower.map((item) => {
+            dataPowerModel.findOneAndDelete({ _id: item._id }).exec();
+        })
+
         return AppResponse.success(req, res)(motelRoom);
     }),
     getMotelRoom: asyncUtil(async (req, res) => {
