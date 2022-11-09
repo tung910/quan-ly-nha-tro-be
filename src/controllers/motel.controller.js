@@ -59,7 +59,6 @@ module.exports = {
         datapower.map((item) => {
             dataPowerModel.findOneAndDelete({ _id: item._id }).exec();
         })
-
         return AppResponse.success(req, res)(motel);
     })
 };
