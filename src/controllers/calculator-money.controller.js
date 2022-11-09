@@ -53,13 +53,13 @@ module.exports = {
                         if (serviceItem.isUse) {
                             serviceItem.serviceName === 'Nước'
                                 ? (add.totalAmount +=
-                                      dataWater.useValue *
-                                      serviceItem.unitPrice)
+                                    dataWater.useValue *
+                                    serviceItem.unitPrice)
                                 : serviceItem.serviceName === 'Điện'
-                                ? (add.totalAmount +=
-                                      dataPower.useValue *
-                                      serviceItem.unitPrice)
-                                : (add.totalAmount += serviceItem.unitPrice);
+                                    ? (add.totalAmount +=
+                                        dataPower.useValue *
+                                        serviceItem.unitPrice)
+                                    : (add.totalAmount += serviceItem.unitPrice);
                         }
                     });
                     add.totalAmount += roomRentalDetail.priceRoom;
@@ -140,7 +140,7 @@ module.exports = {
                 }
             })
         );
-        
+
         return AppResponse.success(req, res)(list);
     }),
     detailCalculator: asyncUtil(async (req, res) => {
@@ -202,16 +202,22 @@ module.exports = {
         const oldValueWater = dataWater[0].oldValue;
         const newValueWater = dataWater[0].newValue;
         const useValueWater = dataWater[0].useValue;
-        const unitPriceWater = 20000;
-        const totalWater = useValueWater * unitPriceWater;
         const dataPower = await DataPowerModel.find({ _id: dataPowerID });
         const oldValue = dataPower[0].oldValue;
         const newValue = dataPower[0].newValue;
         const useValue = dataPower[0].useValue;
         const unitPrice = 3000;
+        const unitPriceWater = 20000;
         const totalPower = useValue * unitPrice;
+        const totalWater = useValueWater * unitPriceWater;
         const totalAmount = calculator[0].totalAmount;
+        const payAmount = calculator[0].payAmount;
+        const remainAmount = calculator[0].remainAmount;
         const total = totalWater + totalPower + totalAmount;
+
+        const formatNumber = (number) => {
+            return new Intl.NumberFormat().format(number)
+        }
 
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -244,19 +250,19 @@ module.exports = {
                         <tbody>
                             <tr>
                                 <td>Số điện</td>
-                                <td>${oldValue}</td>
-                                <td>${newValue}</td>
-                                <td>${useValue}</td>
-                                <td>${unitPrice}đ</td>
-                                <td>${totalPower}đ</td>
+                                <td>${formatNumber(oldValue)}</td>
+                                <td>${formatNumber(newValue)}</td>
+                                <td>${formatNumber(useValue)}</td>
+                                <td>${formatNumber(unitPrice)}đ</td>
+                                <td>${formatNumber(totalPower)}đ</td>
                             </tr>
                             <tr>
                                 <td>Số nước</td>
-                                <td>${oldValueWater}</td>
-                                <td>${newValueWater}</td>
-                                <td>${useValueWater}</td>
-                                <td>${unitPriceWater}đ</td>
-                                <td>${totalWater}đ</td>
+                                <td>${formatNumber(oldValueWater)}</td>
+                                <td>${formatNumber(newValueWater)}</td>
+                                <td>${formatNumber(useValueWater)}</td>
+                                <td>${formatNumber(unitPriceWater)}đ</td>
+                                <td>${formatNumber(totalWater)}đ</td>
                             </tr>
                             <tr>
                                 <td>Tiền phòng</td>
@@ -264,7 +270,7 @@ module.exports = {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>${totalAmount}đ</td>
+                                <td>${formatNumber(totalAmount)}đ</td>
                             </tr>
                             <tr>
                                 <td><b>Tổng</b></td>
@@ -272,7 +278,23 @@ module.exports = {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><b>${total}đ</b></td>
+                                <td><b>${formatNumber(total)}đ</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>Trả Trước(Đã trả)</b></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>${formatNumber(payAmount)}đ</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>Còn lại(Chưa trả)</b></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>${formatNumber(remainAmount)}đ</b></td>
                             </tr>
                         </tbody>
                 </table>`,
