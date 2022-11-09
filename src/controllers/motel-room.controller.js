@@ -40,12 +40,10 @@ module.exports = {
         const motelRoom = await MotelRoomModel.findByIdAndDelete({
             _id: req.params.id,
         }).exec();
-
         const roomRentalDetail = await roomRentalDetailModel.find({ motelRoomID: req.params.id });
         roomRentalDetail.map((item) => {
-            roomRentalDetailModel.findOneAndDelete({ _id: item.id });
+            roomRentalDetailModel.findOneAndDelete({ _id: item._id }).exec();
         })
-
         const water = await waterModel.find({ motelRoomID: req.params.id });
         water.map((item) => {
             waterModel.findOneAndDelete({ _id: item._id }).exec();
