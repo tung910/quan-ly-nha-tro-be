@@ -65,7 +65,10 @@ module.exports = {
     statisticalRoomStatus: asyncUtil(async (req, res) => {
         const areRenting = [];
         const emptyRooms = [];
-        const rooms = await MotelRoomModel.find({});
+        const rooms = await MotelRoomModel.find({}).populate({
+            path: 'motelID',
+            select: ['name'],
+        });
         rooms.forEach((room) => {
             if (room.isRent) {
                 areRenting.push(room);
