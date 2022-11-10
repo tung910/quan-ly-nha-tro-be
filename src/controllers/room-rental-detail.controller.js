@@ -22,6 +22,7 @@ module.exports = {
             email: CustomerInfo.email,
             password: password,
             role: 0,
+            motelRoomID:CustomerInfo.motelRoomID,
             phone: CustomerInfo.phone,
             name: CustomerInfo.customerName,
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,

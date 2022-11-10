@@ -5,11 +5,16 @@ const AppResponse = require('~/helpers/response');
 
 module.exports = {
     getAllUsers: asyncUtil(async (req, res) => {
-        const users = await UserModel.find({});
+        const users = await UserModel.find({})
+            .populate({
+                path: 'motelRoomID',
+                populate: { path: 'motelID', select: 'name' },
+                select: ['roomName', 'customerName'],
+            })
+            .exec();
         return AppResponse.success(req, res)(users);
     }),
     getUser: asyncUtil(async (req, res) => {
-      console.log('id', req.params.id);
         const user = await UserModel.findById({ _id: req.params.id });
         return AppResponse.success(req, res)(user);
     }),

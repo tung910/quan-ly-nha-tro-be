@@ -95,7 +95,7 @@ module.exports = {
                         find.totalAmount += dataPower.useValue * 3000;
                         find.totalAmount += dataWater.useValue * 3000;
                         find.totalAmount += roomRentalDetail.priceRoom;
-                        find.remainAmount = find.totalAmount;
+                        find.remainAmount = find.totalAmount - find.payAmount;
                         await CalculatorMoneyModel.findByIdAndUpdate(
                             { _id: find._id },
                             find,
