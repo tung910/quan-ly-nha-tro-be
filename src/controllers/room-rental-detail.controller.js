@@ -17,12 +17,12 @@ module.exports = {
             service: Service,
             member: Member,
         }).save();
-        const password = await bcrypt.hash('123456789', 10);
+        const password = await bcrypt.hash(process.env.PASSWORD_CUSTOMER, 10);
         const account = {
             email: CustomerInfo.email,
             password: password,
             role: 0,
-            motelRoomID:CustomerInfo.motelRoomID,
+            motelRoomID: CustomerInfo.motelRoomID,
             phone: CustomerInfo.phone,
             name: CustomerInfo.customerName,
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
@@ -136,7 +136,9 @@ module.exports = {
     }),
     changeRoomRentalDetail: asyncUtil(async (req, res) => {
         const { DateChangeRoom, NewRoomID } = req.body;
-        const roomRentalDetail = await RoomRentalDetail.findOne({ _id: req.params.id });
+        const roomRentalDetail = await RoomRentalDetail.findOne({
+            _id: req.params.id,
+        });
         const {
             motelRoomID,
             customerName,
@@ -148,7 +150,7 @@ module.exports = {
             phone,
             member,
             service,
-            payEachTime
+            payEachTime,
         } = roomRentalDetail;
         const motelOld = await MotelRoomModel.findOne({ _id: motelRoomID });
         const avatarCustomer = motelOld.avatarCustomer;
@@ -168,9 +170,11 @@ module.exports = {
             address,
             dateRange,
             phone,
-            payEachTime
-        }
-        const motelRoomOld = await MotelRoomModel.findById({ _id: motelRoomID });
+            payEachTime,
+        };
+        const motelRoomOld = await MotelRoomModel.findById({
+            _id: motelRoomID,
+        });
         const roomNameOld = motelRoomOld.roomName;
         const maxPersonOld = motelRoomOld.maxPerson;
         const imagesOld = motelRoomOld.images;
@@ -181,7 +185,7 @@ module.exports = {
         const isDebitOld = motelRoomOld.isDebit;
         const dataOld = {
             roomName: roomNameOld,
-            customerName: "",
+            customerName: '',
             maxPerson: maxPersonOld,
             images: imagesOld,
             width: widthOld,
@@ -190,14 +194,13 @@ module.exports = {
             lease: leaseOld,
             isDebit: isDebitOld,
             isRent: false,
-            avatarCustomer: "https://res.cloudinary.com/dhfndew6y/image/upload/v1666108397/upload-by-nodejs/kbd0oqh53vnet31epfdf.png"
-        }
+            avatarCustomer:
+                'https://res.cloudinary.com/dhfndew6y/image/upload/v1666108397/upload-by-nodejs/kbd0oqh53vnet31epfdf.png',
+        };
         dataOld.roomRentID = undefined;
-        await MotelRoomModel.findByIdAndUpdate(
-            { _id: motelRoomID },
-            dataOld,
-            { new: true }
-        ).exec();
+        await MotelRoomModel.findByIdAndUpdate({ _id: motelRoomID }, dataOld, {
+            new: true,
+        }).exec();
         const roomRentalDetailNew = await RoomRentalDetail({
             ...custumerInfor,
             service,
@@ -211,9 +214,10 @@ module.exports = {
                 customerName: custumerInfor.customerName,
                 roomRentID: roomRentalDetailNew._id,
                 avatarCustomer: avatarCustomer,
-            }, {
-            new: true
-        }
+            },
+            {
+                new: true,
+            }
         ).exec();
         const [day, month, year] = custumerInfor.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
@@ -257,5 +261,5 @@ module.exports = {
             }
         );
         return AppResponse.success(req, res)(roomRentalDetailNew);
-    })
+    }),
 };
