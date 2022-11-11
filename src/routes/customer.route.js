@@ -25,6 +25,14 @@ router.post(
     isAdmin,
     customerController.addCustomer
 );
+router.post(
+    '/send-email',
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
+    customerController.sendEmail
+);
 router.put(
     '/edit/:id',
     check,
