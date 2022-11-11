@@ -24,6 +24,10 @@ const UserSchema = new mongoose.Schema(
         phone: {
             type: String,
         },
+        motelRoomID: {
+            type: mongoose.ObjectId,
+            ref: 'MotelRoom',
+        },
         role: {
             type: Number,
             default: 0,
