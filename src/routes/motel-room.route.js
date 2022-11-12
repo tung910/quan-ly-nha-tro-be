@@ -79,5 +79,13 @@ router.get(
     isAdmin,
     motelRoomController.statisticalRoomStatus
 );
+router.put(
+    '/pay-hostel',
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
+    motelRoomController.payHostel
+);
 
 module.exports = router;

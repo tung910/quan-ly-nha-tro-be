@@ -40,19 +40,23 @@ module.exports = {
         const motelRoom = await MotelRoomModel.findByIdAndDelete({
             _id: req.params.id,
         }).exec();
-        const roomRentalDetail = await roomRentalDetailModel.find({ motelRoomID: req.params.id });
+        const roomRentalDetail = await roomRentalDetailModel.find({
+            motelRoomID: req.params.id,
+        });
         roomRentalDetail.map((item) => {
             roomRentalDetailModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
         const water = await waterModel.find({ motelRoomID: req.params.id });
         water.map((item) => {
             waterModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
 
-        const datapower = await dataPowerModel.find({ motelRoomID: req.params.id });
+        const datapower = await dataPowerModel.find({
+            motelRoomID: req.params.id,
+        });
         datapower.map((item) => {
             dataPowerModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
 
         return AppResponse.success(req, res)(motelRoom);
     }),
@@ -79,5 +83,21 @@ module.exports = {
             { statusName: 'Phòng trống', emptyRooms },
         ];
         return AppResponse.success(req, res)(response);
+    }),
+    payHostel: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+
+        const motelRoom = await MotelRoomModel.findOneAndUpdate(
+            {
+                _id: req.params.id,
+            },
+            {
+                isRent: false,
+                customerName: '',
+                lease: [],
+            },
+            { new: true }
+        ).exec();
+        return AppResponse.success(req, res)(motelRoom);
     }),
 };
