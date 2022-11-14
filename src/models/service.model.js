@@ -14,6 +14,14 @@ const ServiceSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+        serviceTypeId: {
+            type: Number,
+            required: true,
+        },
+        serviceTypeName: {
+            type: String,
+            required: true,
+        },
         note: {
             type: String,
             default: '',
