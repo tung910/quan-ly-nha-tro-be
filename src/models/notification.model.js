@@ -7,7 +7,7 @@ const NotificationSchema = new Schema(
             type: mongoose.ObjectId,
             ref: 'User',
         },
-        data: {
+        detail: {
             type: Object,
         },
         message: String,
