@@ -9,13 +9,17 @@ const dataPowerModel = require('~/models/data-power.model');
 
 module.exports = {
     getAllMotelRoom: asyncUtil(async (req, res) => {
-        let motelRoom;
-        const roomId = req.query.roomId;
+        let options = {};
+        const roomId = req?.query?.roomId;
+        const isRent = req?.query?.isRent;
+
         if (roomId) {
-            motelRoom = await MotelRoomModel.find({ motelID: roomId });
-        } else {
-            motelRoom = await MotelRoomModel.find({});
+            options = { ...options, motelID: roomId };
         }
+        if (isRent) {
+            options = { ...options, isRent: isRent };
+        }
+        const motelRoom = await MotelRoomModel.find(options);
         return AppResponse.success(req, res)(motelRoom);
     }),
     createMotelRoom: asyncUtil(async (req, res) => {
@@ -40,19 +44,23 @@ module.exports = {
         const motelRoom = await MotelRoomModel.findByIdAndDelete({
             _id: req.params.id,
         }).exec();
-        const roomRentalDetail = await roomRentalDetailModel.find({ motelRoomID: req.params.id });
+        const roomRentalDetail = await roomRentalDetailModel.find({
+            motelRoomID: req.params.id,
+        });
         roomRentalDetail.map((item) => {
             roomRentalDetailModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
         const water = await waterModel.find({ motelRoomID: req.params.id });
         water.map((item) => {
             waterModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
 
-        const datapower = await dataPowerModel.find({ motelRoomID: req.params.id });
+        const datapower = await dataPowerModel.find({
+            motelRoomID: req.params.id,
+        });
         datapower.map((item) => {
             dataPowerModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
 
         return AppResponse.success(req, res)(motelRoom);
     }),

@@ -7,15 +7,15 @@ const userModel = require('~/models/user.model');
 module.exports = {
     check: (req, res, next) => {
         const header = req.headers.authorization;
-        if (!header)
-             return AppResponse.fail(
-                 req,
-                 res,
-                 400
-             )(null, 'Error');
+        if (!header) return AppResponse.fail(req, res, 403)(null, 'Error');
         const token = header.split(' ')[1];
         jwt.verify(token, 'datn_tw13', function (err, data) {
-            if (err)  return AppResponse.fail(req, res, 400)(null, 'Phiên đăng nhập đã quá hạn');
+            if (err)
+                return AppResponse.fail(
+                    req,
+                    res,
+                    401
+                )(null, 'Phiên đăng nhập đã quá hạn');
             req.auth = data;
             return next();
         });
@@ -29,21 +29,21 @@ module.exports = {
     isAuth: (req, res, next) => {
         const user = req.profile._id == req.auth._id;
         if (!user) {
-             return AppResponse.fail(
-                 req,
-                 res,
-                 400
-             )(null, 'Bạn không được phép truy cập');
+            return AppResponse.fail(
+                req,
+                res,
+                403
+            )(null, 'Bạn không được phép truy cập');
         }
         next();
     },
     isAdmin: (req, res, next) => {
         if (req.profile.role == 0) {
-             return AppResponse.fail(
-                 req,
-                 res,
-                 400
-             )(null, 'Bạn không phải admin');
+            return AppResponse.fail(
+                req,
+                res,
+                403
+            )(null, 'Bạn không phải admin');
         }
         next();
     },

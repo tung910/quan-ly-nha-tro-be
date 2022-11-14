@@ -34,7 +34,6 @@ router.get(
     check,
     getUserById,
     isAuth,
-    isAdmin,
     motelRoomController.getAllMotelRoom
 );
 router.get(

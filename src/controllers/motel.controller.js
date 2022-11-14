@@ -2,7 +2,6 @@ const MotelModel = require('~/models/motel.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const motelRoomModel = require('~/models/motel-room.model');
-const roomRentalDetailModel = require('~/models/room-rental-detail.model');
 const calculatorMoneyModel = require('~/models/calculator-money.model');
 const waterModel = require('~/models/water.model');
 const dataPowerModel = require('~/models/data-power.model');
@@ -43,22 +42,24 @@ module.exports = {
         const motelRoom = await motelRoomModel.find({ motelID: req.params.id });
         motelRoom.map(async (item) => {
             motelRoomModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
 
-        const calculator = await calculatorMoneyModel.find({ motelID: req.params.id }).exec();
+        const calculator = await calculatorMoneyModel
+            .find({ motelID: req.params.id })
+            .exec();
         calculator.map((item) => {
             calculatorMoneyModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
 
         const water = await waterModel.find({ motelID: req.params.id });
         water.map((item) => {
             waterModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
 
         const datapower = await dataPowerModel.find({ motelID: req.params.id });
         datapower.map((item) => {
             dataPowerModel.findOneAndDelete({ _id: item._id }).exec();
-        })
+        });
         return AppResponse.success(req, res)(motel);
-    })
+    }),
 };
