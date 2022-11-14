@@ -81,10 +81,10 @@ router.get(
 );
 router.put(
     '/pay-hostel',
-    check,
-    getUserById,
-    isAuth,
-    isAdmin,
+    // check,
+    // getUserById,
+    // isAuth,
+    // isAdmin,
     motelRoomController.payHostel
 );
 

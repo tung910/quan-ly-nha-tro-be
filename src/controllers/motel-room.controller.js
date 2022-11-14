@@ -4,6 +4,7 @@ const DataWaterModel = require('~/models/water.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const roomRentalDetailModel = require('~/models/room-rental-detail.model');
+const CalculatorMoneyModel = require('~/models/calculator-money.model');
 const waterModel = require('~/models/water.model');
 const dataPowerModel = require('~/models/data-power.model');
 
@@ -86,18 +87,68 @@ module.exports = {
     }),
     payHostel: asyncUtil(async (req, res) => {
         const { data } = req.body;
-
-        const motelRoom = await MotelRoomModel.findOneAndUpdate(
-            {
-                _id: req.params.id,
-            },
-            {
-                isRent: false,
-                customerName: '',
-                lease: [],
-            },
-            { new: true }
-        ).exec();
-        return AppResponse.success(req, res)(motelRoom);
+        const calculator = await CalculatorMoneyModel.findOne({
+            month: data.month,
+            year: data.year,
+            roomRentalDetailID: data.roomRentID,
+        });
+        if (calculator) {
+            if (calculator.totalAmount !== 0 && calculator.remainAmount == 0) {
+                await DataPowerModel.findOneAndUpdate(
+                    { motelRoomID: data._id },
+                    {
+                        customerName: '',
+                        month: data.month,
+                        year: data.year,
+                    }
+                ).exec();
+                await DataWaterModel.findOneAndUpdate(
+                    { motelRoomID: data._id },
+                    {
+                        customerName: '',
+                        month: data.month,
+                        year: data.year,
+                    }
+                ).exec();
+                const motelRoom = await MotelRoomModel.findOneAndUpdate(
+                    {
+                        _id: data._id,
+                    },
+                    {
+                        isRent: false,
+                        isDebit: false,
+                        customerName: '',
+                        lease: [],
+                        avatarCustomer:
+                            'https://res.cloudinary.com/dhfndew6y/image/upload/v1666108397/upload-by-nodejs/kbd0oqh53vnet31epfdf.png',
+                    },
+                    { new: true }
+                ).exec();
+                await roomRentalDetailModel.findByIdAndDelete({
+                    _id: data.roomRentID,
+                });
+                await CalculatorMoneyModel.findOneAndDelete({
+                    month: data.month,
+                    year: data.year,
+                    roomRentalDetailID: data.roomRentID,
+                });
+                return AppResponse.success(req, res)(motelRoom);
+            } else {
+                return AppResponse.fail(
+                    req,
+                    res,
+                    400
+                )(
+                    null,
+                    'Phải thanh toán trước khi trả phòng'
+                );
+            }
+        } else {
+            return AppResponse.fail(
+                req,
+                res,
+                400
+            )(null, 'Phải tính tiền phòng');
+        }
     }),
 };
