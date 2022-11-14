@@ -17,9 +17,9 @@ module.exports = {
             service: Service,
             member: Member,
         }).save();
-        const citizenIdentification = CustomerInfo.citizenIdentification;
-        const citizenIdentificate = await UserModel.findOne({ citizenIdentificationNumber: citizenIdentification })
-        return console.log('citizenIdentification', citizenIdentificate);
+        // const citizenIdentification = CustomerInfo.citizenIdentification;
+        // const citizenIdentificate = await UserModel.findOne({ citizenIdentificationNumber: citizenIdentification })
+        // return console.log('citizenIdentification', citizenIdentificate);
         const password = await bcrypt.hash("123456", 10);
         const account = {
             email: CustomerInfo.email,
