@@ -17,10 +17,7 @@ module.exports = {
             service: Service,
             member: Member,
         }).save();
-        // const citizenIdentification = CustomerInfo.citizenIdentification;
-        // const citizenIdentificate = await UserModel.findOne({ citizenIdentificationNumber: citizenIdentification })
-        // return console.log('citizenIdentification', citizenIdentificate);
-        const password = await bcrypt.hash("123456", 10);
+        const password = await bcrypt.hash(process.env.PASSWORD_CUSTOMER, 10);
         const account = {
             email: CustomerInfo.email,
             password: password,
@@ -137,6 +134,7 @@ module.exports = {
         ).exec();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
+
     changeRoomRentalDetail: asyncUtil(async (req, res) => {
         const { DateChangeRoom, NewRoomID } = req.body;
         const roomRentalDetail = await RoomRentalDetail.findOne({
@@ -144,17 +142,19 @@ module.exports = {
         });
         const {
             motelRoomID,
+            roomName,
             customerName,
             email,
-            userID,
             citizenIdentification,
             address,
             dateRange,
+            issuedBy,
             phone,
             member,
             service,
-            payEachTime,
+            payEachTime
         } = roomRentalDetail;
+        const xyz = await RoomRentalDetail.findByIdAndDelete({ _id: req.params.id }).exec();
         const motelOld = await MotelRoomModel.findOne({ _id: motelRoomID });
         const avatarCustomer = motelOld.avatarCustomer;
         const motelRoomNew = await MotelRoomModel.findOne({ _id: NewRoomID });
@@ -168,7 +168,6 @@ module.exports = {
             priceRoom: unitPrice,
             customerName,
             roomName: nameMotelRoom,
-            userID,
             citizenIdentification,
             address,
             dateRange,
@@ -176,7 +175,7 @@ module.exports = {
             payEachTime,
         };
         const motelRoomOld = await MotelRoomModel.findById({
-            _id: motelRoomID,
+            _id: motelRoomID
         });
         const roomNameOld = motelRoomOld.roomName;
         const maxPersonOld = motelRoomOld.maxPerson;
@@ -209,7 +208,6 @@ module.exports = {
             service,
             member,
         }).save();
-        await RoomRentalDetail.findByIdAndDelete({ _id: req.params.id }).exec();
         await MotelRoomModel.findByIdAndUpdate(
             { _id: NewRoomID },
             {
@@ -219,7 +217,7 @@ module.exports = {
                 avatarCustomer: avatarCustomer,
             },
             {
-                new: true,
+                new: true
             }
         ).exec();
         const [day, month, year] = custumerInfor.startDate.split('/');

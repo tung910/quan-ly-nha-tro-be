@@ -22,7 +22,7 @@ const RoomRentalDetailSchema = new mongoose.Schema(
         citizenIdentification: {
             type: String,
             required: true,
-            // unique: true,
+            unique: true,
         },
         address: {
             type: String,
