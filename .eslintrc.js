@@ -27,6 +27,7 @@ module.exports = {
         ],
         eqeqeq: ['error', 'smart'],
         curly: 'off',
+        'no-console': 'error',
     },
     globals: {
         $: true,
