@@ -127,11 +127,11 @@ module.exports = {
                 await roomRentalDetailModel.findByIdAndDelete({
                     _id: data.roomRentID,
                 });
-                await CalculatorMoneyModel.findOneAndDelete({
-                    month: data.month,
-                    year: data.year,
-                    roomRentalDetailID: data.roomRentID,
-                });
+                // await CalculatorMoneyModel.findOneAndUpdate({
+                //     month: data.month,
+                //     year: data.year,
+                //     roomRentalDetailID: data.roomRentID,
+                // });
                 return AppResponse.success(req, res)(motelRoom);
             } else {
                 return AppResponse.fail(
