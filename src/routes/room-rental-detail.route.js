@@ -26,6 +26,11 @@ router.get(
     isAdmin,
     roomRentalDetailController.getRoomRentalDetail
 );
+router.post(
+    '/customer',
+    check,
+    roomRentalDetailController.getRoomRentalDetailByEmail
+);
 router.put(
     '/edit/:id',
     check,

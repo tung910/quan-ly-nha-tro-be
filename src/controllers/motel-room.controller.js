@@ -10,13 +10,17 @@ const dataPowerModel = require('~/models/data-power.model');
 
 module.exports = {
     getAllMotelRoom: asyncUtil(async (req, res) => {
-        let motelRoom;
-        const roomId = req.query.roomId;
+        let options = {};
+        const roomId = req?.query?.roomId;
+        const isRent = req?.query?.isRent;
+
         if (roomId) {
-            motelRoom = await MotelRoomModel.find({ motelID: roomId });
-        } else {
-            motelRoom = await MotelRoomModel.find({});
+            options = { ...options, motelID: roomId };
         }
+        if (isRent) {
+            options = { ...options, isRent: isRent };
+        }
+        const motelRoom = await MotelRoomModel.find(options);
         return AppResponse.success(req, res)(motelRoom);
     }),
     createMotelRoom: asyncUtil(async (req, res) => {
@@ -127,11 +131,11 @@ module.exports = {
                 await roomRentalDetailModel.findByIdAndDelete({
                     _id: data.roomRentID,
                 });
-                await CalculatorMoneyModel.findOneAndDelete({
-                    month: data.month,
-                    year: data.year,
-                    roomRentalDetailID: data.roomRentID,
-                });
+                // await CalculatorMoneyModel.findOneAndUpdate({
+                //     month: data.month,
+                //     year: data.year,
+                //     roomRentalDetailID: data.roomRentID,
+                // });
                 return AppResponse.success(req, res)(motelRoom);
             } else {
                 return AppResponse.fail(

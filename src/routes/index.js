@@ -9,6 +9,7 @@ const waterRoute = require('./water.route');
 const calculatorMoneyRoute = require('./calculator-money.route');
 const revenueStatisticsRoute = require('./revenue-statistics.route');
 const roomDepositRoute = require('./room-deposit.route');
+const notificationRoute = require('./notification.route');
 
 const { exportWordContract } = require('~/services/export.service');
 
@@ -24,6 +25,7 @@ function routes(app) {
     app.use('/api/calculator-money', calculatorMoneyRoute);
     app.use('/api/revenue-statistics', revenueStatisticsRoute);
     app.use('/api/room-deposit', roomDepositRoute);
+    app.use('/api/notifications', notificationRoute);
 
     app.get('/api/export-word-contract/:rentalId', exportWordContract);
 }

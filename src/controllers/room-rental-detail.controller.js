@@ -263,4 +263,11 @@ module.exports = {
         );
         return AppResponse.success(req, res)(roomRentalDetailNew);
     }),
+    getRoomRentalDetailByEmail: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+        const roomRentalDetail = await RoomRentalDetail.findOne({
+            email: data.email,
+        }).exec();
+        return AppResponse.success(req, res)(roomRentalDetail);
+    }),
 };
