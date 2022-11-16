@@ -12,6 +12,6 @@ const {
 } = require('~/middleware/checkauth');
 
 router.get('/list', notificationController.getNotifications);
-router.post('/add-or-update', notificationController.createNotification);
+router.post('/add-or-update', notificationController.addOrUpdateNotification);
 
 module.exports = router;
