@@ -2,6 +2,8 @@ const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const NotificationModel = require('~/models/notification.model');
 const MotelRoom = require('~/models/motel-room.model');
+const roomRentalDetailController = require('~/controllers/room-rental-detail.controller');
+const RoomRentalDetail = require('~/models/room-rental-detail.model');
 
 module.exports = {
     addOrUpdateNotification: asyncUtil(async (req, res) => {
@@ -18,6 +20,15 @@ module.exports = {
                 { _id: notificationId },
                 updateValue
             );
+            const roomRentalDetail = await RoomRentalDetail.findOne({
+                motelRoomID: data.detail.currentRoom._id,
+            });
+            const dataChange = {
+                DateChangeRoom: Date(),
+                NewRoomID: data.detail.newRoom._id,
+                roomRentalDetail: roomRentalDetail._id,
+            };
+            await roomRentalDetailController.changeRoom(dataChange);
         } else {
             await NotificationModel.create(data);
         }

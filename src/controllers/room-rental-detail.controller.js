@@ -152,9 +152,11 @@ module.exports = {
             phone,
             member,
             service,
-            payEachTime
+            payEachTime,
         } = roomRentalDetail;
-        const xyz = await RoomRentalDetail.findByIdAndDelete({ _id: req.params.id }).exec();
+        const xyz = await RoomRentalDetail.findByIdAndDelete({
+            _id: req.params.id,
+        }).exec();
         const motelOld = await MotelRoomModel.findOne({ _id: motelRoomID });
         const avatarCustomer = motelOld.avatarCustomer;
         const motelRoomNew = await MotelRoomModel.findOne({ _id: NewRoomID });
@@ -175,7 +177,7 @@ module.exports = {
             payEachTime,
         };
         const motelRoomOld = await MotelRoomModel.findById({
-            _id: motelRoomID
+            _id: motelRoomID,
         });
         const roomNameOld = motelRoomOld.roomName;
         const maxPersonOld = motelRoomOld.maxPerson;
@@ -217,7 +219,7 @@ module.exports = {
                 avatarCustomer: avatarCustomer,
             },
             {
-                new: true
+                new: true,
             }
         ).exec();
         const [day, month, year] = custumerInfor.startDate.split('/');
@@ -270,4 +272,138 @@ module.exports = {
         }).exec();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
+    changeRoom: async (data) => {
+        const {
+            DateChangeRoom,
+            NewRoomID,
+            roomRentalDetail: roomRentalDetailId,
+        } = data;
+        const roomRentalDetail = await RoomRentalDetail.findOne({
+            _id: roomRentalDetailId,
+        });
+        const {
+            motelRoomID,
+            roomName,
+            customerName,
+            email,
+            citizenIdentification,
+            address,
+            dateRange,
+            issuedBy,
+            phone,
+            member,
+            service,
+            payEachTime,
+        } = roomRentalDetail;
+        const xyz = await RoomRentalDetail.findByIdAndDelete({
+            _id: roomRentalDetailId,
+        }).exec();
+        const motelOld = await MotelRoomModel.findOne({ _id: motelRoomID });
+        const avatarCustomer = motelOld.avatarCustomer;
+        const motelRoomNew = await MotelRoomModel.findOne({ _id: NewRoomID });
+        const nameMotelRoom = motelRoomNew.roomName;
+        const idMotel = motelRoomNew.motelID;
+        const unitPrice = motelRoomNew.unitPrice;
+        const custumerInfor = {
+            motelRoomID: NewRoomID,
+            email,
+            startDate: DateChangeRoom,
+            priceRoom: unitPrice,
+            customerName,
+            roomName: nameMotelRoom,
+            citizenIdentification,
+            address,
+            dateRange,
+            phone,
+            payEachTime,
+        };
+        const motelRoomOld = await MotelRoomModel.findById({
+            _id: motelRoomID,
+        });
+        const roomNameOld = motelRoomOld.roomName;
+        const maxPersonOld = motelRoomOld.maxPerson;
+        const imagesOld = motelRoomOld.images;
+        const widthOld = motelRoomOld.width;
+        const heightOld = motelRoomOld.height;
+        const unitPriceOld = motelRoomOld.unitPrice;
+        const leaseOld = motelRoomOld.lease;
+        const isDebitOld = motelRoomOld.isDebit;
+        const dataOld = {
+            roomName: roomNameOld,
+            customerName: '',
+            maxPerson: maxPersonOld,
+            images: imagesOld,
+            width: widthOld,
+            height: heightOld,
+            unitPrice: unitPriceOld,
+            lease: leaseOld,
+            isDebit: isDebitOld,
+            isRent: false,
+            avatarCustomer:
+                'https://res.cloudinary.com/dhfndew6y/image/upload/v1666108397/upload-by-nodejs/kbd0oqh53vnet31epfdf.png',
+        };
+        dataOld.roomRentID = undefined;
+        await MotelRoomModel.findByIdAndUpdate({ _id: motelRoomID }, dataOld, {
+            new: true,
+        }).exec();
+        const roomRentalDetailNew = await RoomRentalDetail({
+            ...custumerInfor,
+            service,
+            member,
+        }).save();
+        await MotelRoomModel.findByIdAndUpdate(
+            { _id: NewRoomID },
+            {
+                isRent: true,
+                customerName: custumerInfor.customerName,
+                roomRentID: roomRentalDetailNew._id,
+                avatarCustomer: avatarCustomer,
+            },
+            {
+                new: true,
+            }
+        ).exec();
+        const [day, month, year] = custumerInfor.startDate.split('/');
+        await DataPowerModel.findOneAndUpdate(
+            { roomName: roomNameOld },
+            {
+                customerName: '',
+                month: month,
+                year: year,
+            }
+        ).exec();
+        await DataWaterModel.findOneAndUpdate(
+            { roomName: roomNameOld },
+            {
+                customerName: '',
+                month: month,
+                year: year,
+            }
+        ).exec();
+        await DataWaterModel.findOneAndUpdate(
+            {
+                roomName: nameMotelRoom,
+                motelID: idMotel,
+            },
+            {
+                customerName: custumerInfor.customerName,
+                motelRoomID: NewRoomID,
+                month: month,
+                year: year,
+            }
+        );
+        await DataPowerModel.findOneAndUpdate(
+            {
+                roomName: nameMotelRoom,
+                motelID: idMotel,
+            },
+            {
+                customerName: custumerInfor.customerName,
+                motelRoomID: NewRoomID,
+                month: month,
+                year: year,
+            }
+        );
+        return roomRentalDetailNew;
+    },
 };
