@@ -51,6 +51,10 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        status: {
+            type: Boolean,
+            default: true,
+        },
         rentalStartDate: {
             type: String,
         },
@@ -88,7 +92,7 @@ const RoomRentalDetailSchema = new mongoose.Schema(
         },
         email: {
             type: String,
-            required: true
+            required: true,
         },
     },
     { timestamps: true }
