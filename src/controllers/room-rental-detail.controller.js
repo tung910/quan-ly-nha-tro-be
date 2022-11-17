@@ -22,7 +22,11 @@ module.exports = {
             const msgEmail = "Email đã tồn tại!"
             arrMsg.push({ msgEmail });
         }
-       
+        if (existsPhone) {
+            const msgPhone = "Số điện thoại đã tồn tại!"
+            arrMsg.push({ msgPhone });
+        }
+        
         if (arrMsg.length > 0) return AppResponse.fail(req, res)(arrMsg);
 
         const roomRentalDetail = await RoomRentalDetail({
