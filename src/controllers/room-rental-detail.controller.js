@@ -26,7 +26,10 @@ module.exports = {
             const msgPhone = "Số điện thoại đã tồn tại!"
             arrMsg.push({ msgPhone });
         }
-        
+        if (existsCitizenIdentification) {
+            const msgCCCD = "Số CCCD đã tồn tại!"
+            arrMsg.push({ msgCCCD });
+        }
         if (arrMsg.length > 0) return AppResponse.fail(req, res)(arrMsg);
 
         const roomRentalDetail = await RoomRentalDetail({
