@@ -32,7 +32,7 @@ module.exports = {
             const msgCCCD = 'Số CCCD đã tồn tại!';
             arrMsg.push({ msgCCCD });
         }
-        if (arrMsg.length > 0) return AppResponse.fail(req, res)(arrMsg);
+        if (arrMsg.length > 0) return AppResponse.fail(req, res)({}, arrMsg);
 
         const roomRentalDetail = await RoomRentalDetail({
             ...CustomerInfo,
