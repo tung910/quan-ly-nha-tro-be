@@ -128,8 +128,12 @@ module.exports = {
                     },
                     { new: true }
                 ).exec();
-                await roomRentalDetailModel.findByIdAndDelete({
+                motelRoom.roomRentID = undefined,
+                await motelRoom.save()
+                await roomRentalDetailModel.findByIdAndUpdate({
                     _id: data.roomRentID,
+                },{
+                  status:false
                 });
                 // await CalculatorMoneyModel.findOneAndUpdate({
                 //     month: data.month,
