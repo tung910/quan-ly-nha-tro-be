@@ -12,6 +12,26 @@ module.exports = {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
+
+        const { email, phone, citizenIdentification } = CustomerInfo;
+        const existsEmail = await UserModel.findOne({ email: email }).exec();
+        const existsPhone = await UserModel.findOne({ phone: phone }).exec();
+        const existsCitizenIdentification = await UserModel.findOne({ citizenIdentificationNumber: citizenIdentification }).exec();
+        const arrMsg = [];
+        if (existsEmail) {
+            const msgEmail = "Email đã tồn tại!"
+            arrMsg.push({ msgEmail });
+        }
+        if (existsPhone) {
+            const msgPhone = "Số điện thoại đã tồn tại!"
+            arrMsg.push({ msgPhone });
+        }
+        if (existsCitizenIdentification) {
+            const msgCCCD = "Số CCCD đã tồn tại!"
+            arrMsg.push({ msgCCCD });
+        }
+        if (arrMsg.length > 0) return AppResponse.fail(req, res)(arrMsg);
+
         const roomRentalDetail = await RoomRentalDetail({
             ...CustomerInfo,
             service: Service,
@@ -154,7 +174,7 @@ module.exports = {
             service,
             payEachTime
         } = roomRentalDetail;
-        const xyz = await RoomRentalDetail.findByIdAndDelete({ _id: req.params.id }).exec();
+        await RoomRentalDetail.findByIdAndDelete({ _id: req.params.id }).exec();
         const motelOld = await MotelRoomModel.findOne({ _id: motelRoomID });
         const avatarCustomer = motelOld.avatarCustomer;
         const motelRoomNew = await MotelRoomModel.findOne({ _id: NewRoomID });
