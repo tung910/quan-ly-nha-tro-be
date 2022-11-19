@@ -22,7 +22,7 @@ module.exports = {
             .populate({
                 path: 'motelRoomID',
                 populate: { path: 'motelID', select: 'name' },
-                select: ['roomName', 'customerName'],
+                select: ['roomName', 'customerName', 'images'],
             })
             .exec();
         const dataPower = await DataPowerModel.findOne({
@@ -33,16 +33,16 @@ module.exports = {
         });
         result.user = user,
         result.power = {
-                userValue: dataPower.useValue,
+                useValue: dataPower.useValue,
                 newValue: dataPower.newValue,
                 oldValue: dataPower.oldValue,
         };
         result.water = {
-            userValue: dataWater.useValue,
+            useValue: dataWater.useValue,
             newValue: dataWater.newValue,
             oldValue: dataWater.oldValue,
         };
-        console.log('result',result);
+        // console.log('result',result);
         return AppResponse.success(req, res)(result);
     }),
     deleteUser: asyncUtil(async (req, res) => {
