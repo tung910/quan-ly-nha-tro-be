@@ -1,6 +1,7 @@
 const UserModel = require('~/models/user.model');
 const DataPowerModel = require('~/models/data-power.model');
 const DataWaterModel = require('~/models/water.model');
+const CalculatorMoneyModel = require('~/models/calculator-money.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const bcrypt = require('bcrypt');
 const AppResponse = require('~/helpers/response');
@@ -18,31 +19,49 @@ module.exports = {
     }),
     getUser: asyncUtil(async (req, res) => {
         var result = {};
+        const today = new Date();
+        const currentMonth = (today.getMonth() + 1).toString();
+        const currentYear = today.getFullYear().toString();
         var user = await UserModel.findById({ _id: req.params.id })
             .populate({
                 path: 'motelRoomID',
                 populate: { path: 'motelID', select: 'name' },
-                select: ['roomName', 'customerName'],
+                select: ['roomName', 'customerName', 'images', 'roomRentID'],
             })
             .exec();
         const dataPower = await DataPowerModel.findOne({
+            month: currentMonth,
             motelRoomID: user.motelRoomID,
+            year: currentYear,
         });
         const dataWater = await DataWaterModel.findOne({
             motelRoomID: user.motelRoomID,
+            month: currentMonth,
+            year: currentYear,
         });
-        result.user = user,
-        result.power = {
-                userValue: dataPower.useValue,
+        const bill = await CalculatorMoneyModel.findOne({
+            roomRentalDetailID: user.motelRoomID.roomRentID,
+            month: currentMonth,
+            year: currentYear,
+        });
+        if (bill) {
+            result.bill = bill;
+        }
+        result.user = user;
+        if (dataPower) {
+            result.power = {
+                useValue: dataPower.useValue,
                 newValue: dataPower.newValue,
                 oldValue: dataPower.oldValue,
-        };
-        result.water = {
-            userValue: dataWater.useValue,
-            newValue: dataWater.newValue,
-            oldValue: dataWater.oldValue,
-        };
-        console.log('result',result);
+            };
+        }
+        if (dataWater) {
+            result.water = {
+                useValue: dataWater.useValue,
+                newValue: dataWater.newValue,
+                oldValue: dataWater.oldValue,
+            };
+        }
         return AppResponse.success(req, res)(result);
     }),
     deleteUser: asyncUtil(async (req, res) => {

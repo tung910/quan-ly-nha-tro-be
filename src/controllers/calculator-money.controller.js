@@ -51,17 +51,11 @@ module.exports = {
                     });
                     roomRentalDetail.service.map((serviceItem) => {
                         if (serviceItem.isUse) {
-                            serviceItem.serviceName === 'Nước'
-                                ? (add.totalAmount +=
-                                    dataWater.useValue *
-                                    serviceItem.unitPrice)
-                                : serviceItem.serviceName === 'Điện'
-                                    ? (add.totalAmount +=
-                                        dataPower.useValue *
-                                        serviceItem.unitPrice)
-                                    : (add.totalAmount += serviceItem.unitPrice);
+                            find.totalAmount += serviceItem.unitPrice;
                         }
                     });
+                    add.totalAmount += dataPower.useValue * dataPower.price;
+                    add.totalAmount += dataWater.useValue * dataWater.price;
                     add.totalAmount += roomRentalDetail.priceRoom;
                     add.remainAmount = add.totalAmount;
                     await CalculatorMoneyModel.findByIdAndUpdate(
@@ -92,8 +86,8 @@ module.exports = {
                                 find.totalAmount += serviceItem.unitPrice;
                             }
                         });
-                        find.totalAmount += dataPower.useValue * 3000;
-                        find.totalAmount += dataWater.useValue * 3000;
+                        add.totalAmount += dataPower.useValue * dataPower.price;
+                        add.totalAmount += dataWater.useValue * dataWater.price;
                         find.totalAmount += roomRentalDetail.priceRoom;
                         find.remainAmount = find.totalAmount - find.payAmount;
                         await CalculatorMoneyModel.findByIdAndUpdate(
@@ -123,8 +117,8 @@ module.exports = {
                                 find.totalAmount += serviceItem.unitPrice;
                             }
                         });
-                        add.totalAmount += dataPower.useValue * 3000;
-                        add.totalAmount += dataWater.useValue * 3000;
+                        add.totalAmount += dataPower.useValue * dataPower.price;
+                        add.totalAmount += dataWater.useValue * dataWater.price;
                         add.totalAmount += roomRentalDetail.priceRoom;
                         add.remainAmount = add.totalAmount;
                         await CalculatorMoneyModel.findByIdAndUpdate(
