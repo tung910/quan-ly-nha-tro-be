@@ -17,6 +17,10 @@ const WaterSchema = new mongoose.Schema(
             type: String,
             default: '',
         },
+        price: {
+            type: Number,
+            default: 2000,
+        },
         month: {
             type: String,
         },

@@ -292,7 +292,12 @@ module.exports = {
         const { data } = req.body;
         const roomRentalDetail = await RoomRentalDetail.findOne({
             email: data.email,
-        }).exec();
+        })
+            .populate({
+                path: 'motelRoomID',
+                select: ['avatarCustomer'],
+            })
+            .exec();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     changeRoom: async (data) => {
