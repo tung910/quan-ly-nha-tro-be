@@ -15,7 +15,6 @@ module.exports = {
                 400
             )(null, 'Vui lòng kiểm tra lại');
         }
-
         let options = {
             bookingDate: {
                 $gt: new Date(fromDate),
@@ -29,13 +28,29 @@ module.exports = {
                 motelRoomId: motelRoomId,
             };
         }
+
         const RoomDeposit = await RoomDepositModel.find(options)
             .populate('motelRoomId')
             .populate('motelId');
         return AppResponse.success(req, res)(RoomDeposit);
     }),
     getRoomDeposit: asyncUtil(async (req, res) => {
-        const RoomDeposit = await RoomDepositModel.findById(req.params.id);
+        const motelRoomId = req?.query?.roomId;
+        const roomDepositId = req?.query?.roomDepositId;
+        let options = {};
+        if (motelRoomId) {
+            options = {
+                ...options,
+                motelRoomId: motelRoomId,
+            };
+        }
+        if (roomDepositId) {
+            options = {
+                ...options,
+                _id: roomDepositId,
+            };
+        }
+        const RoomDeposit = await RoomDepositModel.findOne(options);
         return AppResponse.success(req, res)(RoomDeposit);
     }),
     addOrUpdate: asyncUtil(async (req, res) => {
