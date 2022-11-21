@@ -44,7 +44,7 @@ router.post(
     RoomDepositController.addOrUpdate
 );
 router.get(
-    '/detail/:id',
+    '/detail',
     check,
     getUserById,
     isAuth,

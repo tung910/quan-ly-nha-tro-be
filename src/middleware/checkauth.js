@@ -7,7 +7,8 @@ const userModel = require('~/models/user.model');
 module.exports = {
     check: (req, res, next) => {
         const header = req.headers.authorization;
-        if (!header) return AppResponse.fail(req, res, 403)(null, 'Error');
+        if (!header)
+            return AppResponse.fail(req, res, 401)(null, 'Unauthorzied');
         const token = header.split(' ')[1];
         jwt.verify(token, 'datn_tw13', function (err, data) {
             if (err)
@@ -21,6 +22,8 @@ module.exports = {
         });
     },
     getUserById: asyncUtil(async (req, res, next) => {
+        if (!req.headers.authid)
+            return AppResponse.fail(req, res, 401)(null, 'Unauthorzied');
         const user = await userModel.findById({ _id: req.headers.authid });
         req.profile = user;
         req.profile.password = undefined;
