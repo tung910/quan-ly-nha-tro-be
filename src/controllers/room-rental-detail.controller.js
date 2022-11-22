@@ -114,10 +114,23 @@ module.exports = {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
         if (CustomerInfo == '' || CustomerInfo == null) {
-            console.log('yêu cầu nhập đủ thông tin!');
             const msg = 'yêu cầu nhập đủ thông tin!';
             return AppResponse.fail(req, res)(msg);
         }
+        const arrMsg = [];
+        if (existsEmail) {
+            const msgEmail = 'Email đã tồn tại!';
+            arrMsg.push({ msgEmail });
+        }
+        if (existsPhone) {
+            const msgPhone = 'Số điện thoại đã tồn tại!';
+            arrMsg.push({ msgPhone });
+        }
+        if (existsCitizenIdentification) {
+            const msgCCCD = 'Số CCCD đã tồn tại!';
+            arrMsg.push({ msgCCCD });
+        }
+        if (arrMsg.length > 0) return AppResponse.fail(req, res)({}, arrMsg);
         const roomRentalDetail = await RoomRentalDetail.findOneAndUpdate(
             {
                 _id: req.params.id,
@@ -292,12 +305,7 @@ module.exports = {
         const { data } = req.body;
         const roomRentalDetail = await RoomRentalDetail.findOne({
             email: data.email,
-        })
-            .populate({
-                path: 'motelRoomID',
-                select: ['avatarCustomer'],
-            })
-            .exec();
+        }).exec();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     changeRoom: async (data) => {
