@@ -60,9 +60,9 @@ module.exports = {
                 from: process.env.EMAIL_APP,
                 to: `${email}`,
                 subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
-                html: `<p>Trọ Vương Anh xin cảm ơn bạn ${name} đã lựa chọn dịch vụ của chúng tôi! <br />
-                Mã OTP của bạn là: ${OTP}
-                  <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b>033333333</b> </p><br><b>Trân trọng!</b>`,
+                html: `<p>Trọ Vương Anh xin cảm ơn bạn<b> ${name}</b> đã lựa chọn dịch vụ của chúng tôi! <br />
+                Mã OTP của bạn là:<b> ${OTP}</b>
+                  <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b style="color:red">0362982605</b> </p><br><b>Trân trọng!</b>`,
             },
             (error) => {
                 if (error) return AppResponse.fail(error, res);
