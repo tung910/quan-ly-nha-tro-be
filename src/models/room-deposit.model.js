@@ -50,6 +50,11 @@ const RoomDepositSchema = new Schema(
         note: {
             type: String,
         },
+        time: {
+            type: Date,
+            default: Date.now,
+            index: { expires: 2592000 }, //30day
+        },
     },
     { timestamps: true }
 );
