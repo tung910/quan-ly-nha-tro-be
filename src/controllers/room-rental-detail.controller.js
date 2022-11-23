@@ -116,8 +116,8 @@ module.exports = {
         const { email, phone, citizenIdentification, customerName } = CustomerInfo;
         const arrMsg = [];
         if (!customerName || customerName == '' || customerName == null) {
-            const msgEmail = 'Email yêu cầu không bỏ trống!';
-            arrMsg.push({ msgEmail });
+            const msgCustomerName = 'Tên khách hàng yêu cầu không bỏ trống!';
+            arrMsg.push({ msgCustomerName });
         }
         if (!email || email == '' || email == null) {
             const msgEmail = 'Email yêu cầu không bỏ trống!';
