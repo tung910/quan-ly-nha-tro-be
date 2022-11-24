@@ -43,6 +43,7 @@ module.exports = {
                         customerName: item.customerName,
                         month: currentMonth,
                         oldValue: item.newValue,
+                        price: item.price,
                         year: item.year,
                         roomName: item.roomName,
                         motelID: item.motelID,
