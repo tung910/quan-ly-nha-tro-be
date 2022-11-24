@@ -43,6 +43,7 @@ module.exports = {
                         month: currentMonth,
                         year: item.year,
                         oldValue: item.newValue,
+                        price:item.price,
                         roomName: item.roomName,
                         motelID: item.motelID,
                         motelRoomID: item.motelRoomID,

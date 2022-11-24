@@ -131,8 +131,19 @@ module.exports = {
             const msgCCCD = 'Số CCCD  yêu cầu không bỏ trống!';
             arrMsg.push({ msgCCCD });
         }
-
+        
         if (arrMsg.length > 0) return AppResponse.fail(req, res)({}, arrMsg);
+        const account = {
+            email: CustomerInfo.email,
+            motelRoomID: CustomerInfo.motelRoomID,
+            phone: CustomerInfo.phone,
+            name: CustomerInfo.customerName,
+            citizenIdentificationNumber: CustomerInfo.citizenIdentification,
+            address: CustomerInfo.address,
+        };
+        const {email:prevEmail} = await RoomRentalDetail.findById({_id:req.params.id})
+        console.log('prev',prevEmail)
+        await UserModel.findOneAndUpdate({email:prevEmail},account,{new:true})
         const roomRentalDetail = await RoomRentalDetail.findOneAndUpdate(
             {
                 _id: req.params.id,
