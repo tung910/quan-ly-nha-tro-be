@@ -26,7 +26,13 @@ module.exports = {
             .populate({
                 path: 'motelRoomID',
                 populate: { path: 'motelID', select: 'name' },
-                select: ['roomName', 'customerName', 'images', 'roomRentID'],
+                select: [
+                    'roomName',
+                    'customerName',
+                    'images',
+                    'roomRentID',
+                    'avatarCustomer',
+                ],
             })
             .exec();
         const dataPower = await DataPowerModel.findOne({
