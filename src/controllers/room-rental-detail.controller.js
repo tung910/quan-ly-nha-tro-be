@@ -19,20 +19,19 @@ module.exports = {
         const existsCitizenIdentification = await UserModel.findOne({
             citizenIdentificationNumber: citizenIdentification,
         }).exec();
-        const arrMsg = [];
         if (existsEmail) {
-            const msgEmail = 'Email đã tồn tại!';
-            arrMsg.push({ msgEmail });
+            return AppResponse.fail(req, res, 400)(null, 'Email đã tồn tại');
         }
         if (existsPhone) {
-            const msgPhone = 'Số điện thoại đã tồn tại!';
-            arrMsg.push({ msgPhone });
+            return AppResponse.fail(
+                req,
+                res,
+                400
+            )(null, 'Số điện thoại đã tồn tại');
         }
         if (existsCitizenIdentification) {
-            const msgCCCD = 'Số CCCD đã tồn tại!';
-            arrMsg.push({ msgCCCD });
+            return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
-        if (arrMsg.length > 0) return AppResponse.fail(req, res)({}, arrMsg);
 
         const roomRentalDetail = await RoomRentalDetail({
             ...CustomerInfo,
@@ -113,26 +112,49 @@ module.exports = {
         const {
             data: { CustomerInfo, Member, Service, Contract },
         } = req.body;
-        const { email, phone, citizenIdentification, customerName } = CustomerInfo;
-        const arrMsg = [];
-        if (!customerName || customerName == '' || customerName == null) {
-            const msgCustomerName = 'Tên khách hàng yêu cầu không bỏ trống!';
-            arrMsg.push({ msgCustomerName });
+        const { email, phone, citizenIdentification, customerName } =
+            CustomerInfo;
+        const existsEmail = await UserModel.findOne({ email: email }).exec();
+        const existsPhone = await UserModel.findOne({ phone: phone }).exec();
+        const existsCitizenIdentification = await UserModel.findOne({
+            citizenIdentificationNumber: citizenIdentification,
+        }).exec();
+        if (existsEmail) {
+            return AppResponse.fail(req, res, 400)(null, 'Email đã tồn tại');
         }
-        if (!email || email == '' || email == null) {
-            const msgEmail = 'Email yêu cầu không bỏ trống!';
-            arrMsg.push({ msgEmail });
+        if (existsPhone) {
+            return AppResponse.fail(
+                req,
+                res,
+                400
+            )(null, 'Số điện thoại đã tồn tại');
         }
-        if (!phone || phone == '' || phone == null) {
-            const msgPhone = 'Số điện  yêu cầu không bỏ trống!';
-            arrMsg.push({ msgPhone });
+        if (existsCitizenIdentification) {
+            return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
-        if (!citizenIdentification || citizenIdentification == '' || citizenIdentification == null) {
-            const msgCCCD = 'Số CCCD  yêu cầu không bỏ trống!';
-            arrMsg.push({ msgCCCD });
-        }
-        
-        if (arrMsg.length > 0) return AppResponse.fail(req, res)({}, arrMsg);
+        // const arrMsg = [];
+        // if (!customerName || customerName == '' || customerName == null) {
+        //     const msgCustomerName = 'Tên khách hàng yêu cầu không bỏ trống!';
+        //     arrMsg.push({ msgCustomerName });
+        // }
+        // if (!email || email == '' || email == null) {
+        //     const msgEmail = 'Email yêu cầu không bỏ trống!';
+        //     arrMsg.push({ msgEmail });
+        // }
+        // if (!phone || phone == '' || phone == null) {
+        //     const msgPhone = 'Số điện  yêu cầu không bỏ trống!';
+        //     arrMsg.push({ msgPhone });
+        // }
+        // if (
+        //     !citizenIdentification ||
+        //     citizenIdentification == '' ||
+        //     citizenIdentification == null
+        // ) {
+        //     const msgCCCD = 'Số CCCD  yêu cầu không bỏ trống!';
+        //     arrMsg.push({ msgCCCD });
+        // }
+
+        // if (arrMsg.length > 0) return AppResponse.fail(req, res)({}, arrMsg);
         const account = {
             email: CustomerInfo.email,
             motelRoomID: CustomerInfo.motelRoomID,
@@ -141,9 +163,12 @@ module.exports = {
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
             address: CustomerInfo.address,
         };
-        const {email:prevEmail} = await RoomRentalDetail.findById({_id:req.params.id})
-        console.log('prev',prevEmail)
-        await UserModel.findOneAndUpdate({email:prevEmail},account,{new:true})
+        const { email: prevEmail } = await RoomRentalDetail.findById({
+            _id: req.params.id,
+        });
+        await UserModel.findOneAndUpdate({ email: prevEmail }, account, {
+            new: true,
+        });
         const roomRentalDetail = await RoomRentalDetail.findOneAndUpdate(
             {
                 _id: req.params.id,
