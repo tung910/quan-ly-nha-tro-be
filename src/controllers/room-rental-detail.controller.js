@@ -119,17 +119,31 @@ module.exports = {
         const existsCitizenIdentification = await UserModel.findOne({
             citizenIdentificationNumber: citizenIdentification,
         }).exec();
-        if (existsEmail) {
+        const { email: prevEmail } = await RoomRentalDetail.findById({
+            _id: req.params.id,
+        });
+        const { phone: prevPhone } = await RoomRentalDetail.findById({
+            _id: req.params.id,
+        });
+        const { citizenIdentification: prevCitizenIdentificationNumber } =
+            await RoomRentalDetail.findById({
+                _id: req.params.id,
+            });
+        if (existsEmail && existsEmail.email !== prevEmail) {
             return AppResponse.fail(req, res, 400)(null, 'Email đã tồn tại');
         }
-        if (existsPhone) {
+        if (existsPhone && existsPhone.phone !== prevPhone) {
             return AppResponse.fail(
                 req,
                 res,
                 400
             )(null, 'Số điện thoại đã tồn tại');
         }
-        if (existsCitizenIdentification) {
+        if (
+            existsCitizenIdentification &&
+            existsCitizenIdentification.citizenIdentificationNumber !==
+                prevCitizenIdentificationNumber
+        ) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
         // const arrMsg = [];
@@ -163,9 +177,7 @@ module.exports = {
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
             address: CustomerInfo.address,
         };
-        const { email: prevEmail } = await RoomRentalDetail.findById({
-            _id: req.params.id,
-        });
+
         await UserModel.findOneAndUpdate({ email: prevEmail }, account, {
             new: true,
         });

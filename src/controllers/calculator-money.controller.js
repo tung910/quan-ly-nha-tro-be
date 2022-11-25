@@ -160,6 +160,7 @@ module.exports = {
                 item.month = data.month;
                 item.year = data.year;
                 item.roomRentalDetailID = i._id;
+                item.motelRoomID = i.motelRoomID._id;
                 item.motelID = i.motelRoomID.motelID;
                 dataPower = await DataPowerModel.findOne({
                     motelRoomID: i.motelRoomID._id,
