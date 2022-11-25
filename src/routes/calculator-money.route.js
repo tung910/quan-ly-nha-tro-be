@@ -43,6 +43,14 @@ router.post(
     calculatorMoneyController.calculatorAllMoney
 );
 router.post(
+    '/calculator-all',
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
+    calculatorMoneyController.calculatorAll
+);
+router.post(
     '/create',
     check,
     getUserById,
