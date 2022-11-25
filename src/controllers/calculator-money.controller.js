@@ -51,7 +51,7 @@ module.exports = {
                     });
                     roomRentalDetail.service.map((serviceItem) => {
                         if (serviceItem.isUse) {
-                            find.totalAmount += serviceItem.unitPrice;
+                            add.totalAmount += serviceItem.unitPrice;
                         }
                     });
                     add.totalAmount += dataPower.useValue * dataPower.price;
@@ -86,8 +86,10 @@ module.exports = {
                                 find.totalAmount += serviceItem.unitPrice;
                             }
                         });
-                        add.totalAmount += dataPower.useValue * dataPower.price;
-                        add.totalAmount += dataWater.useValue * dataWater.price;
+                        find.totalAmount +=
+                            dataPower.useValue * dataPower.price;
+                        find.totalAmount +=
+                            dataWater.useValue * dataWater.price;
                         find.totalAmount += roomRentalDetail.priceRoom;
                         find.remainAmount = find.totalAmount - find.payAmount;
                         await CalculatorMoneyModel.findByIdAndUpdate(
@@ -114,7 +116,140 @@ module.exports = {
                         );
                         roomRentalDetail.service.map((serviceItem) => {
                             if (serviceItem.isUse) {
+                                add.totalAmount += serviceItem.unitPrice;
+                            }
+                        });
+                        add.totalAmount += dataPower.useValue * dataPower.price;
+                        add.totalAmount += dataWater.useValue * dataWater.price;
+                        add.totalAmount += roomRentalDetail.priceRoom;
+                        add.remainAmount = add.totalAmount;
+                        await CalculatorMoneyModel.findByIdAndUpdate(
+                            { _id: add._id },
+                            add,
+                            {
+                                new: true,
+                            }
+                        ).exec();
+                        item = add;
+                        return item;
+                    }
+                }
+            })
+        );
+
+        return AppResponse.success(req, res)(list);
+    }),
+    calculatorAll: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+        const [day, month, year] = data.date.split('/');
+        data.month = month;
+        data.year = year;
+        const listRoomRental = await RoomRentalDetail.find(data).populate({
+            path: 'motelRoomID',
+            select: ['motelID'],
+        });
+        const list = await Promise.all(
+            listRoomRental.map(async (i) => {
+              var item = {};
+                item.month = data.month;
+                item.year = data.year;
+                item.roomRentalDetailID = i._id;
+                item.motelID = i.motelRoomID.motelID;
+                dataPower = await DataPowerModel.findOne({
+                    motelRoomID: i.motelRoomID._id,
+                    month: data.month,
+                    year: data.year,
+                });
+                item.dataPowerID = dataPower._id;
+                dataWater = await DataWaterModel.findOne({
+                    motelRoomID: i.motelRoomID._id,
+                    month: data.month,
+                    year: data.year,
+                });
+                item.dataWaterID = dataWater._id;
+                const find = await CalculatorMoneyModel.findOne({
+                    roomRentalDetailID: item.roomRentalDetailID,
+                });
+                if (!find) {
+                    const add = await CalculatorMoneyModel.create(item);
+                    console.log('add', add.totalAmount);
+                    const dataPower = await DataPowerModel.findOne({
+                        _id: add.dataPowerID,
+                    });
+                    const dataWater = await DataWaterModel.findOne({
+                        _id: add.dataWaterID,
+                    });
+                    const roomRentalDetail = await RoomRentalDetail.findOne({
+                        _id: add.roomRentalDetailID,
+                    });
+                    roomRentalDetail.service.map((serviceItem) => {
+                        if (serviceItem.isUse) {
+                            add.totalAmount += serviceItem.unitPrice;
+                        }
+                    });
+                    add.totalAmount += dataPower.useValue * dataPower.price;
+                    add.totalAmount += dataWater.useValue * dataWater.price;
+                    add.totalAmount += roomRentalDetail.priceRoom;
+                    add.remainAmount = add.totalAmount;
+                    await CalculatorMoneyModel.findByIdAndUpdate(
+                        { _id: add._id },
+                        add,
+                        {
+                            new: true,
+                        }
+                    ).exec();
+                    item = add;
+                    return item;
+                } else {
+                    if (find.month === item.month) {
+                        find.totalAmount = 0;
+                        const dataPower = await DataPowerModel.findOne({
+                            _id: find.dataPowerID,
+                        });
+                        const dataWater = await DataWaterModel.findOne({
+                            _id: find.dataWaterID,
+                        });
+                        const roomRentalDetail = await RoomRentalDetail.findOne(
+                            {
+                                _id: find.roomRentalDetailID,
+                            }
+                        );
+                        roomRentalDetail.service.map((serviceItem) => {
+                            if (serviceItem.isUse) {
                                 find.totalAmount += serviceItem.unitPrice;
+                            }
+                        });
+                        find.totalAmount +=
+                            dataPower.useValue * dataPower.price;
+                        find.totalAmount +=
+                            dataWater.useValue * dataWater.price;
+                        find.totalAmount += roomRentalDetail.priceRoom;
+                        find.remainAmount = find.totalAmount - find.payAmount;
+                        await CalculatorMoneyModel.findByIdAndUpdate(
+                            { _id: find._id },
+                            find,
+                            {
+                                new: true,
+                            }
+                        ).exec();
+                        item = find;
+                        return item;
+                    } else {
+                        const add = await CalculatorMoneyModel.create(item);
+                        const dataPower = await DataPowerModel.findOne({
+                            _id: add.dataPowerID,
+                        });
+                        const dataWater = await DataWaterModel.findOne({
+                            _id: add.dataWaterID,
+                        });
+                        const roomRentalDetail = await RoomRentalDetail.findOne(
+                            {
+                                _id: add.roomRentalDetailID,
+                            }
+                        );
+                        roomRentalDetail.service.map((serviceItem) => {
+                            if (serviceItem.isUse) {
+                                add.totalAmount += serviceItem.unitPrice;
                             }
                         });
                         add.totalAmount += dataPower.useValue * dataPower.price;
@@ -210,8 +345,8 @@ module.exports = {
         const total = totalWater + totalPower + totalAmount;
 
         const formatNumber = (number) => {
-            return new Intl.NumberFormat().format(number)
-        }
+            return new Intl.NumberFormat().format(number);
+        };
 
         let transporter = nodemailer.createTransport({
             service: 'gmail',
