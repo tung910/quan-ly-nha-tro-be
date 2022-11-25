@@ -1,6 +1,4 @@
 const CalculatorMoneyModel = require('~/models/calculator-money.model');
-const RevenueStatisticsModel = require('~/models/revenue-statistics.models');
-const MotelRoomModel = require('~/models/motel-room.model');
 const nodemailer = require('nodemailer');
 const DataPowerModel = require('~/models/data-power.model');
 const RoomRentalDetail = require('~/models/room-rental-detail.model');
@@ -8,8 +6,6 @@ const DataWaterModel = require('~/models/water.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const motelModel = require('~/models/motel.model');
-const serviceModel = require('~/models/service.model');
-const dataPowerModel = require('~/models/data-power.model');
 const roomRentalDetailModel = require('~/models/room-rental-detail.model');
 
 module.exports = {
@@ -20,15 +16,25 @@ module.exports = {
     }),
     listCalculatorMoney: asyncUtil(async (req, res) => {
         const { data } = req.body;
+        const motelRoomId = req.query?.roomId;
         let obj = {};
         if (data) {
-            obj = data;
+            obj = {
+                ...data,
+            };
+        }
+        if (motelRoomId) {
+            obj = {
+                ...data,
+                motelRoomId,
+            };
         }
         const calculators = await CalculatorMoneyModel.find(obj)
             .populate('dataPowerID')
             .populate('dataWaterID')
             .populate('motelID')
-            .populate('roomRentalDetailID');
+            .populate('roomRentalDetailID')
+            .populate({ path: 'motelRoomId', select: ['roomName'] });
         return AppResponse.success(req, res)(calculators);
     }),
     calculatorAllMoney: asyncUtil(async (req, res) => {
@@ -437,4 +443,94 @@ module.exports = {
         const data = { total: total };
         return AppResponse.success(req, res)(data);
     }),
+    paymentVNPay: asyncUtil(async (req, res) => {
+        const dateFormat = require('dateformat');
+        const {
+            amount,
+            bankCode,
+            orderInfo,
+            orderType,
+            locale = 'vn',
+        } = req.body;
+        const ipAddr =
+            req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+        const date = new Date();
+        const createDate = dateFormat(date, 'yyyymmddHHmmss');
+        const orderId = dateFormat(date, 'HHmmss');
+        const currCode = 'VND';
+        let vnpUrl = process.env.VNP_URL;
+        let vnp_Params = {};
+        vnp_Params['vnp_Version'] = '2.1.0';
+        vnp_Params['vnp_Command'] = 'pay';
+        vnp_Params['vnp_TmnCode'] = process.env.VNP_TMNCODE;
+        // vnp_Params['vnp_Merchant'] = ''
+        vnp_Params['vnp_Locale'] = locale;
+        vnp_Params['vnp_CurrCode'] = currCode;
+        vnp_Params['vnp_TxnRef'] = orderId;
+        vnp_Params['vnp_OrderInfo'] = orderInfo;
+        vnp_Params['vnp_OrderType'] = orderType;
+        vnp_Params['vnp_Amount'] = +amount * 100;
+        vnp_Params['vnp_ReturnUrl'] = process.env.VNP_RETURNURL;
+        vnp_Params['vnp_IpAddr'] = ipAddr;
+        vnp_Params['vnp_CreateDate'] = createDate;
+        if (bankCode !== null && bankCode !== '') {
+            vnp_Params['vnp_BankCode'] = bankCode;
+        }
+        vnp_Params = sortObject(vnp_Params);
+
+        const querystring = require('qs');
+        const signData = querystring.stringify(vnp_Params, { encode: false });
+        const crypto = require('crypto');
+        const hmac = crypto.createHmac('sha512', process.env.VNP_HASHSECRET);
+        const signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+        vnp_Params['vnp_SecureHash'] = signed;
+        vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
+        // res.redirect(vnpUrl);
+        return AppResponse.success(req, res)(vnpUrl);
+    }),
+    VNPayReturn: asyncUtil(async (req, res) => {
+        var vnp_Params = req.query;
+
+        var secureHash = vnp_Params['vnp_SecureHash'];
+
+        delete vnp_Params['vnp_SecureHash'];
+        delete vnp_Params['vnp_SecureHashType'];
+
+        vnp_Params = sortObject(vnp_Params);
+
+        var tmnCode = process.env.VNP_TMNCODE;
+        var secretKey = process.env.VNP_HASHSECRET;
+
+        var querystring = require('qs');
+        var signData = querystring.stringify(vnp_Params, { encode: false });
+        var crypto = require('crypto');
+        var hmac = crypto.createHmac('sha512', secretKey);
+        var signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex');
+        if (secureHash === signed) {
+            AppResponse.success(req, res, vnp_Params['vnp_ResponseCode'])(null);
+        } else {
+            AppResponse.success(req, res, 97)(null);
+        }
+    }),
 };
+function sortObject(obj) {
+    var sorted = {};
+    var str = [];
+    var key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            str.push(encodeURIComponent(key));
+        }
+    }
+    str.sort();
+    for (key = 0; key < str.length; key++) {
+        sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(
+            /%20/g,
+            '+'
+        );
+    }
+    return sorted;
+}

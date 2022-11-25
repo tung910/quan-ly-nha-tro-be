@@ -1,10 +1,10 @@
 module.exports = {
-    success(req, res) {
+    success(req, res, status_code = 200) {
         return (data, message) => {
             const finalMessage = message || 'Successfully';
             const finalData = data || null;
-            res.status(200).json({
-                status_code: 200,
+            res.status(status_code).json({
+                status_code,
                 messages: finalMessage,
                 result: {
                     data: finalData,
