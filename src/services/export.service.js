@@ -16,13 +16,13 @@ module.exports = {
         const Motel = await MotelModel.findById({ _id: MotelRoom.motelID });
         const resData = {
             lessor: {
-                name: 'Trần Thanh Tùng',
-                citizenIdentificationNumber: '0123456789',
+                name: 'Lê Văn Vương',
+                citizenIdentificationNumber: '012562859305',
                 address: 'Ha Noi',
                 phone: 031234567,
-                dateOfBirth: '09/10/2002',
+                dateOfBirth: '26/10/2002',
                 dateRange: '01/01/2020',
-                issuedBy: 'Nam Dinh',
+                issuedBy: 'Ha Noi',
             },
             roomRentalDetail: RoomRentalDetail,
             motelRoom: MotelRoom,

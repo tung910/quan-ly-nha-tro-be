@@ -156,11 +156,11 @@ module.exports = {
         });
         const list = await Promise.all(
             listRoomRental.map(async (i) => {
-              var item = {};
+                var item = {};
                 item.month = data.month;
                 item.year = data.year;
                 item.roomRentalDetailID = i._id;
-                item.motelRoomID = i.motelRoomID._id;
+                item.motelRoomId = i.motelRoomID._id;
                 item.motelID = i.motelRoomID.motelID;
                 dataPower = await DataPowerModel.findOne({
                     motelRoomID: i.motelRoomID._id,
