@@ -14,7 +14,6 @@ router.post(
     check,
     getUserById,
     isAuth,
-    isAdmin,
     calculatorMoneyController.listCalculatorMoney
 );
 router.get(
@@ -67,5 +66,7 @@ router.put(
     isAdmin,
     calculatorMoneyController.paymentMoney
 );
+router.post('/create_payment_url', calculatorMoneyController.paymentVNPay);
+router.get('/vnpay_return', calculatorMoneyController.VNPayReturn);
 
 module.exports = router;

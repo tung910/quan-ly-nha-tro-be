@@ -46,7 +46,7 @@ module.exports = {
                 req,
                 res,
                 403
-            )(null, 'Bạn không phải admin');
+            )(null, 'Bạn không được phép truy cập');
         }
         next();
     },

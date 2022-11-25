@@ -128,13 +128,15 @@ module.exports = {
                     },
                     { new: true }
                 ).exec();
-                motelRoom.roomRentID = undefined,
-                await motelRoom.save()
-                await roomRentalDetailModel.findByIdAndUpdate({
-                    _id: data.roomRentID,
-                },{
-                  status:false
-                });
+                (motelRoom.roomRentID = undefined), await motelRoom.save();
+                await roomRentalDetailModel.findByIdAndUpdate(
+                    {
+                        _id: data.roomRentID,
+                    },
+                    {
+                        status: false,
+                    }
+                );
                 // await CalculatorMoneyModel.findOneAndUpdate({
                 //     month: data.month,
                 //     year: data.year,
@@ -146,10 +148,7 @@ module.exports = {
                     req,
                     res,
                     400
-                )(
-                    null,
-                    'Phải thanh toán trước khi trả phòng'
-                );
+                )(null, 'Phải thanh toán trước khi trả phòng');
             }
         } else {
             return AppResponse.fail(
