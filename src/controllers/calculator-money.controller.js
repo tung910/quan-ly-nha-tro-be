@@ -155,6 +155,7 @@ module.exports = {
                 item.year = data.year;
                 item.roomRentalDetailID = i._id;
                 item.motelID = i.motelRoomID.motelID;
+                item.motelRoomID = i.motelRoomID._id;
                 dataPower = await DataPowerModel.findOne({
                     motelRoomID: i.motelRoomID._id,
                     month: data.month,

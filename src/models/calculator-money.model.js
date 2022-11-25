@@ -17,6 +17,10 @@ const CalculatorMoneySchema = new mongoose.Schema(
             ref: 'Motel',
             required: true,
         },
+        motelRoomID: {
+            type: mongoose.ObjectId,
+            ref: 'MotelRoom',
+        },
         roomRentalDetailID: {
             type: mongoose.ObjectId,
             ref: 'RoomRentalDetail',
