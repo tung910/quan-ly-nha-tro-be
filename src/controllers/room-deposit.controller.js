@@ -108,4 +108,17 @@ module.exports = {
             'Delete successfully'
         );
     }),
+    updateStatus: asyncUtil(async (req, res) => {
+        const { data } = req.body;
+        const roomDeposit = await RoomDepositModel.findByIdAndUpdate(
+            req.params.id,
+            data,
+            { new: true }
+        ).exec();
+        console.log(roomDeposit);
+        return AppResponse.success(req, res)(
+            roomDeposit,
+            'Update successfully'
+        );
+    }),
 };
