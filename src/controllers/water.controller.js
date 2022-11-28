@@ -39,8 +39,11 @@ module.exports = {
                     { oldValue: item.newValue }
                 );
                 if (isExist === null) {
-                    const test = await WaterModel.create({
-                        customerName: item.customerName,
+                    const motelRoom = await MotelRoomModel.findById({
+                        _id: item.motelRoomID,
+                    });
+                    await WaterModel.create({
+                        customerName: motelRoom.customerName,
                         month: currentMonth,
                         oldValue: item.newValue,
                         price: item.price,
