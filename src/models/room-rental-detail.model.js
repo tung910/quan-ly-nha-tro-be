@@ -59,7 +59,6 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             type: String,
         },
         deposit: {
-            //tiền cọc
             type: Number,
         },
         licensePlates: {
@@ -68,10 +67,9 @@ const RoomRentalDetailSchema = new mongoose.Schema(
         payType: {
             type: String,
         },
-        payEachTime: {
-            // số lần thanh toán
-            type: Number,
-        },
+        // payEachTime: {
+        //     type: Number,
+        // },
         member: {
             type: Array,
         },
@@ -86,10 +84,10 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        paymentPeriod: {
-            type: Number,
-            default: 10,
-        },
+        // paymentPeriod: {
+        //     type: Number,
+        //     default: 10,
+        // },
         email: {
             type: String,
             required: true,
