@@ -33,6 +33,15 @@ const UserSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        avatar: {
+            type: String,
+            default:
+                'https://res.cloudinary.com/dhfndew6y/image/upload/v1666108397/upload-by-nodejs/kbd0oqh53vnet31epfdf.png',
+        },
+        images: {
+            type: Array,
+            default: [],
+        },
     },
     { timestamps: true }
 );

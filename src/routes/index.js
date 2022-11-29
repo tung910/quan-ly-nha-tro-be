@@ -28,6 +28,9 @@ function routes(app) {
     app.use('/api/notifications', notificationRoute);
 
     app.get('/api/export-word-contract/:rentalId', exportWordContract);
+    app.post('/api/upload-img', (req, res) => {
+        res.json(200);
+    });
 }
 
 module.exports = routes;
