@@ -94,6 +94,9 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        contract: {
+            type: Object,
+        },
     },
     { timestamps: true }
 );

@@ -37,6 +37,7 @@ module.exports = {
             ...CustomerInfo,
             service: Service,
             member: Member,
+            contract: Contract,
         }).save();
         const password = await bcrypt.hash(process.env.PASSWORD_CUSTOMER, 10);
         const account = {
@@ -93,7 +94,7 @@ module.exports = {
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
-        const roomRentalDetail = await RoomRentalDetail.find({});
+        const roomRentalDetail = await RoomRentalDetail.find({}).lean();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     deleteRoomRentalDetail: asyncUtil(async (req, res) => {

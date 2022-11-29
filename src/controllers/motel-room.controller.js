@@ -20,7 +20,9 @@ module.exports = {
         if (isRent) {
             options = { ...options, isRent: isRent };
         }
-        const motelRoom = await MotelRoomModel.find(options);
+        const motelRoom = await MotelRoomModel.find(options)
+            .populate('roomRentID')
+            .lean();
         return AppResponse.success(req, res)(motelRoom);
     }),
     createMotelRoom: asyncUtil(async (req, res) => {
