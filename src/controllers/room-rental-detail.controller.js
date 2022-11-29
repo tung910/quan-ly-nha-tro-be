@@ -33,11 +33,6 @@ module.exports = {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
 
-        const roomRentalDetail = await RoomRentalDetail({
-            ...CustomerInfo,
-            service: Service,
-            member: Member,
-        }).save();
         const password = await bcrypt.hash(process.env.PASSWORD_CUSTOMER, 10);
         const account = {
             email: CustomerInfo.email,
@@ -49,7 +44,13 @@ module.exports = {
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
             address: CustomerInfo.address,
         };
-        await UserModel.create(account);
+        const newAccount =  await UserModel.create(account);
+        const roomRentalDetail = await RoomRentalDetail({
+            ...CustomerInfo,
+            userID:newAccount._id,
+            service: Service,
+            member: Member,
+        }).save();
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
             { roomName: CustomerInfo.roomName },
