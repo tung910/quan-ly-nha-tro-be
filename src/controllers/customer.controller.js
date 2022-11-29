@@ -70,7 +70,7 @@ const handleSendEmail = async (email) => {
                 <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b  style="color:red">0362982605</b> </p><br><b>Trân trọng!</b>`,
         },
         (error) => {
-            if (error) return AppResponse.fail(error, res);
+            if (error) return AppResponse.fail(error);
         }
     );
 };
