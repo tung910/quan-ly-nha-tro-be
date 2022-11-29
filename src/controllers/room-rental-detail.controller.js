@@ -45,11 +45,13 @@ module.exports = {
             address: CustomerInfo.address,
         };
         const newAccount =  await UserModel.create(account);
+        
         const roomRentalDetail = await RoomRentalDetail({
             ...CustomerInfo,
-            userID:newAccount._id,
             service: Service,
+            userID:newAccount._id,
             member: Member,
+            contract: Contract,
         }).save();
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
@@ -94,7 +96,7 @@ module.exports = {
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
-        const roomRentalDetail = await RoomRentalDetail.find({});
+        const roomRentalDetail = await RoomRentalDetail.find({}).lean();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     deleteRoomRentalDetail: asyncUtil(async (req, res) => {
