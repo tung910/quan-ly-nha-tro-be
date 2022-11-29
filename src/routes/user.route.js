@@ -27,7 +27,6 @@ router.put(
     check,
     getUserById,
     isAuth,
-    isAdmin,
     userController.updatePassword
 );
 router.put(
