@@ -38,12 +38,15 @@ module.exports = {
                     { oldValue: item.newValue }
                 );
                 if (isExist === null) {
+                    const motelRoom = await MotelRoomModel.findById({
+                        _id: item.motelRoomID,
+                    });
                     await DataPowerModel.create({
-                        customerName: item.customerName,
+                        customerName: motelRoom.customerName,
                         month: currentMonth,
                         year: item.year,
                         oldValue: item.newValue,
-                        price:item.price,
+                        price: item.price,
                         roomName: item.roomName,
                         motelID: item.motelID,
                         motelRoomID: item.motelRoomID,

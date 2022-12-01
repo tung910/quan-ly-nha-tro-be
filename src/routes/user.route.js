@@ -27,8 +27,14 @@ router.put(
     check,
     getUserById,
     isAuth,
-    isAdmin,
     userController.updatePassword
+);
+router.put(
+    '/update-info/:id',
+    check,
+    getUserById,
+    isAuth,
+    userController.updateInfo
 );
 router.delete(
     '/users/delete/:id',

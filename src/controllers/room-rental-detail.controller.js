@@ -33,11 +33,6 @@ module.exports = {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
 
-        const roomRentalDetail = await RoomRentalDetail({
-            ...CustomerInfo,
-            service: Service,
-            member: Member,
-        }).save();
         const password = await bcrypt.hash(process.env.PASSWORD_CUSTOMER, 10);
         const account = {
             email: CustomerInfo.email,
@@ -49,7 +44,15 @@ module.exports = {
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
             address: CustomerInfo.address,
         };
-        await UserModel.create(account);
+        const newAccount =  await UserModel.create(account);
+        
+        const roomRentalDetail = await RoomRentalDetail({
+            ...CustomerInfo,
+            service: Service,
+            userID:newAccount._id,
+            member: Member,
+            contract: Contract,
+        }).save();
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
             { roomName: CustomerInfo.roomName },
@@ -93,7 +96,7 @@ module.exports = {
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
-        const roomRentalDetail = await RoomRentalDetail.find({});
+        const roomRentalDetail = await RoomRentalDetail.find({}).lean();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     deleteRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -119,17 +122,31 @@ module.exports = {
         const existsCitizenIdentification = await UserModel.findOne({
             citizenIdentificationNumber: citizenIdentification,
         }).exec();
-        if (existsEmail) {
+        const { email: prevEmail } = await RoomRentalDetail.findById({
+            _id: req.params.id,
+        });
+        const { phone: prevPhone } = await RoomRentalDetail.findById({
+            _id: req.params.id,
+        });
+        const { citizenIdentification: prevCitizenIdentificationNumber } =
+            await RoomRentalDetail.findById({
+                _id: req.params.id,
+            });
+        if (existsEmail && existsEmail.email !== prevEmail) {
             return AppResponse.fail(req, res, 400)(null, 'Email đã tồn tại');
         }
-        if (existsPhone) {
+        if (existsPhone && existsPhone.phone !== prevPhone) {
             return AppResponse.fail(
                 req,
                 res,
                 400
             )(null, 'Số điện thoại đã tồn tại');
         }
-        if (existsCitizenIdentification) {
+        if (
+            existsCitizenIdentification &&
+            existsCitizenIdentification.citizenIdentificationNumber !==
+                prevCitizenIdentificationNumber
+        ) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
         // const arrMsg = [];
@@ -163,9 +180,7 @@ module.exports = {
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
             address: CustomerInfo.address,
         };
-        const { email: prevEmail } = await RoomRentalDetail.findById({
-            _id: req.params.id,
-        });
+
         await UserModel.findOneAndUpdate({ email: prevEmail }, account, {
             new: true,
         });

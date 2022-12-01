@@ -43,6 +43,14 @@ router.post(
     validateRequest(validateInSchema),
     RoomDepositController.addOrUpdate
 );
+router.patch(
+    '/add-or-update/:id',
+    check,
+    getUserById,
+    isAuth,
+    isAdmin,
+    RoomDepositController.updateStatus
+);
 router.get(
     '/detail',
     check,

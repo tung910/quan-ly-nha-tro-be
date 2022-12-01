@@ -20,7 +20,9 @@ module.exports = {
         if (isRent) {
             options = { ...options, isRent: isRent };
         }
-        const motelRoom = await MotelRoomModel.find(options);
+        const motelRoom = await MotelRoomModel.find(options)
+            .populate('roomRentID')
+            .lean();
         return AppResponse.success(req, res)(motelRoom);
     }),
     createMotelRoom: asyncUtil(async (req, res) => {
@@ -98,22 +100,22 @@ module.exports = {
         });
         if (calculator) {
             if (calculator.totalAmount !== 0 && calculator.remainAmount == 0) {
-                await DataPowerModel.findOneAndUpdate(
-                    { motelRoomID: data._id },
-                    {
-                        customerName: '',
-                        month: data.month,
-                        year: data.year,
-                    }
-                ).exec();
-                await DataWaterModel.findOneAndUpdate(
-                    { motelRoomID: data._id },
-                    {
-                        customerName: '',
-                        month: data.month,
-                        year: data.year,
-                    }
-                ).exec();
+                // await DataPowerModel.findOneAndUpdate(
+                //     { motelRoomID: data._id },
+                //     {
+                //         customerName: '',
+                //         month: data.month,
+                //         year: data.year,
+                //     }
+                // ).exec();
+                // await DataWaterModel.findOneAndUpdate(
+                //     { motelRoomID: data._id },
+                //     {
+                //         customerName: '',
+                //         month: data.month,
+                //         year: data.year,
+                //     }
+                // ).exec();
                 const motelRoom = await MotelRoomModel.findOneAndUpdate(
                     {
                         _id: data._id,

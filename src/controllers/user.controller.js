@@ -2,6 +2,8 @@ const UserModel = require('~/models/user.model');
 const DataPowerModel = require('~/models/data-power.model');
 const DataWaterModel = require('~/models/water.model');
 const CalculatorMoneyModel = require('~/models/calculator-money.model');
+const MotelRoomModel = require('~/models/motel-room.model');
+const RoomRentalDetailModel = require('~/models/room-rental-detail.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const bcrypt = require('bcrypt');
 const AppResponse = require('~/helpers/response');
@@ -80,6 +82,57 @@ module.exports = {
         const user = await UserModel.findByIdAndUpdate(
             { _id: req.params.id },
             req.body,
+            { new: true }
+        );
+        return AppResponse.success(req, res)(user);
+    }),
+    updateInfo: asyncUtil(async (req, res) => {
+        var obj = {};
+        const { data } = req.body;
+        if (data) {
+            obj = data;
+        }
+        if (data.name) {
+            obj.customerName = data.name;
+        }
+        if (data.citizenIdentificationNumber) {
+            obj.citizenIdentification = data.citizenIdentificationNumber;
+        }
+        const roomrentalDetail = await RoomRentalDetailModel.findOneAndUpdate(
+            {
+                userID: req.params.id,
+            },
+            obj,
+            { new: true }
+        );
+        if (roomrentalDetail) {
+            await MotelRoomModel.findOneAndUpdate(
+                {
+                    roomRentID: roomrentalDetail._id,
+                },
+                obj,
+                {
+                    new: true,
+                }
+            );
+            await DataPowerModel.findOneAndUpdate(
+                {
+                    motelRoomID: roomrentalDetail.motelRoomID,
+                },
+                obj,
+                { new: true }
+            );
+            await DataWaterModel.findOneAndUpdate(
+                {
+                    motelRoomID: roomrentalDetail.motelRoomID,
+                },
+                obj,
+                { new: true }
+            );
+        }
+        const user = await UserModel.findByIdAndUpdate(
+            { _id: req.params.id },
+            data,
             { new: true }
         );
         return AppResponse.success(req, res)(user);
