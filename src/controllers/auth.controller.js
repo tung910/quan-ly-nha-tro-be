@@ -59,7 +59,7 @@ module.exports = {
             {
                 from: process.env.EMAIL_APP,
                 to: `${email}`,
-                subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
+                subject: '<img src="https://res.cloudinary.com/dkiw9eaeh/image/upload/v1669905408/tp10q2rn7dufwirvbf6o.jpg" width="50px" height="50px"> TRỌ VƯƠNG ANH XIN CHÀO!',
                 html: `<p>Trọ Vương Anh xin cảm ơn bạn<b> ${name}</b> đã lựa chọn dịch vụ của chúng tôi! <br />
                 Mã OTP của bạn là:<b> ${OTP}</b>
                   <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b style="color:red">0362982605</b> </p><br><b>Trân trọng!</b>`,

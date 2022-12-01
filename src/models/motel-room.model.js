@@ -21,13 +21,10 @@ const MotelRoomSchema = new mongoose.Schema(
         description: {
             type: String,
         },
-        width: {
+        area: {
             type: Number,
             required: true,
-        },
-        height: {
-            type: Number,
-            required: true,
+            default: 25
         },
         unitPrice: {
             type: Number,
@@ -41,12 +38,10 @@ const MotelRoomSchema = new mongoose.Schema(
             ref: 'Motel',
         },
         isDebit: {
-            // tien nợ
             type: Boolean,
             default: false,
         },
         isRent: {
-            // tiền cọc
             type: Boolean,
             default: false,
         },
