@@ -105,29 +105,31 @@ module.exports = {
             obj,
             { new: true }
         );
-        await MotelRoomModel.findOneAndUpdate(
-            {
-                roomRentID: roomrentalDetail._id,
-            },
-            obj,
-            {
-                new: true,
-            }
-        );
-        await DataPowerModel.findOneAndUpdate(
-            {
-                motelRoomID: roomrentalDetail.motelRoomID,
-            },
-            obj,
-            { new: true }
-        );
-        await DataWaterModel.findOneAndUpdate(
-            {
-                motelRoomID: roomrentalDetail.motelRoomID,
-            },
-            obj,
-            { new: true }
-        );
+        if (roomrentalDetail) {
+            await MotelRoomModel.findOneAndUpdate(
+                {
+                    roomRentID: roomrentalDetail._id,
+                },
+                obj,
+                {
+                    new: true,
+                }
+            );
+            await DataPowerModel.findOneAndUpdate(
+                {
+                    motelRoomID: roomrentalDetail.motelRoomID,
+                },
+                obj,
+                { new: true }
+            );
+            await DataWaterModel.findOneAndUpdate(
+                {
+                    motelRoomID: roomrentalDetail.motelRoomID,
+                },
+                obj,
+                { new: true }
+            );
+        }
         const user = await UserModel.findByIdAndUpdate(
             { _id: req.params.id },
             data,
