@@ -44,18 +44,21 @@ module.exports = {
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
             address: CustomerInfo.address,
         };
-        const newAccount =  await UserModel.create(account);
-        
+        const newAccount = await UserModel.create(account);
+
         const roomRentalDetail = await RoomRentalDetail({
             ...CustomerInfo,
             service: Service,
-            userID:newAccount._id,
+            userID: newAccount._id,
             member: Member,
             contract: Contract,
         }).save();
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            {
+                roomName: CustomerInfo.roomName,
+                motelID: CustomerInfo.motelID,
+            },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
@@ -63,7 +66,10 @@ module.exports = {
             }
         ).exec();
         await DataWaterModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            {
+                roomName: CustomerInfo.roomName,
+                motelID: CustomerInfo.motelID,
+            },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
@@ -197,7 +203,7 @@ module.exports = {
         ).exec();
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            { motelRoomID: CustomerInfo.motelRoomID },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
@@ -205,7 +211,7 @@ module.exports = {
             }
         ).exec();
         await DataWaterModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            { motelRoomID: CustomerInfo.motelRoomID },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
