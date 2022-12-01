@@ -67,9 +67,6 @@ const RoomRentalDetailSchema = new mongoose.Schema(
         payType: {
             type: String,
         },
-        // payEachTime: {
-        //     type: Number,
-        // },
         member: {
             type: Array,
         },
@@ -84,10 +81,6 @@ const RoomRentalDetailSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        // paymentPeriod: {
-        //     type: Number,
-        //     default: 10,
-        // },
         email: {
             type: String,
             required: true,
