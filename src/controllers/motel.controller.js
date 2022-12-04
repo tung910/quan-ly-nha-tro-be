@@ -8,7 +8,9 @@ const dataPowerModel = require('~/models/data-power.model');
 
 module.exports = {
     getAllMotel: asyncUtil(async (req, res) => {
-        const motel = await MotelModel.find({}).lean();
+        const motel = await MotelModel.find({})
+            .sort({ createdAt: -1, updatedAt: -1 })
+            .lean();
         return AppResponse.success(req, res)(motel);
     }),
     createMotel: asyncUtil(async (req, res) => {
