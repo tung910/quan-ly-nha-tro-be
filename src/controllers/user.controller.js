@@ -80,7 +80,7 @@ module.exports = {
         req.body.password = await bcrypt.hash(req.body.password, 10);
         const user = await UserModel.findByIdAndUpdate(
             { _id: req.params.id },
-            req.body,
+            { password: req.body.password },
             { new: true }
         );
         return AppResponse.success(req, res)(user);

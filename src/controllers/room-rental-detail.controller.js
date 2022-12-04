@@ -55,7 +55,10 @@ module.exports = {
         }).save();
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            {
+                roomName: CustomerInfo.roomName,
+                motelID: CustomerInfo.motelID,
+            },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
@@ -63,7 +66,10 @@ module.exports = {
             }
         ).exec();
         await DataWaterModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            {
+                roomName: CustomerInfo.roomName,
+                motelID: CustomerInfo.motelID,
+            },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
@@ -174,7 +180,7 @@ module.exports = {
         ).exec();
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            { motelRoomID: CustomerInfo.motelRoomID },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
@@ -182,7 +188,7 @@ module.exports = {
             }
         ).exec();
         await DataWaterModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            { motelRoomID: CustomerInfo.motelRoomID },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,

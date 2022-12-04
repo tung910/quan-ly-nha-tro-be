@@ -179,7 +179,6 @@ module.exports = {
                 });
                 if (!find) {
                     const add = await CalculatorMoneyModel.create(item);
-                    console.log('add', add.totalAmount);
                     const dataPower = await DataPowerModel.findOne({
                         _id: add.dataPowerID,
                     });
