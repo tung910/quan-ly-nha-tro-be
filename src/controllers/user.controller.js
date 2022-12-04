@@ -77,7 +77,6 @@ module.exports = {
         return AppResponse.success(req, res)(user);
     }),
     updatePassword: asyncUtil(async (req, res) => {
-        // const { password } = req.body;
         req.body.password = await bcrypt.hash(req.body.password, 10);
         const user = await UserModel.findByIdAndUpdate(
             { _id: req.params.id },

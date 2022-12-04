@@ -342,14 +342,13 @@ module.exports = {
         const oldValue = dataPower[0].oldValue;
         const newValue = dataPower[0].newValue;
         const useValue = dataPower[0].useValue;
-        const unitPrice = 3000;
-        const unitPriceWater = 20000;
+        const unitPrice = dataPower[0].price;
+        const unitPriceWater = dataWater[0].price;
         const totalPower = useValue * unitPrice;
         const totalWater = useValueWater * unitPriceWater;
         const totalAmount = calculator[0].totalAmount;
         const payAmount = calculator[0].payAmount;
         const remainAmount = calculator[0].remainAmount;
-        const total = totalWater + totalPower + totalAmount;
 
         const formatNumber = (number) => {
             return new Intl.NumberFormat().format(number);
@@ -414,7 +413,7 @@ module.exports = {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><b>${formatNumber(total)}đ</b></td>
+                                <td><b>${formatNumber(totalAmount)}đ</b></td>
                             </tr>
                             <tr>
                                 <td><b>Trả Trước(Đã trả)</b></td>
@@ -440,9 +439,10 @@ module.exports = {
             }
         );
 
-        const data = { total: total };
+        const data = { total: totalAmount };
         return AppResponse.success(req, res)(data);
     }),
+
     paymentVNPay: asyncUtil(async (req, res) => {
         const dateFormat = require('dateformat');
         const {

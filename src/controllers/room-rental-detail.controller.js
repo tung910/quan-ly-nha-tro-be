@@ -44,12 +44,12 @@ module.exports = {
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
             address: CustomerInfo.address,
         };
-        const newAccount =  await UserModel.create(account);
-        
+        const newAccount = await UserModel.create(account);
+
         const roomRentalDetail = await RoomRentalDetail({
             ...CustomerInfo,
             service: Service,
-            userID:newAccount._id,
+            userID: newAccount._id,
             member: Member,
             contract: Contract,
         }).save();
@@ -145,33 +145,10 @@ module.exports = {
         if (
             existsCitizenIdentification &&
             existsCitizenIdentification.citizenIdentificationNumber !==
-                prevCitizenIdentificationNumber
+            prevCitizenIdentificationNumber
         ) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
-        // const arrMsg = [];
-        // if (!customerName || customerName == '' || customerName == null) {
-        //     const msgCustomerName = 'Tên khách hàng yêu cầu không bỏ trống!';
-        //     arrMsg.push({ msgCustomerName });
-        // }
-        // if (!email || email == '' || email == null) {
-        //     const msgEmail = 'Email yêu cầu không bỏ trống!';
-        //     arrMsg.push({ msgEmail });
-        // }
-        // if (!phone || phone == '' || phone == null) {
-        //     const msgPhone = 'Số điện  yêu cầu không bỏ trống!';
-        //     arrMsg.push({ msgPhone });
-        // }
-        // if (
-        //     !citizenIdentification ||
-        //     citizenIdentification == '' ||
-        //     citizenIdentification == null
-        // ) {
-        //     const msgCCCD = 'Số CCCD  yêu cầu không bỏ trống!';
-        //     arrMsg.push({ msgCCCD });
-        // }
-
-        // if (arrMsg.length > 0) return AppResponse.fail(req, res)({}, arrMsg);
         const account = {
             email: CustomerInfo.email,
             motelRoomID: CustomerInfo.motelRoomID,
