@@ -7,6 +7,7 @@ const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
 const motelModel = require('~/models/motel.model');
 const roomRentalDetailModel = require('~/models/room-rental-detail.model');
+const motelRoomModel = require('~/models/motel-room.model');
 
 module.exports = {
     calculatorMoney: asyncUtil(async (req, res) => {
@@ -326,6 +327,11 @@ module.exports = {
         const roomRentalDetail = await roomRentalDetailModel.find({
             _id: roomRentalDetailID,
         });
+
+        console.log(roomRentalDetail[0]);
+        const motelRoomID = roomRentalDetailID.motelRoomID;
+        const MotelRoom = await motelRoomModel.findOne({ motelRoomID: motelRoomID });
+        const unitPriceRoom = MotelRoom.unitPrice;
         const email = roomRentalDetail[0].email;
         const motelID = calculator[0].motelID;
         const motel = await motelModel.find({ motelID: motelID });
@@ -404,7 +410,7 @@ module.exports = {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>${formatNumber(totalAmount)}đ</td>
+                                <td>${formatNumber(unitPriceRoom)}đ</td>
                             </tr>
                             <tr>
                                 <td><b>Tổng</b></td>
@@ -428,7 +434,7 @@ module.exports = {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><b>${formatNumber(remainAmount)}đ</b></td>
+                                <td><b style="color:red">${formatNumber(remainAmount)}đ</b></td>
                             </tr>
                         </tbody>
                 </table>`,
