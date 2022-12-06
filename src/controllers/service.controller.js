@@ -9,6 +9,10 @@ module.exports = {
     }),
     createService: asyncUtil(async (req, res) => {
         const { data } = req.body;
+        const existService = await ServiceModel.findOne(data);
+        if (existService) {
+            return AppResponse.fail(req, res, 400)(null, 'Dịch vụ đã tồn tại');
+        }
         const service = await ServiceModel.create(data);
         return AppResponse.success(req, res)(service);
     }),
