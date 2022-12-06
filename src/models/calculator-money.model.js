@@ -50,6 +50,10 @@ const CalculatorMoneySchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        previousRemain: {
+            type: Number,
+            default: 0,
+        },
         totalAmount: {
             type: Number,
             default: 0,
