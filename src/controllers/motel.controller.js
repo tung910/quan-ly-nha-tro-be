@@ -14,6 +14,14 @@ module.exports = {
         return AppResponse.success(req, res)(motel);
     }),
     createMotel: asyncUtil(async (req, res) => {
+      const existMotel= await MotelModel.findOne({name:req.body.name});
+      if (existMotel) {
+          return AppResponse.fail(
+              req,
+              res,
+              400
+          )(null, 'Phòng trọ đã tồn tại');
+      }
         const motel = await MotelModel(req.body).save();
         return AppResponse.success(req, res)(motel);
     }),
