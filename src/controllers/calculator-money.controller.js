@@ -77,6 +77,9 @@ module.exports = {
                     add.totalAmount += prevCalculator
                         ? prevCalculator.remainAmount
                         : 0;
+                    add.previousRemain = prevCalculator
+                        ? prevCalculator.remainAmount
+                        : 0;
                     add.totalAmount += dataPower.useValue * dataPower.price;
                     add.totalAmount += dataWater.useValue * dataWater.price;
                     add.totalAmount += roomRentalDetail.priceRoom;
@@ -107,6 +110,9 @@ module.exports = {
                          }
                      });
                      find.totalAmount += prevCalculator
+                         ? prevCalculator.remainAmount
+                         : 0;
+                     find.previousRemain = prevCalculator
                          ? prevCalculator.remainAmount
                          : 0;
                      find.totalAmount += dataPower.useValue * dataPower.price;
@@ -193,6 +199,9 @@ module.exports = {
                     add.totalAmount += prevCalculator
                         ? prevCalculator.remainAmount
                         : 0;
+                    add.previousRemain = prevCalculator
+                        ? prevCalculator.remainAmount
+                        : 0;
                     add.totalAmount += dataPower.useValue * dataPower.price;
                     add.totalAmount += dataWater.useValue * dataWater.price;
                     add.totalAmount += roomRentalDetail.priceRoom;
@@ -223,6 +232,9 @@ module.exports = {
                         }
                     });
                     find.totalAmount += prevCalculator
+                        ? prevCalculator.remainAmount
+                        : 0;
+                    find.previousRemain = prevCalculator
                         ? prevCalculator.remainAmount
                         : 0;
                     find.totalAmount += dataPower.useValue * dataPower.price;
