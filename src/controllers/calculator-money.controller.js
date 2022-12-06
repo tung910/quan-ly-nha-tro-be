@@ -52,6 +52,9 @@ module.exports = {
                 if (prevMonth == 0) {
                     prevYear = (prevYear - 1).toString();
                     prevMonth = '12';
+                } else {
+                    prevMonth = (date.getMonth() + 1).toString();
+                    prevYear = date.getFullYear().toString();
                 }
                 const prevCalculator = await CalculatorMoneyModel.findOne({
                     roomRentalDetailID: item.roomRentalDetailID,
@@ -94,40 +97,40 @@ module.exports = {
                     item = add;
                     return item;
                 } else {
-                     find.totalAmount = 0;
-                     const dataPower = await DataPowerModel.findOne({
-                         _id: find.dataPowerID,
-                     });
-                     const dataWater = await DataWaterModel.findOne({
-                         _id: find.dataWaterID,
-                     });
-                     const roomRentalDetail = await RoomRentalDetail.findOne({
-                         _id: find.roomRentalDetailID,
-                     });
-                     roomRentalDetail.service.map((serviceItem) => {
-                         if (serviceItem.isUse) {
-                             find.totalAmount += serviceItem.unitPrice;
-                         }
-                     });
-                     find.totalAmount += prevCalculator
-                         ? prevCalculator.remainAmount
-                         : 0;
-                     find.previousRemain = prevCalculator
-                         ? prevCalculator.remainAmount
-                         : 0;
-                     find.totalAmount += dataPower.useValue * dataPower.price;
-                     find.totalAmount += dataWater.useValue * dataWater.price;
-                     find.totalAmount += roomRentalDetail.priceRoom;
-                     find.remainAmount = find.totalAmount - find.payAmount;
-                     await CalculatorMoneyModel.findByIdAndUpdate(
-                         { _id: find._id },
-                         find,
-                         {
-                             new: true,
-                         }
-                     ).exec();
-                     item = find;
-                     return item;
+                    find.totalAmount = 0;
+                    const dataPower = await DataPowerModel.findOne({
+                        _id: find.dataPowerID,
+                    });
+                    const dataWater = await DataWaterModel.findOne({
+                        _id: find.dataWaterID,
+                    });
+                    const roomRentalDetail = await RoomRentalDetail.findOne({
+                        _id: find.roomRentalDetailID,
+                    });
+                    roomRentalDetail.service.map((serviceItem) => {
+                        if (serviceItem.isUse) {
+                            find.totalAmount += serviceItem.unitPrice;
+                        }
+                    });
+                    find.totalAmount += prevCalculator
+                        ? prevCalculator.remainAmount
+                        : 0;
+                    find.previousRemain = prevCalculator
+                        ? prevCalculator.remainAmount
+                        : 0;
+                    find.totalAmount += dataPower.useValue * dataPower.price;
+                    find.totalAmount += dataWater.useValue * dataWater.price;
+                    find.totalAmount += roomRentalDetail.priceRoom;
+                    find.remainAmount = find.totalAmount - find.payAmount;
+                    await CalculatorMoneyModel.findByIdAndUpdate(
+                        { _id: find._id },
+                        find,
+                        {
+                            new: true,
+                        }
+                    ).exec();
+                    item = find;
+                    return item;
                 }
             })
         );
@@ -162,6 +165,9 @@ module.exports = {
                 if (prevMonth == 0) {
                     prevYear = (prevYear - 1).toString();
                     prevMonth = '12';
+                } else {
+                    prevMonth = date.getMonth().toString();
+                    prevYear = date.getFullYear().toString();
                 }
                 const prevCalculator = await CalculatorMoneyModel.findOne({
                     roomRentalDetailID: item.roomRentalDetailID,
@@ -237,6 +243,7 @@ module.exports = {
                     find.previousRemain = prevCalculator
                         ? prevCalculator.remainAmount
                         : 0;
+                    console.log('previousRemain', find.previousRemain);
                     find.totalAmount += dataPower.useValue * dataPower.price;
                     find.totalAmount += dataWater.useValue * dataWater.price;
                     find.totalAmount += roomRentalDetail.priceRoom;
