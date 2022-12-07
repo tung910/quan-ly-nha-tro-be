@@ -71,7 +71,7 @@ router.put(
     check,
     getUserById,
     isAuth,
-    isAdmin,
+    // isAdmin,
     calculatorMoneyController.paymentMoney
 );
 router.post('/create_payment_url', calculatorMoneyController.paymentVNPay);
