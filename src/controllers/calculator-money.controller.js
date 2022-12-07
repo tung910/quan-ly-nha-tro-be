@@ -53,7 +53,7 @@ module.exports = {
                     prevYear = (prevYear - 1).toString();
                     prevMonth = '12';
                 } else {
-                    prevMonth = (date.getMonth() + 1).toString();
+                    prevMonth = (date.getMonth()).toString();
                     prevYear = date.getFullYear().toString();
                 }
                 const prevCalculator = await CalculatorMoneyModel.findOne({
