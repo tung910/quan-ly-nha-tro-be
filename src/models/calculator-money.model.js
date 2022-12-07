@@ -66,6 +66,9 @@ const CalculatorMoneySchema = new mongoose.Schema(
             type: mongoose.ObjectId,
             ref: 'MotelRoom',
         },
+        note: {
+            type: String,
+        },
     },
     { collection: 'CalculatorMoney', timestamps: true }
 );
