@@ -59,6 +59,7 @@ module.exports = {
             const exitRoomDeposit = await RoomDepositModel.findOne({
                 motelRoomId: data.motelRoomId,
             });
+            console.log(exitRoomDeposit);
             const motelRoom = await MotelRoomModel.findById(data.motelRoomId);
             if (motelRoom.isRent) {
                 return AppResponse.fail(
@@ -67,7 +68,11 @@ module.exports = {
                     400
                 )(null, 'Phòng đã có người ở');
             }
-            if (exitRoomDeposit) {
+            if (
+                exitRoomDeposit &&
+                !exitRoomDeposit.cancelDate &&
+                !exitRoomDeposit.hasCancel
+            ) {
                 return AppResponse.fail(
                     req,
                     res,
