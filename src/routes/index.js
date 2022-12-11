@@ -14,6 +14,12 @@ const notificationRoute = require('./notification.route');
 const { exportWordContract } = require('~/services/export.service');
 
 function routes(app) {
+    app.use('/', (req, res) => {
+        return res.status(403).json({
+            status_code: 403,
+            messages: 'Forbidden',
+        });
+    });
     app.use('/api', userRoute);
     app.use('/api/motel-room', motelRoomRoute);
     app.use('/api/motel', motelRoute);
