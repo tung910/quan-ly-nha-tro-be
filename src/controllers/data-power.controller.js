@@ -11,11 +11,21 @@ module.exports = {
     }),
     updatePower: asyncUtil(async (req, res) => {
         const { data } = req.body;
-        const power = await DataPowerModel.findOneAndUpdate(
-            { _id: req.params.id },
-            data,
-            { new: true }
-        );
+        let power;
+        if (data.isUpdatePrice) {
+            power = DataPowerModel.updateMany(
+                {},
+                {
+                    price: data.price,
+                }
+            );
+        } else {
+            power = await DataPowerModel.findOneAndUpdate(
+                { _id: req.params.id },
+                data,
+                { new: true }
+            );
+        }
         return AppResponse.success(req, res)(power);
     }),
     getListPower: asyncUtil(async (req, res) => {
