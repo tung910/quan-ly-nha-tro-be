@@ -12,11 +12,20 @@ module.exports = {
 
     updateWater: asyncUtil(async (req, res) => {
         const { data } = req.body;
-        const water = await WaterModel.findOneAndUpdate(
-            { _id: req.params.id },
-            data,
-            { new: true }
-        );
+        let water;
+        if (data.isUpdatePrice) {
+            water = await WaterModel.updateMany({
+                price: data.price,
+            });
+        } else {
+            if (req.params.id) {
+                water = await WaterModel.findOneAndUpdate(
+                    { _id: req.params.id },
+                    data,
+                    { new: true }
+                );
+            }
+        }
         return AppResponse.success(req, res)(water);
     }),
     listWater: asyncUtil(async (req, res) => {
