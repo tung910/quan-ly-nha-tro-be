@@ -6,6 +6,7 @@ const DataWaterModel = require('~/models/water.model');
 const DataPowerModel = require('~/models/data-power.model');
 const UserModel = require('~/models/user.model');
 const bcrypt = require('bcrypt');
+const { genPassword } = require('~/services/user.service');
 
 module.exports = {
     createRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -32,8 +33,9 @@ module.exports = {
         if (existsCitizenIdentification) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
-
-        const password = await bcrypt.hash(process.env.PASSWORD_CUSTOMER, 10);
+        const PASSWORD_CUSTOMER = genPassword();
+        console.log(PASSWORD_CUSTOMER);
+        const password = await bcrypt.hash(PASSWORD_CUSTOMER, 10);
         const account = {
             email: CustomerInfo.email,
             password: password,
@@ -151,7 +153,7 @@ module.exports = {
         if (
             existsCitizenIdentification &&
             existsCitizenIdentification.citizenIdentificationNumber !==
-            prevCitizenIdentificationNumber
+                prevCitizenIdentificationNumber
         ) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
