@@ -33,6 +33,9 @@ const MotelRoomSchema = new mongoose.Schema(
         lease: {
             type: Array,
         },
+        licensePlates: {
+            type: String,
+        },
         motelID: {
             type: mongoose.ObjectId,
             ref: 'Motel',
