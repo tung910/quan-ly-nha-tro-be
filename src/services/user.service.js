@@ -20,7 +20,6 @@ module.exports = {
                 password: lastOtp.password,
                 name: lastOtp.name,
                 phone: lastOtp.phone,
-                citizenIdentificationNumber: 0,
             });
             if (user) {
                 await OtpModel.deleteMany({ email });
