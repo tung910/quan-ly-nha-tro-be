@@ -5,7 +5,7 @@ const { validOtp } = require('./otp.service');
 
 module.exports = {
     verifyOtp: asyncUtil(async ({ email, otp }) => {
-        const otpHolder = await OtpModel.find({ email });
+        const otpHolder = await OtpModel.find({ email }).lean();
         if (!otpHolder.length) {
             return { code_status: 404, message: 'Expired OTP!' };
         }
@@ -20,6 +20,7 @@ module.exports = {
                 password: lastOtp.password,
                 name: lastOtp.name,
                 phone: lastOtp.phone,
+                citizenIdentificationNumber: 0,
             });
             if (user) {
                 await OtpModel.deleteMany({ email });

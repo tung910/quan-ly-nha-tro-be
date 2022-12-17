@@ -61,11 +61,13 @@ module.exports = {
                 from: process.env.EMAIL_APP,
                 to: `${email}`,
                 subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
-                html: `<p>Trọ Vương Anh xin cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi! <br />
-                Email của bạn là:<b> ${CustomerInfo.email}</b> <br />  
-                Mật khẩu của bạn là: <b>${PASSWORD_CUSTOMER}</b> <br />  
-                <i>Vui lòng không chia sẻ mã này cho bất kì ai </i>
-                <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b  style="color:red">0362982605</b> </p><br><b>Trân trọng!</b>`,
+                html: `<h2>Trọ Vương Anh xin cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi!<h2 />  
+                <p>Email của bạn là:<b> ${CustomerInfo.email}</b></p>
+               <p> Mật khẩu của bạn là: <b>${PASSWORD_CUSTOMER}</b></p>  
+                <i>Vui lòng không chia sẻ mã này cho bất kì ai </i>   
+                <h4>Đăng nhập ngay <a href='${process.env.URL_LOGIN}'>tại đây</a>!</h4>
+                <br /> 
+                 <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b  style="color:red">0362982605</b> </h2><br><b>Trân trọng!</b>`,
             },
             (error) => {
                 if (error) return AppResponse.fail(error);

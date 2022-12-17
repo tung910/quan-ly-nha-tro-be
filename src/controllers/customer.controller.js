@@ -63,9 +63,9 @@ const handleSendEmail = async (email) => {
             from: process.env.EMAIL_APP,
             to: `${email}`,
             subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
-            html: `<p>Trọ Vương Anh xin cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi! <br />
-                Email của bạn là:<b> ${user.email}</b> <br />  
-                Mật khẩu của bạn là: <b>${password}</b> <br />  
+            html: `<h2>Trọ Vương Anh xin cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi!<h2 /> 
+                <p>Email của bạn là:<b> ${user.email}</b></p>  
+                <p>Mật khẩu của bạn là: <b>${password}</b></p>  
                 <i>Vui lòng không chia sẻ mã này cho bất kì ai </i>
                 <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b  style="color:red">0362982605</b> </p><br><b>Trân trọng!</b>`,
         },
