@@ -81,6 +81,13 @@ router.post(
     isAuth,
     calculatorMoneyController.paymentVNPay
 );
+router.post(
+    '/send-email',
+    check,
+    getUserById,
+    isAuth,
+    calculatorMoneyController.sendEmailPaymentSuccess
+);
 router.get(
     '/vnpay_return',
     check,
