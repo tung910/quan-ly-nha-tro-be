@@ -54,7 +54,7 @@ module.exports = {
                     prevYear = (prevYear - 1).toString();
                     prevMonth = '12';
                 } else {
-                    prevMonth = (date.getMonth()).toString();
+                    prevMonth = date.getMonth().toString();
                     prevYear = date.getFullYear().toString();
                 }
                 const prevCalculator = await CalculatorMoneyModel.findOne({
@@ -374,7 +374,9 @@ module.exports = {
 
         console.log(roomRentalDetail[0]);
         const motelRoomID = roomRentalDetailID.motelRoomID;
-        const MotelRoom = await motelRoomModel.findOne({ motelRoomID: motelRoomID });
+        const MotelRoom = await motelRoomModel.findOne({
+            motelRoomID: motelRoomID,
+        });
         const unitPriceRoom = MotelRoom.unitPrice;
         const email = roomRentalDetail[0].email;
         const motelID = calculator[0].motelID;
@@ -478,7 +480,9 @@ module.exports = {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><b style="color:red">${formatNumber(remainAmount)}đ</b></td>
+                                <td><b style="color:red">${formatNumber(
+                                    remainAmount
+                                )}đ</b></td>
                             </tr>
                         </tbody>
                 </table>`,
@@ -590,6 +594,39 @@ module.exports = {
         } else {
             res.status(200).json({ RspCode: '97', Message: 'Fail checksum' });
         }
+    }),
+    sendEmailPaymentSuccess: asyncUtil(async (req, res) => {
+        const { email, name, roomName, payType, priceRoom, date, payer } =
+            req.body;
+        const room = roomName.split('-')[1];
+        const motel = roomName.split('-')[0];
+
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_APP,
+                pass: process.env.PASS_APP,
+            },
+        });
+        await transporter.sendMail(
+            {
+                from: process.env.EMAIL_APP,
+                to: process.env.EMAIL_ADMIN,
+                subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
+                html: `<h3>Thanh toán thành công</h3>
+                <p>Khách hàng:<b> ${name}</b></p>  
+                <p>Người thanh toán:<b> ${payer}</b></p>  
+                <p>Email: <b>${email}</b></p>  
+                <p>Nhà: <b>${motel}</b> Phòng: <b>${room}</b></p>   
+                <h5><b>Đã thanh toán thành công tiền trọ tháng ${date} với số tiền là ${priceRoom} </b></h5>
+                <p>Phương thức thanh toán là ${payType}</p>
+                `,
+            },
+            (error) => {
+                if (error) return AppResponse.fail(error);
+            }
+        );
+        return AppResponse.success(req, res);
     }),
 };
 function sortObject(obj) {
