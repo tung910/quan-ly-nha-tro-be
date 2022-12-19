@@ -16,7 +16,7 @@ module.exports = {
         return Otp;
     }),
     validOtp: asyncUtil(async ({ otp, hashOtp }) => {
-        const isValid = await bcrypt.compare(otp, hashOtp);
+        const isValid = await bcrypt.compare(String(otp), String(hashOtp));
         return isValid;
     }),
 };

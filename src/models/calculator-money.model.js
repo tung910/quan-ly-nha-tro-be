@@ -54,6 +54,10 @@ const CalculatorMoneySchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        previousRemain: {
+            type: Number,
+            default: 0,
+        },
         totalAmount: {
             type: Number,
             default: 0,
@@ -65,6 +69,9 @@ const CalculatorMoneySchema = new mongoose.Schema(
         motelRoomId: {
             type: mongoose.ObjectId,
             ref: 'MotelRoom',
+        },
+        note: {
+            type: String,
         },
     },
     { collection: 'CalculatorMoney', timestamps: true }

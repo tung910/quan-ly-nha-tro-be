@@ -71,10 +71,36 @@ router.put(
     check,
     getUserById,
     isAuth,
-    isAdmin,
+    // isAdmin,
     calculatorMoneyController.paymentMoney
 );
-router.post('/create_payment_url', calculatorMoneyController.paymentVNPay);
-router.get('/vnpay_return', calculatorMoneyController.VNPayReturn);
+router.post(
+    '/create_payment_url',
+    check,
+    getUserById,
+    isAuth,
+    calculatorMoneyController.paymentVNPay
+);
+router.post(
+    '/send-email',
+    check,
+    getUserById,
+    isAuth,
+    calculatorMoneyController.sendEmailPaymentSuccess
+);
+router.get(
+    '/vnpay_return',
+    check,
+    getUserById,
+    isAuth,
+    calculatorMoneyController.VNPayReturn
+);
+router.get(
+    '/vnpay_ipn',
+    check,
+    getUserById,
+    isAuth,
+    calculatorMoneyController.VNPayIPN
+);
 
 module.exports = router;

@@ -20,13 +20,23 @@ module.exports = {
         if (isRent) {
             options = { ...options, isRent: isRent };
         }
-        const motelRoom = await MotelRoomModel.find(options);
+        const motelRoom = await MotelRoomModel.find(options)
+            .populate('roomRentID')
+            .lean();
         return AppResponse.success(req, res)(motelRoom);
     }),
     createMotelRoom: asyncUtil(async (req, res) => {
         const { data } = req.body;
         await DataPowerModel.create(data);
         await DataWaterModel.create(data);
+        const existMotelRoom = await MotelRoomModel.findOne(data)
+        if(existMotelRoom){
+          return AppResponse.fail(
+              req,
+              res,
+              400
+          )(null, 'Phòng trọ đã tồn tại');
+        }
         const motelRoom = await MotelRoomModel.create(data);
         return AppResponse.success(req, res)(motelRoom);
     }),
@@ -98,22 +108,22 @@ module.exports = {
         });
         if (calculator) {
             if (calculator.totalAmount !== 0 && calculator.remainAmount == 0) {
-                await DataPowerModel.findOneAndUpdate(
-                    { motelRoomID: data._id },
-                    {
-                        customerName: '',
-                        month: data.month,
-                        year: data.year,
-                    }
-                ).exec();
-                await DataWaterModel.findOneAndUpdate(
-                    { motelRoomID: data._id },
-                    {
-                        customerName: '',
-                        month: data.month,
-                        year: data.year,
-                    }
-                ).exec();
+                // await DataPowerModel.findOneAndUpdate(
+                //     { motelRoomID: data._id },
+                //     {
+                //         customerName: '',
+                //         month: data.month,
+                //         year: data.year,
+                //     }
+                // ).exec();
+                // await DataWaterModel.findOneAndUpdate(
+                //     { motelRoomID: data._id },
+                //     {
+                //         customerName: '',
+                //         month: data.month,
+                //         year: data.year,
+                //     }
+                // ).exec();
                 const motelRoom = await MotelRoomModel.findOneAndUpdate(
                     {
                         _id: data._id,

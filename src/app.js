@@ -5,6 +5,7 @@ const cors = require('cors');
 const { initEnvironment, initConnectDB } = require('./app.init');
 const routes = require('~/routes');
 const logger = require('./helpers/logger');
+const bodyParser = require('body-parser');
 
 const app = express();
 initEnvironment();
@@ -17,6 +18,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.urlencoded({ limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
+app.use(bodyParser.json());
 
 routes(app);
 

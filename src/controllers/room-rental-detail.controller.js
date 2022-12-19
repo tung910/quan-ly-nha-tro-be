@@ -1,3 +1,4 @@
+const nodemailer = require('nodemailer');
 const RoomRentalDetail = require('~/models/room-rental-detail.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
@@ -6,6 +7,7 @@ const DataWaterModel = require('~/models/water.model');
 const DataPowerModel = require('~/models/data-power.model');
 const UserModel = require('~/models/user.model');
 const bcrypt = require('bcrypt');
+const { genPassword } = require('~/services/user.service');
 
 module.exports = {
     createRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -32,13 +34,9 @@ module.exports = {
         if (existsCitizenIdentification) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
-
-        const roomRentalDetail = await RoomRentalDetail({
-            ...CustomerInfo,
-            service: Service,
-            member: Member,
-        }).save();
-        const password = await bcrypt.hash(process.env.PASSWORD_CUSTOMER, 10);
+        const PASSWORD_CUSTOMER = genPassword();
+        console.log(PASSWORD_CUSTOMER);
+        const password = await bcrypt.hash(PASSWORD_CUSTOMER, 10);
         const account = {
             email: CustomerInfo.email,
             password: password,
@@ -49,10 +47,45 @@ module.exports = {
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
             address: CustomerInfo.address,
         };
-        await UserModel.create(account);
+        const newAccount = await UserModel.create(account);
+
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_APP,
+                pass: process.env.PASS_APP,
+            },
+        });
+        await transporter.sendMail(
+            {
+                from: process.env.EMAIL_APP,
+                to: `${email}`,
+                subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
+                html: `<h2>Trọ Vương Anh xin cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi!<h2 />  
+                <p>Email của bạn là:<b> ${CustomerInfo.email}</b></p>
+               <p> Mật khẩu của bạn là: <b>${PASSWORD_CUSTOMER}</b></p>  
+                <i>Vui lòng không chia sẻ mã này cho bất kì ai </i>   
+                <h4>Đăng nhập ngay <a href='${process.env.URL_LOGIN}'>tại đây</a>!</h4>
+                <br /> 
+                 <br />  Mọi thắc mắc xin liên hệ qua số điện thoại : <b  style="color:red">0362982605</b> </h2><br><b>Trân trọng!</b>`,
+            },
+            (error) => {
+                if (error) return AppResponse.fail(error);
+            }
+        );
+        const roomRentalDetail = await RoomRentalDetail({
+            ...CustomerInfo,
+            service: Service,
+            userID: newAccount._id,
+            member: Member,
+            contract: Contract,
+        }).save();
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            {
+                roomName: CustomerInfo.roomName,
+                motelID: CustomerInfo.motelID,
+            },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
@@ -60,7 +93,10 @@ module.exports = {
             }
         ).exec();
         await DataWaterModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            {
+                roomName: CustomerInfo.roomName,
+                motelID: CustomerInfo.motelID,
+            },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
@@ -93,7 +129,7 @@ module.exports = {
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     getAllRoomRentalDetail: asyncUtil(async (req, res) => {
-        const roomRentalDetail = await RoomRentalDetail.find({});
+        const roomRentalDetail = await RoomRentalDetail.find({}).lean();
         return AppResponse.success(req, res)(roomRentalDetail);
     }),
     deleteRoomRentalDetail: asyncUtil(async (req, res) => {
@@ -119,42 +155,33 @@ module.exports = {
         const existsCitizenIdentification = await UserModel.findOne({
             citizenIdentificationNumber: citizenIdentification,
         }).exec();
-        if (existsEmail) {
+        const { email: prevEmail } = await RoomRentalDetail.findById({
+            _id: req.params.id,
+        });
+        const { phone: prevPhone } = await RoomRentalDetail.findById({
+            _id: req.params.id,
+        });
+        const { citizenIdentification: prevCitizenIdentificationNumber } =
+            await RoomRentalDetail.findById({
+                _id: req.params.id,
+            });
+        if (existsEmail && existsEmail.email !== prevEmail) {
             return AppResponse.fail(req, res, 400)(null, 'Email đã tồn tại');
         }
-        if (existsPhone) {
+        if (existsPhone && existsPhone.phone !== prevPhone) {
             return AppResponse.fail(
                 req,
                 res,
                 400
             )(null, 'Số điện thoại đã tồn tại');
         }
-        if (existsCitizenIdentification) {
+        if (
+            existsCitizenIdentification &&
+            existsCitizenIdentification.citizenIdentificationNumber !==
+                prevCitizenIdentificationNumber
+        ) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
-        // const arrMsg = [];
-        // if (!customerName || customerName == '' || customerName == null) {
-        //     const msgCustomerName = 'Tên khách hàng yêu cầu không bỏ trống!';
-        //     arrMsg.push({ msgCustomerName });
-        // }
-        // if (!email || email == '' || email == null) {
-        //     const msgEmail = 'Email yêu cầu không bỏ trống!';
-        //     arrMsg.push({ msgEmail });
-        // }
-        // if (!phone || phone == '' || phone == null) {
-        //     const msgPhone = 'Số điện  yêu cầu không bỏ trống!';
-        //     arrMsg.push({ msgPhone });
-        // }
-        // if (
-        //     !citizenIdentification ||
-        //     citizenIdentification == '' ||
-        //     citizenIdentification == null
-        // ) {
-        //     const msgCCCD = 'Số CCCD  yêu cầu không bỏ trống!';
-        //     arrMsg.push({ msgCCCD });
-        // }
-
-        // if (arrMsg.length > 0) return AppResponse.fail(req, res)({}, arrMsg);
         const account = {
             email: CustomerInfo.email,
             motelRoomID: CustomerInfo.motelRoomID,
@@ -163,9 +190,7 @@ module.exports = {
             citizenIdentificationNumber: CustomerInfo.citizenIdentification,
             address: CustomerInfo.address,
         };
-        const { email: prevEmail } = await RoomRentalDetail.findById({
-            _id: req.params.id,
-        });
+
         await UserModel.findOneAndUpdate({ email: prevEmail }, account, {
             new: true,
         });
@@ -182,7 +207,7 @@ module.exports = {
         ).exec();
         const [day, month, year] = CustomerInfo.startDate.split('/');
         await DataPowerModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            { motelRoomID: CustomerInfo.motelRoomID },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
@@ -190,7 +215,7 @@ module.exports = {
             }
         ).exec();
         await DataWaterModel.findOneAndUpdate(
-            { roomName: CustomerInfo.roomName },
+            { motelRoomID: CustomerInfo.motelRoomID },
             {
                 customerName: CustomerInfo.customerName,
                 month: month,
