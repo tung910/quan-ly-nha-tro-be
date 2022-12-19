@@ -30,12 +30,12 @@ module.exports = {
         await DataPowerModel.create(data);
         await DataWaterModel.create(data);
         const existMotelRoom = await MotelRoomModel.findOne(data)
-        if(existMotelRoom){
-          return AppResponse.fail(
-              req,
-              res,
-              400
-          )(null, 'Phòng trọ đã tồn tại');
+        if (existMotelRoom) {
+            return AppResponse.fail(
+                req,
+                res,
+                400
+            )(null, 'Phòng trọ đã tồn tại');
         }
         const motelRoom = await MotelRoomModel.create(data);
         return AppResponse.success(req, res)(motelRoom);
