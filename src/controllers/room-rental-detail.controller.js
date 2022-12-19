@@ -41,6 +41,10 @@ module.exports = {
                 400
             )(null, 'Số điện thoại đã tồn tại');
         }
+        const regexPhone = /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/;
+        if (!phone.match(regexPhone)) {
+            return AppResponse.fail(req, res, 400)(null, 'Yêu cầu nhập đúng định dạng số điện thoại!');
+        }
         if (existsCitizenIdentification) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
