@@ -596,8 +596,16 @@ module.exports = {
         }
     }),
     sendEmailPaymentSuccess: asyncUtil(async (req, res) => {
-        const { email, name, roomName, payType, priceRoom, date, payer } =
-            req.body;
+        const {
+            email,
+            name,
+            roomName,
+            payType,
+            priceRoom,
+            date,
+            payer,
+            orderId,
+        } = req.body;
         const room = roomName.split('-')[1];
         const motel = roomName.split('-')[0];
 
@@ -613,12 +621,12 @@ module.exports = {
                 from: process.env.EMAIL_APP,
                 to: process.env.EMAIL_ADMIN,
                 subject: 'TRỌ VƯƠNG ANH XIN CHÀO!',
-                html: `<h3>Thanh toán thành công</h3>
+                html: `<h3>Hóa đơn #${orderId} thanh toán thành công</h3>
                 <p>Khách hàng:<b> ${name}</b></p>  
                 <p>Người thanh toán:<b> ${payer}</b></p>  
                 <p>Email: <b>${email}</b></p>  
                 <p>Nhà: <b>${motel}</b> Phòng: <b>${room}</b></p>   
-                <h5><b>Đã thanh toán thành công tiền trọ tháng ${date} với số tiền là ${priceRoom} </b></h5>
+                <h4><b>Đã thanh toán thành công tiền trọ tháng ${date} với số tiền là ${priceRoom} </b></h4>
                 <p>Phương thức thanh toán là ${payType}</p>
                 `,
             },
@@ -626,7 +634,7 @@ module.exports = {
                 if (error) return AppResponse.fail(error);
             }
         );
-        return AppResponse.success(req, res);
+        return AppResponse.success(req, res)(null);
     }),
 };
 function sortObject(obj) {
