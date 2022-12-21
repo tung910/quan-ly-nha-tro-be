@@ -102,7 +102,11 @@ module.exports = {
                     } else {
                         add.totalAmount += roomRentalDetail.priceRoom;
                     }
-                    add.remainAmount = add.totalAmount;
+                    if (startMonth == currentMonth) {
+                        add.totalAmount += roomRentalDetail.deposit;
+                        add.payAmount += roomRentalDetail.deposit;
+                    }
+                    add.remainAmount = add.totalAmount - add.payAmount;
                     await CalculatorMoneyModel.findByIdAndUpdate(
                         { _id: add._id },
                         add,
@@ -151,6 +155,10 @@ module.exports = {
                             find.totalAmount + roomRentalDetail.priceRoom / 2;
                     } else {
                         find.totalAmount += roomRentalDetail.priceRoom;
+                    }
+                    if (startMonth == currentMonth) {
+                        find.totalAmount += roomRentalDetail.deposit;
+                        find.payAmount += roomRentalDetail.deposit;
                     }
                     find.remainAmount = find.totalAmount - find.payAmount;
                     await CalculatorMoneyModel.findByIdAndUpdate(
@@ -179,145 +187,163 @@ module.exports = {
         });
         const list = await Promise.all(
             listRoomRental.map(async (i) => {
-                var item = {};
-                item.month = data.month;
-                item.year = data.year;
-                item.roomRentalDetailID = i._id;
-                item.motelRoomId = i.motelRoomID._id;
-                item.motelID = i.motelRoomID.motelID;
-                item.motelRoomID = i.motelRoomID._id;
-                dataPower = await DataPowerModel.findOne({
-                    motelRoomID: i.motelRoomID._id,
-                    month: data.month,
-                    year: data.year,
-                });
-                const date = new Date(item.year.concat('/', item.month));
-                var prevMonth = date.getMonth();
-                var prevYear = date.getFullYear();
-                if (prevMonth == 0) {
-                    prevYear = (prevYear - 1).toString();
-                    prevMonth = '12';
-                } else {
-                    prevMonth = date.getMonth().toString();
-                    prevYear = date.getFullYear().toString();
-                }
-                const prevCalculator = await CalculatorMoneyModel.findOne({
-                    roomRentalDetailID: item.roomRentalDetailID,
-                    month: prevMonth,
-                    year: prevYear,
-                });
-                item.dataPowerID = dataPower._id;
-                dataWater = await DataWaterModel.findOne({
-                    motelRoomID: i.motelRoomID._id,
-                    month: data.month,
-                    year: data.year,
-                });
-                item.dataWaterID = dataWater._id;
-                const find = await CalculatorMoneyModel.findOne({
-                    roomRentalDetailID: item.roomRentalDetailID,
-                    month: item.month,
-                    year: item.year,
-                });
-                if (!find) {
-                    const add = await CalculatorMoneyModel.create(item);
-                    const dataPower = await DataPowerModel.findOne({
-                        _id: add.dataPowerID,
-                    });
-                    const dataWater = await DataWaterModel.findOne({
-                        _id: add.dataWaterID,
-                    });
-                    const roomRentalDetail = await RoomRentalDetail.findOne({
-                        _id: add.roomRentalDetailID,
-                    });
-                    const currentDate = new Date();
-                    const currentMonth = (
-                        currentDate.getMonth() + 1
-                    ).toString();
-                    const [startDay, startMonth, startYear] =
-                        roomRentalDetail.startDate.split('/');
-                    roomRentalDetail.service.map((serviceItem) => {
-                        if (serviceItem.isUse) {
-                            add.totalAmount += serviceItem.unitPrice;
-                        }
-                    });
-                    add.totalAmount += prevCalculator
-                        ? prevCalculator.remainAmount
-                        : 0;
-                    add.previousRemain = prevCalculator
-                        ? prevCalculator.remainAmount
-                        : 0;
-                    add.totalAmount += dataPower.useValue * dataPower.price;
-                    add.totalAmount += dataWater.useValue * dataWater.price;
-                    if (
-                        startDay == '14' ||
-                        startDay == '15' ||
-                        (startDay == '16' && startMonth == currentMonth)
-                    ) {
-                        add.totalAmount =
-                            add.totalAmount + roomRentalDetail.priceRoom / 2;
+                if (i?.motelRoomID?._id !== undefined) {
+                    var item = {};
+                    item.month = data.month;
+                    item.year = data.year;
+                    item.roomRentalDetailID = i._id;
+                    item.motelRoomId = i.motelRoomID._id;
+                    item.motelID = i.motelRoomID.motelID;
+                    item.motelRoomID = i.motelRoomID._id;
+                    const date = new Date(item.year.concat('/', item.month));
+                    var prevMonth = date.getMonth();
+                    var prevYear = date.getFullYear();
+                    if (prevMonth == 0) {
+                        prevYear = (prevYear - 1).toString();
+                        prevMonth = '12';
                     } else {
-                        add.totalAmount += roomRentalDetail.priceRoom;
+                        prevMonth = date.getMonth().toString();
+                        prevYear = date.getFullYear().toString();
                     }
-                    add.remainAmount = add.totalAmount;
-                    await CalculatorMoneyModel.findByIdAndUpdate(
-                        { _id: add._id },
-                        add,
-                        {
-                            new: true,
+                    const prevCalculator = await CalculatorMoneyModel.findOne({
+                        roomRentalDetailID: item.roomRentalDetailID,
+                        month: prevMonth,
+                        year: prevYear,
+                    });
+                    dataPower = await DataPowerModel.findOne({
+                        motelRoomID: i.motelRoomID._id,
+                        month: data.month,
+                        year: data.year,
+                    });
+                    item.dataPowerID = dataPower._id;
+                    dataWater = await DataWaterModel.findOne({
+                        motelRoomID: i.motelRoomID._id,
+                        month: data.month,
+                        year: data.year,
+                    });
+                    item.dataWaterID = dataWater._id;
+                    const find = await CalculatorMoneyModel.findOne({
+                        roomRentalDetailID: item.roomRentalDetailID,
+                        month: item.month,
+                        year: item.year,
+                    });
+                    if (!find) {
+                        const add = await CalculatorMoneyModel.create(item);
+                        const dataPower = await DataPowerModel.findOne({
+                            _id: add.dataPowerID,
+                        });
+                        const dataWater = await DataWaterModel.findOne({
+                            _id: add.dataWaterID,
+                        });
+                        const roomRentalDetail = await RoomRentalDetail.findOne(
+                            {
+                                _id: add.roomRentalDetailID,
+                            }
+                        );
+                        const currentDate = new Date();
+                        const currentMonth = (
+                            currentDate.getMonth() + 1
+                        ).toString();
+                        const [startDay, startMonth, startYear] =
+                            roomRentalDetail.startDate.split('/');
+                        roomRentalDetail.service.map((serviceItem) => {
+                            if (serviceItem.isUse) {
+                                add.totalAmount += serviceItem.unitPrice;
+                            }
+                        });
+                        add.totalAmount += prevCalculator
+                            ? prevCalculator.remainAmount
+                            : 0;
+                        add.previousRemain = prevCalculator
+                            ? prevCalculator.remainAmount
+                            : 0;
+                        add.totalAmount += dataPower.useValue * dataPower.price;
+                        add.totalAmount += dataWater.useValue * dataWater.price;
+                        if (
+                            startDay == '14' ||
+                            startDay == '15' ||
+                            (startDay == '16' && startMonth == currentMonth)
+                        ) {
+                            add.totalAmount =
+                                add.totalAmount +
+                                roomRentalDetail.priceRoom / 2;
+                        } else {
+                            add.totalAmount += roomRentalDetail.priceRoom;
                         }
-                    ).exec();
-                    item = add;
-                    return item;
-                } else {
-                    find.totalAmount = 0;
-                    const dataPower = await DataPowerModel.findOne({
-                        _id: find.dataPowerID,
-                    });
-                    const dataWater = await DataWaterModel.findOne({
-                        _id: find.dataWaterID,
-                    });
-                    const roomRentalDetail = await RoomRentalDetail.findOne({
-                        _id: find.roomRentalDetailID,
-                    });
-                    const currentDate = new Date();
-                    const currentMonth = (
-                        currentDate.getMonth() + 1
-                    ).toString();
-                    const [startDay, startMonth, startYear] =
-                        roomRentalDetail.startDate.split('/');
-                    roomRentalDetail.service.map((serviceItem) => {
-                        if (serviceItem.isUse) {
-                            find.totalAmount += serviceItem.unitPrice;
+                        if (startMonth == currentMonth) {
+                            add.totalAmount += roomRentalDetail.deposit;
+                            add.payAmount += roomRentalDetail.deposit;
                         }
-                    });
-                    find.totalAmount += prevCalculator
-                        ? prevCalculator.remainAmount
-                        : 0;
-                    find.previousRemain = prevCalculator
-                        ? prevCalculator.remainAmount
-                        : 0;
-                    find.totalAmount += dataPower.useValue * dataPower.price;
-                    find.totalAmount += dataWater.useValue * dataWater.price;
-                    if (
-                        startDay == '14' ||
-                        startDay == '15' ||
-                        (startDay == '16' && startMonth == currentMonth)
-                    ) {
-                        find.totalAmount =
-                            find.totalAmount + roomRentalDetail.priceRoom / 2;
+                        add.remainAmount = add.totalAmount - add.payAmount;
+                        await CalculatorMoneyModel.findByIdAndUpdate(
+                            { _id: add._id },
+                            add,
+                            {
+                                new: true,
+                            }
+                        ).exec();
+                        item = add;
+                        return item;
                     } else {
-                        find.totalAmount += roomRentalDetail.priceRoom;
-                    }
-                    find.remainAmount = find.totalAmount - find.payAmount;
-                    await CalculatorMoneyModel.findByIdAndUpdate(
-                        { _id: find._id },
-                        find,
-                        {
-                            new: true,
+                        find.totalAmount = 0;
+                        const dataPower = await DataPowerModel.findOne({
+                            _id: find.dataPowerID,
+                        });
+                        const dataWater = await DataWaterModel.findOne({
+                            _id: find.dataWaterID,
+                        });
+                        const roomRentalDetail = await RoomRentalDetail.findOne(
+                            {
+                                _id: find.roomRentalDetailID,
+                            }
+                        );
+                        const currentDate = new Date();
+                        const currentMonth = (
+                            currentDate.getMonth() + 1
+                        ).toString();
+                        const [startDay, startMonth, startYear] =
+                            roomRentalDetail.startDate.split('/');
+                        roomRentalDetail.service.map((serviceItem) => {
+                            if (serviceItem.isUse) {
+                                find.totalAmount += serviceItem.unitPrice;
+                            }
+                        });
+                        find.totalAmount += prevCalculator
+                            ? prevCalculator.remainAmount
+                            : 0;
+                        find.previousRemain = prevCalculator
+                            ? prevCalculator.remainAmount
+                            : 0;
+                        find.totalAmount +=
+                            dataPower.useValue * dataPower.price;
+                        find.totalAmount +=
+                            dataWater.useValue * dataWater.price;
+                        if (
+                            startDay == '14' ||
+                            startDay == '15' ||
+                            (startDay == '16' && startMonth == currentMonth)
+                        ) {
+                            find.totalAmount =
+                                find.totalAmount +
+                                roomRentalDetail.priceRoom / 2;
+                        } else {
+                            find.totalAmount += roomRentalDetail.priceRoom;
                         }
-                    ).exec();
-                    item = find;
-                    return item;
+                        if (startMonth == currentMonth) {
+                            find.totalAmount += roomRentalDetail.deposit;
+                            find.payAmount += roomRentalDetail.deposit;
+                        }
+                        find.remainAmount = find.totalAmount - find.payAmount;
+                        await CalculatorMoneyModel.findByIdAndUpdate(
+                            { _id: find._id },
+                            find,
+                            {
+                                new: true,
+                            }
+                        ).exec();
+                        item = find;
+                        return item;
+                    }
                 }
             })
         );
