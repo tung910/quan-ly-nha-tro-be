@@ -24,12 +24,26 @@ module.exports = {
         if (existsEmail) {
             return AppResponse.fail(req, res, 400)(null, 'Email đã tồn tại');
         }
+        const validateEmail = (email) => {
+            return String(email)
+                .toLowerCase()
+                .match(
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                );
+        };
+        if (!validateEmail(email)) {
+            return AppResponse.fail(req, res, 400)(null, 'Yêu cầu nhập đúng định dạng email!');
+        }
         if (existsPhone) {
             return AppResponse.fail(
                 req,
                 res,
                 400
             )(null, 'Số điện thoại đã tồn tại');
+        }
+        const regexPhone = /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/;
+        if (!phone.match(regexPhone)) {
+            return AppResponse.fail(req, res, 400)(null, 'Yêu cầu nhập đúng định dạng số điện thoại!');
         }
         if (existsCitizenIdentification) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
@@ -178,7 +192,7 @@ module.exports = {
         if (
             existsCitizenIdentification &&
             existsCitizenIdentification.citizenIdentificationNumber !==
-                prevCitizenIdentificationNumber
+            prevCitizenIdentificationNumber
         ) {
             return AppResponse.fail(req, res, 400)(null, 'Số CCCD đã tồn tại');
         }
