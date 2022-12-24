@@ -16,6 +16,7 @@ module.exports = {
                 populate: { path: 'motelID', select: 'name' },
                 select: ['roomName', 'customerName'],
             })
+            .sort({ createdAt: -1, updatedAt: -1 })
             .exec();
         return AppResponse.success(req, res)(users);
     }),
