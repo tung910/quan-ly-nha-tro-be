@@ -34,7 +34,10 @@ module.exports = {
             .populate('dataPowerID')
             .populate('dataWaterID')
             .populate('motelID')
-            .populate('roomRentalDetailID')
+            .populate({
+                path: 'roomRentalDetailID',
+                populate: { path: 'userID', select: ['status', 'message'] },
+            })
             .populate({ path: 'motelRoomId', select: ['roomName'] });
         return AppResponse.success(req, res)(calculators);
     }),

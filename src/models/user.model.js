@@ -19,6 +19,13 @@ const UserSchema = new mongoose.Schema(
             type: String,
             unique: true,
         },
+        status: {
+            type: Boolean,
+            default: true,
+        },
+        message: {
+            type: String,
+        },
         address: {
             type: String,
         },
