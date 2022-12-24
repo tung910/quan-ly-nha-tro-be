@@ -3,6 +3,8 @@ const DataPowerModel = require('~/models/data-power.model');
 const DataWaterModel = require('~/models/water.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
+const RevenueStatisticsModel = require('~/models/revenue-statistics.models');
+const UserModel = require('~/models/user.model');
 const roomRentalDetailModel = require('~/models/room-rental-detail.model');
 const CalculatorMoneyModel = require('~/models/calculator-money.model');
 const waterModel = require('~/models/water.model');
@@ -29,7 +31,7 @@ module.exports = {
         const { data } = req.body;
         await DataPowerModel.create(data);
         await DataWaterModel.create(data);
-        const existMotelRoom = await MotelRoomModel.findOne(data)
+        const existMotelRoom = await MotelRoomModel.findOne(data);
         if (existMotelRoom) {
             return AppResponse.fail(
                 req,
@@ -139,12 +141,41 @@ module.exports = {
                     { new: true }
                 ).exec();
                 (motelRoom.roomRentID = undefined), await motelRoom.save();
-                await roomRentalDetailModel.findByIdAndUpdate(
+                const roomRental =
+                    await roomRentalDetailModel.findByIdAndUpdate(
+                        {
+                            _id: data.roomRentID,
+                        },
+                        {
+                            status: false,
+                        }
+                    );
+                const { totalPaymentAmount } =
+                    await RevenueStatisticsModel.findOne({
+                        month: data.month,
+                        year: data.year,
+                    });
+                await RevenueStatisticsModel.findOneAndUpdate(
                     {
-                        _id: data.roomRentID,
+                        month: data.month,
+                        year: data.year,
+                    },
+                    {
+                        totalPaymentAmount:
+                            +totalPaymentAmount - +roomRental.deposit,
+                    }
+                );
+                const dateFormat = require('dateformat');
+                await UserModel.findByIdAndUpdate(
+                    {
+                        _id: roomRental.userID,
                     },
                     {
                         status: false,
+                        message: `Khách đã trả phòng vào ${dateFormat(
+                            Date.now(),
+                            'dd/mm/yyyy'
+                        )}`,
                     }
                 );
                 // await CalculatorMoneyModel.findOneAndUpdate({

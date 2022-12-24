@@ -1,4 +1,6 @@
 const RevenueStatisticsModel = require('~/models/revenue-statistics.models');
+const UserModel = require('~/models/user.model');
+const RoomRentalDetail = require('~/models/room-rental-detail.model');
 const CalculatorMoneyModel = require('~/models/calculator-money.model');
 const asyncUtil = require('~/helpers/asyncUtil');
 const AppResponse = require('~/helpers/response');
@@ -27,15 +29,7 @@ module.exports = {
             year: data.year,
         });
         obj.totalBill = listBill.length;
-        listBill.map((item) => {
-            obj.totalPaymentAmount += item.payAmount;
-            obj.totalPaymentUnpaid += item.remainAmount;
-            if (item.paymentStatus) {
-                obj.totalBillPaid++;
-            } else {
-                obj.totalBillUnpaid++;
-            }
-        });
+        await forLoop(listBill, obj, data);
         if (existTotalPayment) {
             updateTotalPayment = await RevenueStatisticsModel.findOneAndUpdate(
                 {
@@ -80,4 +74,50 @@ module.exports = {
 
         return AppResponse.success(req, res)(revenueStatistics);
     }),
+};
+const forLoop = async (listBill, obj, data) => {
+    const listBillLength = listBill.length;
+    for (let index = 0; index < listBill.length; index++) {
+        const bill = listBill[index];
+        const roomRentalDetail = await RoomRentalDetail.findOne({
+            _id: bill.roomRentalDetailID,
+        });
+        obj.totalPaymentAmount += bill.payAmount;
+        obj.totalPaymentUnpaid += bill.remainAmount;
+        if (bill.paymentStatus) {
+            obj.totalBillPaid++;
+        } else {
+            obj.totalBillUnpaid++;
+        }
+        const user = await UserModel.findById({ _id: roomRentalDetail.userID });
+        if (!user.status) {
+            continue;
+        }
+        const [startDay, startMonth, startYear] =
+            roomRentalDetail.startDate.split('/');
+        if (startMonth == data.month && startYear == data.year) {
+            obj.totalPaymentAmount += roomRentalDetail.deposit
+                ? roomRentalDetail.deposit
+                : 0;
+        }
+    }
+    // listBill.map(async (item) => {
+    // const roomRentalDetail = await RoomRentalDetail.findOne({
+    //     _id: item.roomRentalDetailID,
+    // });
+    // const [startDay, startMonth, startYear] =
+    //     roomRentalDetail.startDate.split('/');
+    // if (startMonth == data.month && startYear == data.year) {
+    //     obj.totalPaymentAmount += roomRentalDetail.deposit
+    //         ? roomRentalDetail.deposit
+    //         : 0;
+    // }
+    // obj.totalPaymentAmount += item.payAmount;
+    // obj.totalPaymentUnpaid += item.remainAmount;
+    // if (item.paymentStatus) {
+    //     obj.totalBillPaid++;
+    // } else {
+    //     obj.totalBillUnpaid++;
+    // }
+    // });
 };
