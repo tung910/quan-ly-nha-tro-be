@@ -102,11 +102,7 @@ module.exports = {
                     } else {
                         add.totalAmount += roomRentalDetail.priceRoom;
                     }
-                    if (startMonth == currentMonth) {
-                        add.totalAmount += roomRentalDetail.deposit;
-                        add.payAmount += roomRentalDetail.deposit;
-                    }
-                    add.remainAmount = add.totalAmount - add.payAmount;
+                    add.remainAmount = add.totalAmount;
                     await CalculatorMoneyModel.findByIdAndUpdate(
                         { _id: add._id },
                         add,
@@ -116,7 +112,7 @@ module.exports = {
                     ).exec();
                     item = add;
                     return item;
-                } else {
+                } else if (find.paymentStatus == false && find) {
                     find.totalAmount = 0;
                     const dataPower = await DataPowerModel.findOne({
                         _id: find.dataPowerID,
@@ -155,10 +151,6 @@ module.exports = {
                             find.totalAmount + roomRentalDetail.priceRoom / 2;
                     } else {
                         find.totalAmount += roomRentalDetail.priceRoom;
-                    }
-                    if (startMonth == currentMonth) {
-                        find.totalAmount += roomRentalDetail.deposit;
-                        find.payAmount += roomRentalDetail.deposit;
                     }
                     find.remainAmount = find.totalAmount - find.payAmount;
                     await CalculatorMoneyModel.findByIdAndUpdate(
@@ -270,11 +262,7 @@ module.exports = {
                         } else {
                             add.totalAmount += roomRentalDetail.priceRoom;
                         }
-                        if (startMonth == currentMonth) {
-                            add.totalAmount += roomRentalDetail.deposit;
-                            add.payAmount += roomRentalDetail.deposit;
-                        }
-                        add.remainAmount = add.totalAmount - add.payAmount;
+                        add.remainAmount = add.totalAmount;
                         await CalculatorMoneyModel.findByIdAndUpdate(
                             { _id: add._id },
                             add,
@@ -284,7 +272,7 @@ module.exports = {
                         ).exec();
                         item = add;
                         return item;
-                    } else {
+                    } else if (find.paymentStatus == false && find) {
                         find.totalAmount = 0;
                         const dataPower = await DataPowerModel.findOne({
                             _id: find.dataPowerID,
@@ -328,10 +316,6 @@ module.exports = {
                                 roomRentalDetail.priceRoom / 2;
                         } else {
                             find.totalAmount += roomRentalDetail.priceRoom;
-                        }
-                        if (startMonth == currentMonth) {
-                            find.totalAmount += roomRentalDetail.deposit;
-                            find.payAmount += roomRentalDetail.deposit;
                         }
                         find.remainAmount = find.totalAmount - find.payAmount;
                         await CalculatorMoneyModel.findByIdAndUpdate(
