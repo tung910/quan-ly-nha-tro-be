@@ -31,7 +31,8 @@ module.exports = {
 
         const RoomDeposit = await RoomDepositModel.find(options)
             .populate('motelRoomId')
-            .populate('motelId');
+            .populate('motelId')
+            .sort({ createdAt: -1, updatedAt: -1 });
         return AppResponse.success(req, res)(RoomDeposit);
     }),
     getRoomDeposit: asyncUtil(async (req, res) => {

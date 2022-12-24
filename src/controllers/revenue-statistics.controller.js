@@ -54,7 +54,15 @@ module.exports = {
         if (data) {
             obj = data;
         }
-        const revenueStatistics = await RevenueStatisticsModel.findOne(obj);
+        let revenueStatistics = await RevenueStatisticsModel.findOne(obj);
+        if (!revenueStatistics) return AppResponse.success(req, res)(null);
+        const calculator = await CalculatorMoneyModel.find(obj);
+        const totalPaymentAmount = calculator
+            .filter((item) => item.paymentStatus && item)
+            .reduce((pre, item) => {
+                return pre + Number(item.payAmount);
+            }, 0);
+        revenueStatistics.totalPaymentAmount = totalPaymentAmount;
 
         return AppResponse.success(req, res)(revenueStatistics);
     }),

@@ -38,7 +38,8 @@ module.exports = {
                 path: 'roomRentalDetailID',
                 populate: { path: 'userID', select: ['status', 'message'] },
             })
-            .populate({ path: 'motelRoomId', select: ['roomName'] });
+            .populate({ path: 'motelRoomId', select: ['roomName'] })
+            .sort({ createdAt: -1, updatedAt: -1 });
         return AppResponse.success(req, res)(calculators);
     }),
     calculatorAllMoney: asyncUtil(async (req, res) => {
