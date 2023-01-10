@@ -37,8 +37,8 @@ module.exports = {
             prevYear = (prevYear - 1).toString();
             prevMonth = '12';
         } else {
-            prevMonth = today.getMonth().toString();
-            prevYear = today.getFullYear().toString();
+            prevMonth = prevMonth.toString();
+            prevYear = prevYear.toString();
         }
         const prevDataWater = await WaterModel.find({
             month: prevMonth,
