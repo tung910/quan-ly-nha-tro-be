@@ -27,7 +27,7 @@ module.exports = {
         }
         const today = new Date();
         var currentMonth = today.getMonth() + 1;
-        const currentYear = today.getFullYear().toString();
+        var currentYear = today.getFullYear().toString();
         if (currentMonth < 10 && currentMonth > 0) {
             currentMonth = '0'.concat(currentMonth.toString());
         }
@@ -47,7 +47,11 @@ module.exports = {
         await Promise.all(
             prevDataWater.map(async (item) => {
                 const isExist = await WaterModel.findOneAndUpdate(
-                    { motelRoomID: item.motelRoomID, month: currentMonth },
+                    {
+                        motelRoomID: item.motelRoomID,
+                        month: currentMonth,
+                        year: currentYear,
+                    },
                     { oldValue: item.newValue }
                 );
                 if (isExist === null) {
