@@ -25,12 +25,24 @@ module.exports = {
             obj = data;
         }
         const today = new Date();
-        const currentMonth = (today.getMonth() + 1).toString();
-        const prevMonth = today.getMonth().toString();
-        // const currentDataPower = await DataPowerModel.find({
-        //     month: currentMonth,
-        // });
-        const prevDataPower = await DataPowerModel.find({ month: prevMonth });
+        var currentMonth = today.getMonth() + 1;
+        const currentYear = today.getFullYear().toString();
+        if (currentMonth < 10 && currentMonth > 0) {
+            currentMonth = '0'.concat(currentMonth.toString());
+        }
+        var prevMonth = today.getMonth();
+        var prevYear = today.getFullYear();
+        if (prevMonth == 0) {
+            prevYear = (prevYear - 1).toString();
+            prevMonth = '12';
+        } else {
+            prevMonth = today.getMonth().toString();
+            prevYear = today.getFullYear().toString();
+        }
+        const prevDataPower = await DataPowerModel.find({
+            month: prevMonth,
+            year: prevYear,
+        });
         await Promise.all(
             prevDataPower.map(async (item) => {
                 const isExist = await DataPowerModel.findOneAndUpdate(
@@ -44,7 +56,7 @@ module.exports = {
                     await DataPowerModel.create({
                         customerName: motelRoom.customerName,
                         month: currentMonth,
-                        year: item.year,
+                        year: currentYear,
                         oldValue: item.newValue,
                         price: item.price,
                         roomName: item.roomName,
